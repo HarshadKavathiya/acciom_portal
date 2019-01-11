@@ -1,0 +1,48 @@
+.nav{
+    background-color:rgb(12, 0, 0);
+    color:white;
+    display: flex;
+    justify-content: flex-start;
+
+   
+    margin-bottom:15px;
+    font-family: 'Open Sans', sans-serif;
+   
+
+
+}
+
+/* @media screen and (max-width:200px)
+{.nav{
+
+    margin-bottom:10px;
+    display: flex;
+    align-items: flex-start;
+    letter-spacing: 2px;
+    font-size:25px;
+    
+
+
+} */
+
+.heading{
+ 
+    letter-spacing: 5px;
+    font-size:25px;
+    font-weight:1000;
+    text-transform: capitalize;
+   
+
+  
+}
+.loginbut{
+    font:20px;
+    color:#fff;
+    margin-left:auto
+
+
+
+}.loginbut:hover{
+    background-color: lightgrey;
+}
+

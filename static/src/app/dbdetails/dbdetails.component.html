@@ -1,0 +1,35 @@
+<app-navbarlogout></app-navbarlogout>
+<div class="body">
+<mat-card class="mat">
+    <div class="heading" > Update Your DB Details</div>
+    <form class="form" [formGroup]="createForm">
+       
+        <mat-form-field class="example-full-width">
+            <input type="text" autocomplete="off" matInput placeholder="Database Type*" formControlName="type">
+            <mat-error>Enter Database Type</mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input type="text" autocomplete="off" matInput placeholder=" Database Name*" formControlName="name">
+            <mat-error>Enter  Name</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field class="example-full-width">
+            <input type="text" autocomplete="off" matInput placeholder=" hostname*" formControlName="hostname">
+            <mat-error>Enter Host Name</mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input type="text" autocomplete="off" matInput placeholder=" Username*" formControlName="username">
+            <mat-error>Enter Username </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input type="password" autocomplete="off" matInput placeholder=" Password*" formControlName="password">
+            <mat-error>Enter Password </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button [disabled]="createForm.invalid" (click)="Update()" color="primary" >Update</button>
+        
+    </form>
+</mat-card>
+
+
+</div>

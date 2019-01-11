@@ -1,0 +1,55 @@
+.body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.card{
+  margin-top:10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.heading{
+  text-align: center;
+  margin-bottom:10px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 900;
+}
+.form {
+   
+    min-width:400px;
+  
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+   @media screen and (max-width:400px)
+{
+  .form{
+    min-width:200px;
+  
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+}
+  
+  .example-full-width {
+    
+    flex:1 1 0;
+   
+  }
+
+  .register{
+    font-family: 'Open Sans', sans-serif;
+    position:relative;
+    text-align:center;
+    color:red;
+
+  }
+
+  
+  

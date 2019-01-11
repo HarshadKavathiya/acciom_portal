@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+<div class="body">
+        <mat-card class="card">
+            <div class="heading" > Sign Up Here</div>
+<form class="form" [formGroup]="createForm">
+   
+    <mat-form-field class="example-full-width">
+        <input type="text" autocomplete="off" matInput placeholder="email*" formControlName="email">
+        <mat-error>please enter valid email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input type="text" autocomplete="off" matInput placeholder="First Name*" formControlName="first_name">
+        <mat-error>please enter valid name</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input type="text" autocomplete="off" matInput placeholder="Last Name*" formControlName="last_name">
+        <mat-error>please enter valid name</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input type="password" autocomplete="off" matInput placeholder=" Password*" formControlName="password">
+        <mat-error>please enter valid password</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width-lname">
+        <input matInput  type="password"  placeholder=" Confirm Password" formControlName="cpassword">
+         </mat-form-field>
+    <button mat-raised-button (click)="signIn()" [disabled]='!createForm.valid' color="warn" >SignIn</button>
+    
+</form>
+
+</mat-card>
+</div>

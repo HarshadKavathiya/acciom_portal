@@ -1,0 +1,56 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms'
+import {UploadserviceService} from '../uploadservice.service';
+import { Routes, RouterModule, Router } from '@angular/router';
+import Swal from 'sweetalert2'
+
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
+})
+export class RegisterComponent implements OnInit {
+  createForm:FormGroup;
+
+  constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
+    private router:Router) {
+      this.createForm=fb.group({
+        email:['',[Validators.required,Validators.email]],
+        first_name:['',Validators.required],
+        last_name:['',Validators.required],
+        password:['',Validators.required],
+        cpassword:['',Validators.required],
+      });
+     }
+
+  ngOnInit() {
+    if((this.fileUploadService.loggedIn())) {
+      this.router.navigate(['home'])
+  }
+}
+
+  signIn(){
+    console.log(this.createForm.value);
+    if(!this.createForm.valid || (this.createForm.controls.password.value != this.createForm.controls.cpassword.value))
+    { alert("please enter correct passwords")
+  }
+  else{
+    this.fileUploadService.register(this.createForm.value).subscribe(data=>{
+      if (data.success){
+        Swal("Success","User Created Succesfully","success")
+
+        this.router.navigate(['login'])
+      }else{
+    
+        Swal("error",data.message,"error")
+
+
+      }
+    })
+
+  }
+ 
+
+}
+}
+

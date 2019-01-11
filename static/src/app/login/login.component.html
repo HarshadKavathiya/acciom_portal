@@ -1,0 +1,24 @@
+<app-navbar></app-navbar>
+<ng4-loading-spinner> </ng4-loading-spinner>
+<div class="body">
+        <mat-card class="card">
+            <div class="heading" > Log In Yourself</div>
+<form class="form" [formGroup]="createForm">
+   
+    <mat-form-field class="example-full-width">
+        <input type="email" autocomplete="off" matInput placeholder="email*" formControlName="email">
+        <mat-error>please enter valid email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input type="password" autocomplete="off" matInput placeholder=" Password*" formControlName="password">
+        <mat-error>please enter valid password</mat-error>
+    </mat-form-field>
+    <button mat-raised-button (click)="LogIn()" color="primary" >Login</button>
+    
+</form>
+<div class="register">Not registered? <button  mat-button color="primary" (click)="signup()" >Signup here</button></div>
+
+</mat-card>
+</div>
+
