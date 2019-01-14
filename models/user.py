@@ -180,7 +180,7 @@ class TestCase(db.Model):
     table_src_target = db.Column(db.Text, nullable=True)
     test_name = db.Column(db.String(80), nullable=True)
 
-    test_queries = db.Column(db.String(80), nullable=True)
+    test_queries = db.Column(db.Text, nullable=True)
     test_expected = db.Column(db.Text, nullable=True)
     test_actual = db.Column(db.Text, nullable=True)
     test_created_by = db.Column(db.String(80), nullable=True)
