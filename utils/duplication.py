@@ -10,9 +10,10 @@ def duplication(target_cursor, target_table):
             res = "\n".join(my_list)
 
             if my_list:
-                x1 = str(row)
                 return {"res": 0, "src_value": None, "des_value": res}
             else:
-                return {"res": 1, "src_value": "src_value not require", "des_value": "No Duplication"}
-        except:
+                return {"res": 1, "src_value": "src_value not require",
+                        "des_value": "No Duplication"}
+        except Exception as e:
+            print(e)
             return {"res": 2, "src_val": "src_value", "des_value": "des_val"}

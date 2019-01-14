@@ -17,9 +17,12 @@ def count_check(source_cursor, target_cursor, source_table, target_table):
                 pass
 
         if src_count == target_count:
-            return {"res": 1, "src_value": src_count, "des_value": target_count}  # pass.
+            return {"res": 1, "src_value": src_count,
+                    "des_value": target_count}  # pass.
         else:
             # fail.
-            return {"res": 0, "src_value": src_count, "des_value": target_count}
-    except:
+            return {"res": 0, "src_value": src_count,
+                    "des_value": target_count}
+    except Exception as e:
+        print(e)
         return {"res": 2, "src_value": None, "des_value": None}

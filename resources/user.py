@@ -1,24 +1,45 @@
-from flask_restful import Resource, reqparse
 import datetime
+
+from flask_jwt_extended import (create_access_token,
+                                jwt_required,
+                                jwt_refresh_token_required,
+                                get_jwt_identity,
+                                get_raw_jwt)
+from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
+
 from db import db
 from models.user import User, RevokedTokenModel
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
-                                get_jwt_identity, get_raw_jwt)
 
 parser = reqparse.RequestParser()
-parser.add_argument('email', help='This field cannot be blank', required=True)
-parser.add_argument('first_name', help='This field cannot be blank', required=False)
-parser.add_argument('last_name', help='This field cannot be blank', required=False)
-parser.add_argument('password', help='This field cannot be blank', required=True)
+parser.add_argument('email',
+                    help='This field cannot be blank',
+                    required=True)
+parser.add_argument('first_name',
+                    help='This field cannot be blank',
+                    required=False)
+parser.add_argument('last_name',
+                    help='This field cannot be blank',
+                    required=False)
+parser.add_argument('password',
+                    help='This field cannot be blank',
+                    required=True)
 
 
 class UserRegistration(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('email', help='This field cannot be blank', required=True)
-    parser.add_argument('first_name', help='This field cannot be blank', required=True)
-    parser.add_argument('last_name', help='This field cannot be blank', required=True)
-    parser.add_argument('password', help='This field cannot be blank', required=True)
+    parser.add_argument('email',
+                        help='This field cannot be blank',
+                        required=True)
+    parser.add_argument('first_name',
+                        help='This field cannot be blank',
+                        required=True)
+    parser.add_argument('last_name',
+                        help='This field cannot be blank',
+                        required=True)
+    parser.add_argument('password',
+                        help='This field cannot be blank',
+                        required=True)
 
     def post(self):
         data = parser.parse_args()
@@ -48,8 +69,12 @@ class UserLogin(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('email', help='This field cannot be blank', required=True)
-        parser.add_argument('password', help='This field cannot be blank', required=True)
+        parser.add_argument('email',
+                            help='This field cannot be blank',
+                            required=True)
+        parser.add_argument('password',
+                            help='This field cannot be blank',
+                            required=True)
 
         data = parser.parse_args()
         current_user = User.query.filter_by(email=data['email']).first()
@@ -63,8 +88,10 @@ class UserLogin(Resource):
         if not current_user:
             return {'response': 'user does not exists'}
         if User.verify_hash(data['password'], current_user.password):
-            access_token = create_access_token(identity=current_user.user_id, expires_delta=expires),
-            refresh_token = create_refresh_token(identity=current_user.user_id)
+            access_token = create_access_token(identity=current_user.user_id,
+                                               expires_delta=expires)
+            # refresh_token = create_refresh_token
+            # (identity=current_user.user_id)
             return {'message': 'logged in as {} '.format(current_user.email),
                     'uid': current_user.user_id,
                     'access_token': access_token,
@@ -85,8 +112,8 @@ class UserLogoutAccess(Resource):
             revoked_token = RevokedTokenModel(jti=jti)
             revoked_token.add()
             return {'message': 'access_token has been revoked'}
-        except:
-            return {'message': 'something went wrong'}
+        except Exception as e:
+            return {'message': e}
 
 
 class UserLogoutRefresh(Resource):
@@ -99,8 +126,8 @@ class AllUser(Resource):
     def get(self):
         try:
             return User.return_all()
-        except:
-            {'message': 'something went wrong'}
+        except Exception as e:
+            {'message': e}
 
     def delete(self):
         return User.delete_all()

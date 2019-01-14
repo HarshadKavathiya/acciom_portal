@@ -1,6 +1,8 @@
-from db import db
-from passlib.hash import pbkdf2_sha256 as sha256
 import datetime
+
+from passlib.hash import pbkdf2_sha256 as sha256
+
+from db import db
 
 
 class User(db.Model):
@@ -23,7 +25,6 @@ class User(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
-
 
     @staticmethod
     def generate_hash(password):
@@ -61,10 +62,11 @@ class User(db.Model):
         try:
             row_deleted = db.session.query(cls).delete()
             db.session.commit()
-            return {'message': ' {}rows deleted'.format(row_deleted)}  # delete all the users and
+            return {'message': ' {}rows deleted'.format(row_deleted)}
+            # delete all the users and
             # return number of rows deleted
-        except:
-            return {'message': 'something went wrong'}
+        except Exception as e:
+            return {'message': e}
 
 
 class RevokedTokenModel(db.Model):
@@ -85,7 +87,9 @@ class RevokedTokenModel(db.Model):
 class DbDetail(db.Model):
     __tablename__ = "dbdetail"
     db_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('user.user_id'),
+                        nullable=False)
     db_type = db.Column(db.String(80), nullable=False)
     db_name = db.Column(db.String(80), nullable=False)
     db_hostname = db.Column(db.String(80), nullable=False)
@@ -94,7 +98,8 @@ class DbDetail(db.Model):
     users = db.relationship('User', back_populates='dbdetail', lazy=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
-    def __init__(self, db_type, db_name, db_hostname, db_username, db_password, user_id):
+    def __init__(self, db_type, db_name, db_hostname,
+                 db_username, db_password, user_id):
         self.db_type = db_type
         self.db_name = db_name
         self.db_hostname = db_hostname
@@ -110,11 +115,13 @@ class DbDetail(db.Model):
 class TestSuite(db.Model):
     __tablename__ = "test_suite"
     test_suite_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('user.user_id'), nullable=False)
     excel_name = db.Column(db.String(300), nullable=False)
     test_suite_name = db.Column(db.String(50), nullable=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
-    test_case = db.relationship("TestCase", back_populates='test_suite', lazy=True)
+    test_case = db.relationship("TestCase",
+                                back_populates='test_suite', lazy=True)
     user = db.relationship('User', back_populates='suite', lazy=True)
 
     def save_to_db(self):
@@ -140,7 +147,9 @@ class TestSuite(db.Model):
                 'test_name': x.test_name,
                 'test_id': x.test_id,
                 'test_status': x.test_status,
-                'test_case_log': list(map(lambda each_case: test_log_to_json(each_case), x.test_case_log))
+                'test_case_log': list(map(lambda each_case:
+                                          test_log_to_json(each_case),
+                                          x.test_case_log))
             }
 
         def test_suite_to_json(x):
@@ -149,10 +158,13 @@ class TestSuite(db.Model):
                 'excel_name': x.excel_name,
                 'test_suite_name': x.test_suite_name,
                 'created': str(x.created)[0:19],
-                'test_case_list': list(map(lambda each_case: test_case_to_json(each_case), x.test_case))
+                'test_case_list': list(map(lambda each_case:
+                                           test_case_to_json(each_case),
+                                           x.test_case))
             }
 
-        return {'user': list(map(lambda x: test_suite_to_json(x), TestSuite.query.filter_by(user_id=user_id)))}
+        return {'user': list(map(lambda x: test_suite_to_json(x),
+                                 TestSuite.query.filter_by(user_id=user_id)))}
 
 
 class TestCase(db.Model):
@@ -176,15 +188,22 @@ class TestCase(db.Model):
     test_comment = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
     test_comment = db.Column(db.Text, nullable=True)
-    test_suite = db.relationship(TestSuite, back_populates='test_case', lazy=True)
-    test_case_log = db.relationship("TestCaseLog", back_populates='test_cases', lazy=True)
+    test_suite = db.relationship(TestSuite,
+                                 back_populates='test_case', lazy=True)
+    test_case_log = db.relationship("TestCaseLog",
+                                    back_populates='test_cases', lazy=True)
 
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, test_suite_id, test_id, test_status, test_priority, test_detail, test_column, table_src_target,
-                 test_name, test_queries, test_expected, test_actual, test_created_by, test_executed_by, test_comment):
+    def __init__(self, test_suite_id, test_id, test_status,
+                 test_priority, test_detail, test_column,
+                 table_src_target, test_name,
+                 test_queries,
+                 test_expected, test_actual,
+                 test_created_by, test_executed_by,
+                 test_comment):
         self.test_suite_id = test_suite_id
         self.test_id = test_id
         self.test_status = test_status
@@ -193,7 +212,7 @@ class TestCase(db.Model):
         self.test_column = test_column
         self.table_src_target = table_src_target
         self.test_name = test_name
-        test_queries = self.test_queries
+        self.test_queries = test_queries
         self.test_expected = test_expected
         self.test_actual = test_actual
         self.test_created_by = test_created_by
@@ -209,10 +228,12 @@ class TestCaseLog(db.Model):
     src_execution_log = db.Column(db.Text, nullable=True)
     des_execution_log = db.Column(db.Text, nullable=True)
     error_log = db.Column(db.String(80), nullable=True)
-    test_cases = db.relationship(TestCase, back_populates='test_case_log', lazy=True)
+    test_cases = db.relationship(TestCase,
+                                 back_populates='test_case_log', lazy=True)
     executed_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
-    def __init__(self, test_case_id, execution_status, src_execution_log, des_execution_log, error_log):
+    def __init__(self, test_case_id, execution_status,
+                 src_execution_log, des_execution_log, error_log):
         self.test_case_id = test_case_id
         self.execution_status = execution_status
         self.src_execution_log = src_execution_log

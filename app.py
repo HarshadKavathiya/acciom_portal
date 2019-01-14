@@ -1,26 +1,24 @@
 from flask import Flask
-from flask_restful import Api
-from flask_jwt import JWT
 from flask_cors import CORS
-
-
-from security import authenticate, identity
-from resources.user import UserRegistration, UserLogin, UserLogoutAccess, TokenRefresh, AllUser
 from flask_jwt_extended import JWTManager
-
-from resources.FileData import Upload, GetUpload
-from resources.runtest import DoTest
-from resources.dbdetails import DbDetails
-from models.user import RevokedTokenModel
-from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from db import db
+from flask_restful import Api
+from flask_script import Manager
 
+from db import db
+from models.user import RevokedTokenModel
+from resources.FileData import Upload, GetUpload
+from resources.dbdetails import DbDetails
+from resources.runtest import DoTest
+from resources.user import UserRegistration, \
+    UserLogin, UserLogoutAccess, \
+    TokenRefresh, AllUser
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Acciom_user:Acciomuser@localhost/Acciom_tool'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+            'mysql+pymysql://Acciom_user:Acciomuser@localhost/Acciom_tool'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#SECRET_KEY = "EiEiO"
+# SECRET_KEY = "EiEiO"
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -36,7 +34,7 @@ manager.add_command('db', MigrateCommand)
 
 CORS(app, origins="http://localhost:4200", allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
-    supports_credentials=True, intercept_exceptions=False)
+     supports_credentials=True, intercept_exceptions=False)
 
 
 @jwt.token_in_blacklist_loader
@@ -50,8 +48,6 @@ def create_tables():
     db.create_all()
 
 
-jwt = JWT(app, authenticate, identity)  # /auth
-
 api.add_resource(UserRegistration, '/register')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogoutAccess, '/logout')
@@ -64,7 +60,8 @@ api.add_resource(DoTest, '/testdb/')
 
 if __name__ == '__main__':
     from db import db
+
     db.init_app(app)
-    #manager.run()
+    # manager.run()
 
     app.run(port=8000, debug=True)
