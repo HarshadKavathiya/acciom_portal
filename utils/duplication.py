@@ -1,7 +1,10 @@
 
 def duplication(target_cursor, target_table):
 
-        target_cursor.execute('SELECT name,quantity, COUNT(*) FROM {} GROUP BY name,quantity HAVING COUNT(*) > 1'.format(target_table))
+        target_cursor.execute('SELECT name,quantity,'
+                              ' COUNT(*) FROM {} GROUP BY name,'
+                              'quantity HAVING COUNT(*)'
+                              ' > 1'.format(target_table))
 
         my_list = []
         try:

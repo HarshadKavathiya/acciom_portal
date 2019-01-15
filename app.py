@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate, MigrateCommand
@@ -47,6 +47,19 @@ def check_if_token_in_blacklist(decrypted_token):
 def create_tables():
     db.create_all()
 
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+static_folder = basedir + '/static/dist/uploadfile/'
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(static_folder + path):
+        return send_from_directory(static_folder, path)
+    elif not path:
+        return send_from_directory(static_folder, 'index.html')
+
 
 api.add_resource(UserRegistration, '/register')
 api.add_resource(UserLogin, '/login')
@@ -62,6 +75,6 @@ if __name__ == '__main__':
     from db import db
 
     db.init_app(app)
-    # manager.run()
+    #manager.run()
 
     app.run(port=8000, debug=True)
