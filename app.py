@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -5,8 +7,8 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_restful import Api
 from flask_script import Manager
 
-from db import db
 from models.user import RevokedTokenModel
+from models.user import db
 from resources.FileData import Upload, GetUpload
 from resources.dbdetails import DbDetails
 from resources.runtest import DoTest
@@ -47,34 +49,36 @@ def check_if_token_in_blacklist(decrypted_token):
 def create_tables():
     db.create_all()
 
-import os
-basedir = os.path.abspath(os.path.dirname(__file__))
-static_folder = basedir + '/static/dist/uploadfile/'
+
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def serve(path):
+#     print(path)
+#     basedir = os.path.abspath(os.path.dirname(__file__))
+#     static_folder = basedir + '/static/dist/uploadfile/'
+#     if path != "" and os.path.exists(static_folder + path):
+#         return send_from_directory(static_folder, path)
+#     elif not str(path).startswith("api/"):
+#         print(path)
+#         return send_from_directory(static_folder, 'index.html', **path)
+#     elif path == "":
+#         return send_from_directory(static_folder, 'index.html')
+#         # TODO:Issue to be resove
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(static_folder + path):
-        return send_from_directory(static_folder, path)
-    elif not path:
-        return send_from_directory(static_folder, 'index.html')
-
-
-api.add_resource(UserRegistration, '/register')
-api.add_resource(UserLogin, '/login')
-api.add_resource(UserLogoutAccess, '/logout')
-api.add_resource(AllUser, '/users')
-api.add_resource(Upload, '/upload')
-api.add_resource(DbDetails, '/add')
-api.add_resource(TokenRefresh, '/token/refresh')
-api.add_resource(GetUpload, '/getsuite/<int:user_id>')
-api.add_resource(DoTest, '/testdb/')
+api.add_resource(UserRegistration, '/api/register')
+api.add_resource(UserLogin, '/api/login')
+api.add_resource(UserLogoutAccess, '/api/logout')
+api.add_resource(AllUser, '/api/users')
+api.add_resource(Upload, '/api/upload')
+api.add_resource(DbDetails, '/api/add')
+api.add_resource(TokenRefresh, '/api/token/refresh')
+api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
+api.add_resource(DoTest, '/api/testdb/')
 
 if __name__ == '__main__':
-    from db import db
 
     db.init_app(app)
-    #manager.run()
+# manager.run()
 
     app.run(port=8000, debug=True)
