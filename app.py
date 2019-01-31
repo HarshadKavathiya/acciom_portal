@@ -75,10 +75,10 @@ api.add_resource(DbDetails, '/api/add')
 api.add_resource(TokenRefresh, '/api/token/refresh')
 api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
 api.add_resource(DoTest, '/api/testdb/')
-
+db.init_app(app)
 if __name__ == '__main__':
 
-    db.init_app(app)
+#    db.init_app(app)
 # manager.run()
 
     app.run(host='0.0.0.0', port=8000, debug=True)
