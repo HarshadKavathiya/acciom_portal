@@ -138,6 +138,8 @@ class TestSuite(db.Model):
             return {
                 'test_case_id': x.test_case_id,
                 'test_execution_status': x.execution_status,
+                'source_log': x.src_execution_log,
+                'destination_log': x.des_execution_log,
                 'executed_at': str(x.executed_at)[0:19]
             }
 
@@ -230,6 +232,7 @@ class TestCaseLog(db.Model):
     error_log = db.Column(db.String(80), nullable=True)
     test_cases = db.relationship(TestCase,
                                  back_populates='test_case_log', lazy=True)
+    spark_job = db.relationship("SparkJob", back_populates='test_cases_log', lazy=True)
     executed_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __init__(self, test_case_id, execution_status,
@@ -239,6 +242,25 @@ class TestCaseLog(db.Model):
         self.src_execution_log = src_execution_log
         self.des_execution_log = des_execution_log
         self.error_log = error_log
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class SparkJob(db.Model):
+    __tablename__ = "sparkjob"
+    spark_job_id = db.Column(db.Integer, primary_key=True)
+    test_case_log_id = db.Column(db.ForeignKey(TestCaseLog.test_case_log_id))
+    job_id = db.Column(db.Integer, nullable=True)
+    status = db.Column(db.String(80), nullable=True)
+    test_cases_log = db.relationship(TestCaseLog, back_populates='spark_job', lazy=True)
+    created = db.Column(db.DateTime, default=datetime.datetime.now)
+    modified = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def __init__(self, job_id=None, status=None):
+        self.job_id = job_id
+        self.status = status
 
     def save_to_db(self):
         db.session.add(self)

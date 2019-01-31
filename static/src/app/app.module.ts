@@ -12,7 +12,7 @@ import { RegisterComponent } from './register/register.component';
 import { DbdetailsComponent } from './dbdetails/dbdetails.component';
 import { StartupComponent } from './startup/startup.component';
 import {DialogOverviewExampleDialog} from './home/home.component';
-
+import{DialogOverviewExampleDialogstartup} from './startup/startup.component';
 import {UploadserviceService} from './uploadservice.service';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -51,6 +51,7 @@ import { UserdetailComponent } from './userdetail/userdetail.component';
     StartupComponent,
     DbdetailsComponent,
     DialogOverviewExampleDialog,
+    DialogOverviewExampleDialogstartup,
     ColorDirective,
     AppcolorDirective,
     UserdetailComponent
@@ -82,7 +83,7 @@ import { UserdetailComponent } from './userdetail/userdetail.component';
   ],
   providers: [UploadserviceService,CanDeactivateGuard],
   bootstrap: [AppComponent],
-  entryComponents: [DialogOverviewExampleDialog]
+  entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup]
 
 
 })

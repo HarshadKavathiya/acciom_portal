@@ -12,13 +12,14 @@ from models.user import db
 from resources.FileData import Upload, GetUpload
 from resources.dbdetails import DbDetails
 from resources.runtest import DoTest
+from resources.sparkjob import SparkJobStatus
 from resources.user import UserRegistration, \
     UserLogin, UserLogoutAccess, \
     TokenRefresh, AllUser
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = \
-            'mysql+pymysql://Acciom_user:Acciomuser@localhost/Acciom_tool'
+            'mysql+pymysql://root:Password1234@localhost/Acciom_tool'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # SECRET_KEY = "EiEiO"
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -60,7 +61,8 @@ def create_tables():
 #         return send_from_directory(static_folder, path)
 #     elif not str(path).startswith("api/"):
 #         print(path)
-#         return send_from_directory(static_folder, 'index.html', **path)
+#         return send_from
+#         _directory(static_folder, 'index.html', **path)
 #     elif path == "":
 #         return send_from_directory(static_folder, 'index.html')
 #         # TODO:Issue to be resove
@@ -75,10 +77,10 @@ api.add_resource(DbDetails, '/api/add')
 api.add_resource(TokenRefresh, '/api/token/refresh')
 api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
 api.add_resource(DoTest, '/api/testdb/')
-
+api.add_resource(SparkJobStatus, '/api/spark-job-status/<int:spark_job_id>')
 if __name__ == '__main__':
 
     db.init_app(app)
-# manager.run()
+    #manager.run()
 
     app.run(port=8000, debug=True)

@@ -225,7 +225,7 @@ if (this.selectedAll){
  Next(s){
    this.show=false;
    this.show1=true;
-  const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+  const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {   
     width: '250px',
     data : {suitename :this.suitename}
     

@@ -1,11 +1,27 @@
-import { Component, OnInit,OnChanges, SimpleChanges,ChangeDetectionStrategy,HostListener } from '@angular/core';
+import { Component, OnInit,OnChanges,Inject, SimpleChanges,ChangeDetectionStrategy,HostListener } from '@angular/core';
 import { Routes, RouterModule, Router } from '@angular/router';
 import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
 import {trigger,state,style,transition,animate  } from '@angular/animations'
-import { Observable,interval } from 'rxjs';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {Observable} from "rxjs"
+
+export interface DialogData {
+  
+  source_log: string;
+  destination_countcheck:boolean;
+  nullcheck:boolean;
+  duplicate:boolean;
+  datavalidation:boolean;log:string;
+  datavalidation_pass:boolean;
+  ddlcheck:boolean;
+  key_src:Array<any>;
+  value_src:Array<any>;
+}
+
 // import { interval } from 'rxjs';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
 @Component({
   selector: 'app-startup',
   templateUrl: './startup.component.html',
@@ -45,9 +61,23 @@ export class StartupComponent implements OnInit {
   show2:Array<Boolean>=[]
   z:number;
   q:number=1;
+  res:string="sas"
+  countcheck:boolean=true;
+  nullcheck:boolean=true;
+  duplicate:boolean=true;
+  datavalidation_pass:boolean=true;
+  datavalidation:boolean=true;
+  ddlcheck:boolean=true;
+  keys_src=[]
+  value_src=[]
+  first_obj=[]
+  parsed_obj=""
+
+  len:number;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
-    private spinnerService: Ng4LoadingSpinnerService) { }
+    private spinnerService: Ng4LoadingSpinnerService,
+    public dialog: MatDialog) { }
 
 
   ngOnInit() {
@@ -82,7 +112,7 @@ export class StartupComponent implements OnInit {
    
       this.playButtons2 = new Array();
       this.show2=[]
-      // console.log(this.arr1)
+       //console.log(this.arr1)
       for(var i=0;i<this.arr1.length;i++)
       {
         this.temparr=[]
@@ -134,7 +164,7 @@ this.playButtons[x]=!this.playButtons[x]
   
       }
       else{
-      
+      this.ngOnInit()
         Swal("error","Something went wrong","error")
 
       }
@@ -161,6 +191,7 @@ this.playButtons[x]=!this.playButtons[x]
   
       }
       else{
+        this.ngOnInit()
         Swal("error","Something went wrong","error")
 
       }
@@ -176,6 +207,7 @@ this.playButtons[x]=!this.playButtons[x]
       case 2:
       return "#E84342";
       case 3:
+      return '#F7861B'
       case 4:
       return 'red';
     }
@@ -198,5 +230,108 @@ topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
+
+showlog(test_name,case_log){
+  if (test_name =='CountCheck'){
+    this.countcheck=false
+    this.nullcheck=true
+    this.datavalidation=true
+    this.datavalidation_pass=true
+    this.duplicate=true
+    this.ddlcheck=true
+  }
+  else if (test_name == 'NullCheck'){
+    this.countcheck=true
+    this.nullcheck=false
+    this.datavalidation=true
+    this.datavalidation_pass=true
+    this.duplicate=true
+    this.ddlcheck=true
+  }
+  else if (test_name == "DuplicateCheck"){
+    this.countcheck=true
+    this.nullcheck=true
+    this.datavalidation=true
+    this.datavalidation_pass=true
+    this.duplicate=false
+    this.ddlcheck=true
+
+  }
+  else if (test_name == "Datavalidation"){
+    this.value_src=[]
+    this.keys_src=[]
+    if(case_log.source_log=='none'){
+      this.countcheck=true
+      this.nullcheck=true
+      this.datavalidation=true
+      this.datavalidation_pass=false
+      this.duplicate=true
+      this.ddlcheck=true
+    }
+   
+    else{
+      this.parsed_obj=(eval(case_log.source_log)[0])
+    this.first_obj=(JSON.parse(String(this.parsed_obj)))
+    this.keys_src=(Object.keys(this.first_obj))
+    //console.log(this.keys_src.length)
+     this.len=eval(case_log.source_log).length
+     //console.log((Object.values(this.first_obj)))
+     console.log(this.len)
+    for(var i=0;i<this.len;i++){
+        this.parsed_obj=(eval(case_log.source_log)[i])
+        this.first_obj=(JSON.parse(String(this.parsed_obj)))
+        this.value_src.push(Object.values(this.first_obj))
+      }
+      console.log(this.value_src)
+      this.countcheck=true
+      this.nullcheck=true
+      this.datavalidation=false
+      this.datavalidation_pass=true
+      this.duplicate=true
+      this.ddlcheck=true
+
+    }
+  }
+  else if(test_name == 'DDLCheck')
+
+  {
+    this.countcheck=true
+    this.nullcheck=true
+    this.datavalidation=true
+    this.datavalidation_pass=true
+    this.duplicate=true
+    this.ddlcheck=false
+  }
+
+  const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
+    width: '1550px',
+    height:'550px',
+
+    data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
+      datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
+    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck:this.ddlcheck}
+   
+  });
+  dialogRef.afterClosed().subscribe(result => {
+    console.log( result)
+   });
+}
+
+
+}
+
+@Component({
+  selector: 'dialog-overview-example-startup-dialog',
+  templateUrl: 'dialog-overview-example-startup-dialog.html',
+})
+export class DialogOverviewExampleDialogstartup {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialogstartup>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }

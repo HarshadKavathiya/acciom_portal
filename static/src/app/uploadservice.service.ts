@@ -15,7 +15,7 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url='/api';
+  url='http://127.0.0.1:8000/api';
 
   constructor(private http:HttpClient) { }
   

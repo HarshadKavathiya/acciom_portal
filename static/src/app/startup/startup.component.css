@@ -151,6 +151,9 @@ background-image: linear-gradient(to bottom right, #8df714, #65911e);
     background-color:rgb(226, 90, 40)
 
   }
+  .myOwnBgOrange{
+      background-color: #F7861B;
+  }
   .yellow{
       background-color: yellow;
   }
