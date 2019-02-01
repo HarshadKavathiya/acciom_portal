@@ -1,0 +1,83 @@
+<head>
+    <style type="text/css">
+   .panel-body {
+        /* height:90%; width: 90%; */
+        
+        /* transform: rotate(90deg); */
+        max-height: 390px;
+            /* max-width:390px; */
+            overflow: scroll;
+        /* transform-origin: 188px 241px 0; */
+    }
+.close{
+   float:left;
+}
+    </style>
+</head>
+<div mat-dialog-actions class="close">
+    <button mat-button (click)="onNoClick()">Close</button>
+  </div>
+
+
+<div class="panel-body">
+<h1>Result</h1>
+<div mat-dialog-content  *ngIf="!data.countcheck">
+    <table cellspacing=12 border=1 >
+        <tr><th>Source Table</th>
+            <th>Target Table </th>
+        </tr>
+        <tr>
+            <td>{{data.source_log}}</td>
+            <td>{{data.destination_log}}</td>
+        </tr>
+    </table >
+  </div>
+  <div mat-dialog-content  *ngIf="!data.nullcheck">
+        <table>
+            <tr> <th>Target</th></tr>
+            <tr><td>{{data.destination_log}}</td></tr>
+        </table>
+      </div>
+
+  <div mat-dialog-content  *ngIf="!data.duplicate">
+        <table>
+            <tr> <th>Target Table </th></tr>
+            <tr>
+                <td>{{data.destination_log}}</td>
+            </tr>
+        </table>
+      </div>
+
+      <div mat-dialog-content  *ngIf="!data.datavalidation">
+
+          
+            <table >
+                    <tr cellspacing=2>
+                        <th *ngFor="let i of data.key_src">
+                            <div>{{i}}</div>
+                        </th>
+                    </tr>
+                <tr *ngFor="let y of data.value_src" cellspacing=2>
+                    <td *ngFor= "let z of y" cellspacing=2>
+                        <div>{{z}}</div>
+                    </td>
+                </tr>
+            </table>
+          </div>
+          <div mat-dialog-content  *ngIf="!data.datavalidation_pass">
+                <table>
+                    <tr> <th>Target</th></tr>
+                    <tr><td>None</td></tr>
+                </table>
+              </div>
+              <div mat-dialog-content  *ngIf="!data.ddlcheck">
+                    <table>
+                        <tr> <th>Target---ddlcheck</th></tr>
+                        <tr><td>None</td></tr>
+                    </table>
+                  </div>
+                  
+        </div>
+
+
+     

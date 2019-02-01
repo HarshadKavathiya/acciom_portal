@@ -1,0 +1,78 @@
+<app-navbarlogout></app-navbarlogout>
+<div  class="card">
+  <div class="form-group">
+    <mat-card class="for-form">
+   
+        <mat-progress-bar  mode="determinate" value="{{ prog }}"></mat-progress-bar>
+       
+
+            <br>
+            <br>
+            <mat-card-title>Upload Your File Here</mat-card-title>
+        <div class="container">
+            <mat-card-content><input type="file"  [(ngModel)]='filevalue' class="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"><br></mat-card-content>
+        </div>{{error}}<br>
+    </mat-card>
+    <div *ngIf="show">
+        <mat-card class="result-card">
+            <h2>Select The Page:</h2>
+           
+            <div *ngFor="let page of Pages">
+                <mat-radio-button  value="{{ page }}"
+                (change)="selectradio(page)">{{page}}</mat-radio-button><br><br>
+            </div>
+            <button mat-raised-button [disabled]="disable"  (click)="Next(selectedradio)">Next</button>
+         </mat-card>
+    </div>
+
+
+    <div *ngIf="show1">
+        
+        <mat-card class="result-card">
+            <p class="result">{{ msg }}</p>
+           
+           
+            <table *ngIf="show1" class="cright" cellspacing=12>
+                <div *ngIf="afterupload">
+                    <!-- edit this!!!!-->
+                        
+                <tr>
+                    <th>TestCase</th>
+                    <th>Check</th>
+                </tr>
+  
+               
+                   Select All <input id="checkid" type="checkbox" (change)="selectAll()" [checked]="selectedAll" style="float: left;"> 
+                    
+                 
+               
+                <tr *ngFor=" let case of all_cases" class="cright">
+
+                    <td >{{ case.name }}</td>
+
+                    <td>   <input class="form-check-input" 
+                    value="{{ case.name }}" 
+                    [(ngModel)]="case.selected" 
+                   
+                    type="checkbox" (change)="selectBadge($event, case.name)" >
+                    </td>
+                </tr>
+                </div><button mat-raised-button  class="uploadbtn" color="primary" [disabled]="disable2" (click)="OnClick(0)" >Upload</button> 
+                <button mat-raised-button color="primary" [disabled]="disable2" (click)="OnClick(1)" >Upload And Execute </button> 
+                <p>{{ result }}</p>
+                <div *ngIf="dis">
+                <h4>Test Cases To be Tested</h4>
+                </div>
+            </table>
+            <!-- <div *ngFor="let x of selectedValue "> {{ x.testCases }}</div> -->
+           
+        </mat-card>
+    </div>
+        
+ </div>     
+</div>
+
+
+
+
+

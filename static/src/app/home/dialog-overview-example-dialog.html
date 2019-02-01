@@ -1,0 +1,11 @@
+
+<div mat-dialog-content>
+  <p>Select Your Own Sheet Name?</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.suitename">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.suitename" cdkFocusInitial>Ok</button>
+</div>
