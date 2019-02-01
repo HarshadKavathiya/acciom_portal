@@ -35,9 +35,10 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
-CORS(app, origins="http://localhost:4200", allow_headers=[
-    "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
-     supports_credentials=True, intercept_exceptions=False)
+# CORS(app, origins="172.16.21.188", allow_headers=[
+#     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+#      supports_credentials=True, intercept_exceptions=False)
+CORS(app)
 
 
 @jwt.token_in_blacklist_loader
