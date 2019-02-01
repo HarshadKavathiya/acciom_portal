@@ -10,6 +10,7 @@ export interface DialogData {
   
   source_log: string;
   destination_countcheck:boolean;
+  countcheck:boolean;
   nullcheck:boolean;
   duplicate:boolean;
   datavalidation:boolean;log:string;
@@ -304,8 +305,8 @@ showlog(test_name,case_log){
   }
 
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
-    width: '1550px',
-    height:'550px',
+    width: '90%',
+    height:'90%',
 
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,

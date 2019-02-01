@@ -19,8 +19,8 @@ def source_db(src_db, src_db_type):
         return cnxn
     elif src_db_type == 'mysql':
         cnxn = pymysql.connect(host="localhost",
-                               user='root',
-                               password='Password1234',
+                               user='Acciom_user',
+                               password='Acciomuser',
                                db=src_db)
         return cnxn
     elif src_db_type == 'postgres':
@@ -42,8 +42,8 @@ def dest_db(target_db, dest_db_type):
         return cnxn
     elif dest_db_type == 'mysql':
         cnxn = pymysql.connect(host="localhost",
-                               user='root',
-                               password='Password1234',
+                               user='Acciom_user',
+                               password='Acciomuser',
                                db=target_db)
         return cnxn
     elif dest_db_type == 'postgres':

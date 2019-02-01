@@ -3,6 +3,7 @@
     color:white;
     display: flex;
     justify-content: flex-start;
+   /* flex-wrap:wrap-reverse; */
     font-family: 'Hammersmith One', sans-serif;
 
 
@@ -70,7 +71,8 @@ img {
 
 .dropdown {
    
-    margin-left:auto
+    margin-left:auto;
+    /* flex-wrap:wrap; */
 
 }
 

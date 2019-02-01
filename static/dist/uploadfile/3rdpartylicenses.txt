@@ -204,7 +204,7 @@ Apache-2.0
  
 
 
-@angular/core
+@angular/common
 MIT
 
 tslib
@@ -265,6 +265,12 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
+
+@angular/core
+MIT
+
+@angular/platform-browser
+MIT
 
 xlsx
 Apache-2.0
@@ -498,12 +504,6 @@ SOFTWARE.
 
 
 ng4-loading-spinner
-MIT
-
-@angular/common
-MIT
-
-@angular/platform-browser
 MIT
 
 @angular/router

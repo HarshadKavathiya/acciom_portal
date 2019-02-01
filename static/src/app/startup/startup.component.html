@@ -87,7 +87,7 @@
                       <td *ngIf="case_log.test_execution_status== 4">Error</td>
                       <td *ngIf="case_log.test_execution_status== 3">Waiting</td>
                       <td> {{ case_log.executed_at | date:'short' }}</td>
-                      <td><button mat-button (click)="showlog(each_test.test_name,case_log)"><i class="material-icons">
+                      <td><button  mat-button (click)="showlog(each_test.test_name,case_log)"><i class="material-icons">
                         dehaze
                         </i></button></td>
                     </tr>

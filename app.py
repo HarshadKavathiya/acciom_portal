@@ -19,7 +19,7 @@ from resources.user import UserRegistration, \
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = \
-            'mysql+pymysql://root:Password1234@localhost/Acciom_tool'
+            'mysql+pymysql://Acciom_user:Acciomuser@localhost/Acciom_tool'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # SECRET_KEY = "EiEiO"
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -78,9 +78,10 @@ api.add_resource(TokenRefresh, '/api/token/refresh')
 api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
 api.add_resource(DoTest, '/api/testdb/')
 api.add_resource(SparkJobStatus, '/api/spark-job-status/<int:spark_job_id>')
+db.init_app(app)
 if __name__ == '__main__':
 
-    db.init_app(app)
+
     #manager.run()
 
-    app.run(port=8000, debug=True)
+    app.run(host='0.0.0.0',port=8000, debug=True)

@@ -1,3 +1,25 @@
+<head>
+    <style type="text/css">
+   .panel-body {
+        /* height:90%; width: 90%; */
+        
+        /* transform: rotate(90deg); */
+        max-height: 390px;
+            /* max-width:390px; */
+            overflow: scroll;
+        /* transform-origin: 188px 241px 0; */
+    }
+.close{
+   float:left;
+}
+    </style>
+</head>
+<div mat-dialog-actions class="close">
+    <button mat-button (click)="onNoClick()">Close</button>
+  </div>
+
+
+<div class="panel-body">
 <h1>Result</h1>
 <div mat-dialog-content  *ngIf="!data.countcheck">
     <table cellspacing=12 border=1 >
@@ -54,7 +76,8 @@
                         <tr><td>None</td></tr>
                     </table>
                   </div>
+                  
+        </div>
 
-      <div mat-dialog-actions>
-            <button mat-button (click)="onNoClick()">Close</button>
-          </div>
+
+     
