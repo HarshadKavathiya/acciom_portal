@@ -18,6 +18,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
         result_diff2 = []
         result_diff3 = []
         res2 =""
+        result1=""
+        result2=""
+
         for row in cursor:
             data1.append(row)
             d1=dict(data1)
