@@ -71,9 +71,14 @@
                 </table>
               </div>
               <div mat-dialog-content  *ngIf="!data.ddlcheck">
-                    <table>
-                        <tr> <th>Target---ddlcheck</th></tr>
-                        <tr><td>None</td></tr>
+                    <table cellspacing=12 border=1 >
+                        <tr>
+                            <th>Source Table</th>
+                            <th>Target Table </th></tr>
+                        <tr>
+                            <td>{{data.source_log}}</td>
+                            <td>{{data.destination_log}}</td>
+                        </tr>
                     </table>
                   </div>
                   
