@@ -12,7 +12,7 @@ def source_db(src_db, src_db_type):
         server = 'localhost'
         database = src_db
         username = 'SA'
-        password = 'Password1234'
+        password = 'acciom_user@123'
         cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
                               ';SERVER='+server + ';DATABASE=' + database +
                               ';UID=' + username + ';PWD=' + password)
@@ -35,7 +35,7 @@ def dest_db(target_db, dest_db_type):
         server = 'localhost'
         database = target_db
         username = "SA"
-        password = 'Password1234'
+        password = 'acciom_user@123'
         cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
                               ';SERVER=' + server + ';DATABASE=' + database +
                               ';UID=' + username + ';PWD=' + password)
