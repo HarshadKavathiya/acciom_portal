@@ -14,7 +14,7 @@ def null_check(target_cursor, target_table):
                                 "des_value": des_value}
                     else:
                         return {"res": 1, "src_value": None,
-                                "des_value": "empty"}
+                                "des_value": "Null Values Does not Exist"}
 
         except Exception as e:
             print(e)

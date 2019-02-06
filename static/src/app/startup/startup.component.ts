@@ -67,6 +67,7 @@ export class StartupComponent implements OnInit {
   nullcheck:boolean=true;
   duplicate:boolean=true;
   datavalidation_pass:boolean=true;
+  ddlcheck_pass:boolean=true;
   datavalidation:boolean=true;
   ddlcheck:boolean=true;
   keys_src=[]
@@ -238,6 +239,7 @@ showlog(test_name,case_log){
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=true
   }
@@ -246,6 +248,7 @@ showlog(test_name,case_log){
     this.nullcheck=false
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=true
   }
@@ -254,6 +257,7 @@ showlog(test_name,case_log){
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=false
     this.ddlcheck=true
 
@@ -266,6 +270,7 @@ showlog(test_name,case_log){
       this.nullcheck=true
       this.datavalidation=true
       this.datavalidation_pass=false
+      this.ddlcheck_pass=true
       this.duplicate=true
       this.ddlcheck=true
     }
@@ -288,21 +293,45 @@ showlog(test_name,case_log){
       this.nullcheck=true
       this.datavalidation=false
       this.datavalidation_pass=true
+      this.ddlcheck_pass=true
       this.duplicate=true
       this.ddlcheck=true
 
     }
   }
-  else if(test_name == 'DDLCheck')
-
-  {
+  else if(test_name == 'DDLCheck'){
+  
+   if(case_log.source_log=='none1')
+    {
+      this.countcheck=true
+      this.nullcheck=true
+      this.datavalidation=true
+      this.datavalidation_pass=true
+      this.ddlcheck_pass=false
+      this.duplicate=true
+      this.ddlcheck=true
+    }
+   else if(case_log.destination_log=='none1')
+    {
+      this.countcheck=true
+      this.nullcheck=true
+      this.datavalidation=true
+      this.datavalidation_pass=true
+      this.ddlcheck_pass=false
+      this.duplicate=true
+      this.ddlcheck=true
+    }
+   else {
     this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=false
+   }
   }
+  
 
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     width: '90%',
@@ -310,7 +339,7 @@ showlog(test_name,case_log){
 
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
-    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck:this.ddlcheck}
+    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck}
    
   });
   dialogRef.afterClosed().subscribe(result => {

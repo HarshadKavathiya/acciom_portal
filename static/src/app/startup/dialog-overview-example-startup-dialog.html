@@ -23,8 +23,8 @@
 <h1>Result</h1>
 <div mat-dialog-content  *ngIf="!data.countcheck">
     <table cellspacing=12 border=1 >
-        <tr><th>Source Table</th>
-            <th>Target Table </th>
+        <tr><th>Source Table Count</th>
+            <th>Target Table Count</th>
         </tr>
         <tr>
             <td>{{data.source_log}}</td>
@@ -70,7 +70,8 @@
                     <tr><td>No Different Data</td></tr>
                 </table>
               </div>
-              <div mat-dialog-content  *ngIf="!data.ddlcheck">
+            <div mat-dialog-content  *ngIf="!data.ddlcheck">
+                    <h2>source and target scheme does not matches</h2>
                     <table cellspacing=12 border=1 >
                         <tr>
                             <th>Source Table</th>
@@ -80,7 +81,14 @@
                             <td>{{data.destination_log}}</td>
                         </tr>
                     </table>
+            </div>
+            <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
+                    
+                        
+                        <th>source and target matches</th>
+                    
                   </div>
+           
                   
         </div>
 
