@@ -15,6 +15,7 @@ export interface DialogData {
   duplicate:boolean;
   datavalidation:boolean;log:string;
   datavalidation_pass:boolean;
+  ddlcheck_pass:boolean;
   ddlcheck:boolean;
   key_src:Array<any>;
   value_src:Array<any>;
