@@ -67,8 +67,9 @@
           <div mat-dialog-content  *ngIf="!data.datavalidation_pass">
                 <table>
                     <tr> <th>Target</th></tr>
-                    <tr><td>No Different Data</td></tr>
+                    <tr><td>None</td></tr>
                 </table>
+                
               </div>
             <div mat-dialog-content  *ngIf="!data.ddlcheck">
                     <h2>source and target scheme does not matches</h2>
@@ -82,12 +83,12 @@
                         </tr>
                     </table>
             </div>
-            <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
+            <!-- <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
                     
                         
                         <th>source and target matches</th>
                     
-                  </div>
+                  </div> -->
            
                   
         </div>
