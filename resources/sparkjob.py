@@ -25,7 +25,8 @@ def my_multi_process_job(spark_job_id, result_count, job_result):
         result = requests.get('http://127.0.0.1:8998/batches/{0}'.format(spark_job.job_id))
         if result.ok:
             res = result.json()
-            if res["state"] == "success" or res["state"] == "fail":
+            # if res["state"] == "success" or res["state"] == "fail":
+            if res["state"] == "starting":
                     spark_job.status = res['state']
                     spark_job.save_to_db()
                     print("primary key of testcaselog:", spark_job.test_case_log_id)
