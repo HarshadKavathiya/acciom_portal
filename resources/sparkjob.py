@@ -26,6 +26,7 @@ def my_multi_process_job(spark_job_id, result_count, job_result):
         if result.ok:
             res = result.json()
             # if res["state"] == "success" or res["state"] == "fail":
+            # if res["state"] == "starting":
             if res["state"] == "starting":
                     spark_job.status = res['state']
                     spark_job.save_to_db()
