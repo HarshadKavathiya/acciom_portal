@@ -1,16 +1,15 @@
 import time
-from models.user import SparkJob
 
 import requests
 
+from models.user import SparkJob
 from models.user import TestCaseLog, TestCase
 from utils.countcheck import count_check
 from utils.dbconnect import source_db, dest_db
+from utils.ddlcheck import ddl_check
 from utils.duplication import duplication
 from utils.nullcheck import null_check
-from utils.ddlcheck import ddl_check
-import sqlalchemy
-from resources.sparkjob import SparkJobStatus
+
 
 def split_table(table_name):
     """
@@ -72,6 +71,20 @@ def run_by_case_id(test_case_id):
     return True
 
 
+def get_count(src_db, src_tables, src_db_type, target_db, target_table, target_db_type):
+    source_cursor = source_db(src_db, src_db_type).cursor()
+    target_cursor = dest_db(target_db, target_db_type).cursor()
+    source_cursor.execute('SELECT COUNT(*) FROM {}'.format(src_tables))
+    target_cursor.execute('SELECT COUNT(*) FROM {}'.format(target_table))
+    for row in source_cursor:
+        for x in row:
+            pass
+    for row in target_cursor:
+        for y in row:
+            pass
+    return max(x, y)
+
+
 def run_test(case_id):
     """
     :param case_id: case_id is test_case_id
@@ -103,37 +116,49 @@ def run_test(case_id):
             result = duplication(target_cursor=target_cursor,
                                  target_table=table_name[0][1])
         if case_id.test_name == 'Datavalidation':
+            dbmysql_user_name = 'Acciom_user'
+            dbmysql_user_password = 'Acciomuser'
+            dbsql_user_name = 'SA'
+            dbsql_user_password = 'acciom_user@123'
             db_type = split_db(case_id.test_detail)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            print(db_type)
             table_name = split_table(case_id.table_src_target)
             print(table_name)
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
-            # r = datavalidation(db_type[1][1:],db_type[3][1:])
-            spark_job=SparkJob()
+            print(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1], db_type[3][1:])
+            row_count = get_count(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
+                                  db_type[3][1:])
+            print("row count", row_count)
+            if row_count < 10000:
+                limit = 10000
+            elif row_count > 10000 and row_count < 100000:
+                limit = 50000
+            else:
 
+                limit = 200000
+            spark_job = SparkJob()
             spark_job.save_to_db()
-            spark_job.test_case_log_id=case_log.test_case_log_id
+            spark_job.test_case_log_id = case_log.test_case_log_id
             spark_job.save_to_db()
+            print(row_count)
+            print(limit)
             print("primary key", spark_job.spark_job_id)
-            payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar"], "args": [db_type[0][1:], table_name[0][0], db_type[1][1:], table_name[0][1], spark_job.spark_job_id]})
+            payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar", "/sqljdbc42.jar"],
+                            "args": [db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
+                                     db_type[3][1:], spark_job.spark_job_id, row_count,
+                                     limit, dbmysql_user_name, dbmysql_user_password,
+                                     dbsql_user_name, dbsql_user_password]})
             r = requests.post('http://127.0.0.1:8998/batches', json=payload)
             res = {}
             res = r.json()
             print(res['id'])
             print(res['state'])
-            spark_job.job_id=res['id']
-            spark_job.status=res['state']
+            spark_job.job_id = res['id']
+            spark_job.status = res['state']
             spark_job.save_to_db()
-            # temp=SparkJob(job_id=res['id'],status=res['state'])
-            # temp.save_to_db()
             time.sleep(2)
-            #result = requests.get('http://127.0.0.1:8998/batches/{0}'.format(res['id']))
-            #print(result.json()['log'])
-            #res = SparkJobStatus.get()
             result = {'res': 3, "src_value": "none", "des_value": "none"}
-
 
         if case_id.test_name == 'DDLCheck':
             db_type = split_db(case_id.test_detail)
@@ -145,15 +170,13 @@ def run_test(case_id):
             result = ddl_check(source_cursor, target_cursor, table_name[0][0], table_name[0][1])
 
         if result['res'] == 1:
-            save_test_status(case_id, 1)# TestCase object.
+            save_test_status(case_id, 1)  # TestCase object.
             case_log.execution_status = 1
             case_log.src_execution_log = result['src_value']
             case_log.des_execution_log = result['des_value']
             case_log.error_log = None
             case_log.save_to_db()
-            # save_case_log(case_id.test_case_id,
-            #               case_id.test_status, result['src_value'],
-            #               result['des_value'], None)
+
         elif result['res'] == 3:
             save_test_status(case_id, 3)  # TestCase object.
             case_log.execution_status = 3
@@ -177,7 +200,6 @@ def run_test(case_id):
             case_log.des_execution_log = result['des_value']
             case_log.error_log = None
             case_log.save_to_db()
-
 
     return True
 

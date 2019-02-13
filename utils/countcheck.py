@@ -1,4 +1,3 @@
-
 arr = []
 
 
@@ -6,6 +5,7 @@ def count_check(source_cursor, target_cursor, source_table, target_table):
     try:
         cursor = source_cursor
         cursor.execute('SELECT COUNT(*) FROM {}'.format(source_table))
+
         for row in cursor:
             for src_count in row:
                 pass
