@@ -149,7 +149,7 @@ def run_test(case_id):
                                      db_type[3][1:], spark_job.spark_job_id, row_count,
                                      limit, dbmysql_user_name, dbmysql_user_password,
                                      dbsql_user_name, dbsql_user_password]})
-            r = requests.post('http://127.0.0.1:8998/batches', json=payload)
+            r = requests.post('http://172.16.21.188:8998/batches', json=payload)
             res = {}
             res = r.json()
             print(res['id'])
