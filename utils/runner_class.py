@@ -101,7 +101,7 @@ def run_test(case_id):
             result = count_check(source_cursor,
                                  target_cursor,
                                  table_name[0][0],
-                                 table_name[0][1])
+                                 table_name[0][1], case_id.test_queries)
 
         if case_id.test_name == 'NullCheck':  # 2nd Test
             db_type = split_db(case_id.test_detail)
@@ -123,13 +123,11 @@ def run_test(case_id):
             db_type = split_db(case_id.test_detail)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
-            print(table_name)
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
             print(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1], db_type[3][1:])
             row_count = get_count(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
                                   db_type[3][1:])
-            print("row count", row_count)
             if row_count < 10000:
                 limit = 10000
             elif row_count > 10000 and row_count < 100000:
@@ -141,10 +139,9 @@ def run_test(case_id):
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
             spark_job.save_to_db()
-            print(row_count)
-            print(limit)
-            print("primary key", spark_job.spark_job_id)
             payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar", "/sqljdbc42.jar"],
+                            "driverMemory": "13G",
+                            "executorMemory": "11G",
                             "args": [db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
                                      db_type[3][1:], spark_job.spark_job_id, row_count,
                                      limit, dbmysql_user_name, dbmysql_user_password,
@@ -152,8 +149,6 @@ def run_test(case_id):
             r = requests.post('http://172.16.21.188:8998/batches', json=payload)
             res = {}
             res = r.json()
-            print(res['id'])
-            print(res['state'])
             spark_job.job_id = res['id']
             spark_job.status = res['state']
             spark_job.save_to_db()
@@ -162,9 +157,7 @@ def run_test(case_id):
 
         if case_id.test_name == 'DDLCheck':
             db_type = split_db(case_id.test_detail)
-            print(db_type)
             table_name = split_table(case_id.table_src_target)
-            print(table_name)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
             result = ddl_check(source_cursor, target_cursor, table_name[0][0], table_name[0][1])
