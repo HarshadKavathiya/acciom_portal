@@ -16,6 +16,7 @@
 </head>
 <div mat-dialog-actions class="close">
     <button mat-button (click)="onNoClick()">Close</button>
+    <button mat-button (click)="onexport(data.case_log_id) ">Export Excel</button>
   </div>
 
 
@@ -66,6 +67,7 @@
           </div>
           <div mat-dialog-content  *ngIf="!data.datavalidation_pass">
                 <table>
+                    <!-- <h2>SOurce And Destination Table are same</h2> -->
                     <tr> <th>Target</th></tr>
                     <tr><td>None</td></tr>
                 </table>

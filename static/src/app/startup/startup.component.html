@@ -3,14 +3,16 @@
 <mat-card class="card">
   <h1 class="heading">Get Started</h1>
   <button  [color]="'success'" (click)="ToHome()" mat-button>Upload Your File</button>
-  <!-- <button [disabled]=true [color]="'success1'"  mat-button>Update DB Credetials</button> -->
 <div  class="droppanel">
   
   <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
     <mat-expansion-panel class="dropdown" 
-    (opened)="yellow = true"
+    (opened)="suitestatusopen(x)"
+    (closed)="suitestatusclose(x)"
+    [expanded]="checkstatus(x)"
     >
-      <mat-expansion-panel-header>
+    <!-- [expanded]="true" -->
+      <mat-expansion-panel-header   > <!-- aria-expanded="true"   TODO:-->
         <mat-panel-title *ngIf="i.test_suite_name !='undefined'"  class="panel_title"> <!-- TODO: USE *ngIf-->
         {{i.test_suite_name}}
         </mat-panel-title>

@@ -136,6 +136,7 @@ class TestSuite(db.Model):
     def return_all(cls, user_id):
         def test_log_to_json(x):
             return {
+                'test_case_log_id':x.test_case_log_id,
                 'test_case_id': x.test_case_id,
                 'test_execution_status': x.execution_status,
                 'source_log': x.src_execution_log,

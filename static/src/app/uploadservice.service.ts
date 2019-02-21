@@ -15,7 +15,7 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url='/api';
+  url='http://0.0.0.0:8000/api';
 
   constructor(private http:HttpClient) { }
   
@@ -131,6 +131,15 @@ export class UploadserviceService {
     return this.http.post<any>(`${this.url}/testdb/`,run,{headers:headers});
   }
 
+  exportinexcel(case_log_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/toexcel/${case_log_id}`,{headers:headers})
+  }
 
 
 

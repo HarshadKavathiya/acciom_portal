@@ -1,8 +1,10 @@
 import pyodbc
-# from db import db
-import pymysql
+
 #  import os
 import psycopg2
+# from db import db
+import pymysql
+
 
 # TODO: DO THE CONNECTION FOR DIFFRENT DARTABASES.
 
@@ -12,15 +14,15 @@ def source_db(src_db, src_db_type):
         server = 'localhost'
         database = src_db
         username = 'SA'
-        password = 'acciom_user@123'
+        password = 'Password1234'
         cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
-                              ';SERVER='+server + ';DATABASE=' + database +
+                              ';SERVER=' + server + ';DATABASE=' + database +
                               ';UID=' + username + ';PWD=' + password)
         return cnxn
     elif src_db_type == 'mysql':
         cnxn = pymysql.connect(host="localhost",
-                               user='Acciom_user',
-                               password='Acciomuser',
+                               user='root',
+                               password='Password1234',
                                db=src_db)
         return cnxn
     elif src_db_type == 'postgres':
@@ -35,15 +37,15 @@ def dest_db(target_db, dest_db_type):
         server = 'localhost'
         database = target_db
         username = "SA"
-        password = 'acciom_user@123'
+        password = 'Password1234'
         cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
                               ';SERVER=' + server + ';DATABASE=' + database +
                               ';UID=' + username + ';PWD=' + password)
         return cnxn
     elif dest_db_type == 'mysql':
         cnxn = pymysql.connect(host="localhost",
-                               user='Acciom_user',
-                               password='Acciomuser',
+                               user='root',
+                               password='Password1234',
                                db=target_db)
         return cnxn
     elif dest_db_type == 'postgres':

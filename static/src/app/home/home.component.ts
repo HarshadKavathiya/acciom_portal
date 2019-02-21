@@ -191,7 +191,10 @@ return true;
 
  }
 
+ closed(){
+  this.router.navigate(['/startup'])
 
+}
  testselect(){
    console.log('trueeeee')
    this.dis=true

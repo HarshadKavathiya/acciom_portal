@@ -1,9 +1,13 @@
 from flask_restful import Resource, reqparse
 from flask import request
-from models.user import TestSuite, TestCase
+from models.user import TestSuite, TestCase, TestCaseLog
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from openpyxl import load_workbook
+from openpyxl import load_workbook,Workbook
 from io import BytesIO
+import json
+from flask import Response
+
+import openpyxl
 # from celery_task import my_background_task
 from utils.runner_class import run_by_case_id
 
@@ -30,22 +34,16 @@ class Upload(Resource):
         selected_case = data['selectedcase']
         file = request.files['inputFile']
         suite_name = data['suitename']
-        print(suite_name)
-        print("execution value", data['exvalue'])
         user_id = get_jwt_identity()
-        print(user_id)
         temp_file = TestSuite(user_id=user_id,
                               excel_name=file.filename,
                               test_suite_name=suite_name)
 
         temp_file.save_to_db()
-        print(temp_file.test_suite_id)
-
-        print(selected_case,  sheet)
         wb = load_workbook(filename=BytesIO(file.read()))
+        print("wb is",wb)
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
-        # print(ws)
         temp_test = [[str(ws[x][0].value)
                       for x in range(2, ws.max_row+1)]]
         # from column 2nd
@@ -81,7 +79,6 @@ class Upload(Resource):
 
         if int(data['exvalue']) == 1:
             # my_background_task.apply_async(countdown=15)
-            print(temp.test_suite_id)
             test_suite = TestSuite.query.filter_by(
                 test_suite_id=temp.test_suite_id).first()
             for each_test in test_suite.test_case:
@@ -93,6 +90,24 @@ class Upload(Resource):
 class GetUpload(Resource):
     def get(self, user_id):
         # print(TestSuite.return_all(user_id))
-
+        # something new is added then only true??
         return {"suites": TestSuite.return_all(user_id),
                 "success": True}
+
+class LogExport(Resource):
+    def get(self,case_log_id):
+        print(case_log_id)
+        case_log = TestCaseLog.query.filter_by(test_case_log_id=case_log_id).first()
+        test_case = case_log.test_cases
+        print(test_case.test_name)
+        if test_case.test_name == 'DuplicateCheck' or 'NullCheck':
+            print(type(case_log.des_execution_log))
+        log=json.loads(case_log.des_execution_log)
+        book = Workbook()
+        sheet = book.active
+        rows=log
+        for row in rows:
+            sheet.append(row)
+        book.save("/home/roja/Desktop/{0}{1}.xlsx".format(test_case.test_name,case_log_id))
+        # return Response(,mimetype=)
+

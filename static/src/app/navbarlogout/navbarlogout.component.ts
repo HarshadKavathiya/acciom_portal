@@ -27,5 +27,6 @@ export class NavbarlogoutComponent implements OnInit {
   Userdetail(){
     this.router.navigate(['/user'])
   }
+  
 
 }

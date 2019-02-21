@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup, Validators } from '@angular/forms'
 import {UploadserviceService} from '../uploadservice.service';
 import { Routes, RouterModule, Router } from '@angular/router';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -31,16 +32,26 @@ export class LoginComponent implements OnInit {
   LogIn()
 {
   console.log(this.createForm.value);
-  this.fileUploadService.authenticateUser(this.createForm.value).subscribe(data => {
-    if(data.success){
+  this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
+    if(data.success==true){
+      Swal("success",data.message,"success")
+
       console.log(data.expires_time)
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
+    }
+  //   else{
+  //     console.log(error.success)
+  //     console.log(data.message)
+  //     //Swal("error.success",data.message,"success")
+  // }
 
-    }else{
    
-   }
- });
+ },err=>{
+   console.log(err.success)
+   Swal("error",err.error.message,"error")
+  
+  });
 
 
 }

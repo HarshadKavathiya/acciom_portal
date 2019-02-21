@@ -9,6 +9,7 @@ from utils.dbconnect import source_db, dest_db
 from utils.ddlcheck import ddl_check
 from utils.duplication import duplication
 from utils.nullcheck import null_check
+from flask import current_app as app
 
 
 def split_table(table_name):
@@ -51,13 +52,17 @@ def save_test_status(test_case_id, status):
 def split_db(test_db_detail):
     lst1 = []
     lst2 = []
+
     strip_db_detail = test_db_detail.strip("@'").split("'@")
+
     for i in range(len(strip_db_detail)):
         lst1.append(strip_db_detail[i].split(':'))
+
     lst2.append(lst1[2][1].strip('\n'))
     lst2.append(lst1[4][1].strip('\n'))
     lst2.append(lst1[0][1].strip('\n'))
     lst2.append(lst1[3][1].strip('\n'))
+
     return lst2
 
 
@@ -92,8 +97,10 @@ def run_test(case_id):
     """
     save_test_status(case_id, 3)
     case_log = save_case_log(case_id.test_case_id, None, None, None, None)
+
     if case_id.test_status == 3:
         if case_id.test_name == 'CountCheck':  # 1st Test
+            app.logger.debug("count check start")
             db_type = split_db(case_id.test_detail)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
@@ -104,20 +111,22 @@ def run_test(case_id):
                                  table_name[0][1], case_id.test_queries)
 
         if case_id.test_name == 'NullCheck':  # 2nd Test
+            app.logger.debug("Null check start")
             db_type = split_db(case_id.test_detail)
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
-            result = null_check(target_cursor, table_name[0][1])
+            result = null_check(target_cursor, table_name[0][1], case_id.test_column, case_id.test_queries)
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
+            app.logger.debug("Duplicate check start")
             db_type = split_db(case_id.test_detail)
             target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
             result = duplication(target_cursor=target_cursor,
-                                 target_table=table_name[0][1])
+                                 target_table=table_name[0][1], column_name=case_id.test_column, test_queries=case_id.test_queries)
         if case_id.test_name == 'Datavalidation':
-            dbmysql_user_name = 'Acciom_user'
-            dbmysql_user_password = 'Acciomuser'
+            dbmysql_user_name = 'root' #TODO:change while tupload
+            dbmysql_user_password = 'Password1234'
             dbsql_user_name = 'SA'
             dbsql_user_password = 'acciom_user@123'
             db_type = split_db(case_id.test_detail)
@@ -128,25 +137,23 @@ def run_test(case_id):
             print(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1], db_type[3][1:])
             row_count = get_count(db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
                                   db_type[3][1:])
+            print(row_count)
             if row_count < 10000:
                 limit = 10000
             elif row_count > 10000 and row_count < 100000:
                 limit = 50000
             else:
-
                 limit = 200000
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
-            spark_job.save_to_db()
+            spark_job.save_to_db()#TODO:add memory (executor_memory) while upload.
             payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar", "/sqljdbc42.jar"],
-                            "driverMemory": "13G",
-                            "executorMemory": "11G",
                             "args": [db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
                                      db_type[3][1:], spark_job.spark_job_id, row_count,
                                      limit, dbmysql_user_name, dbmysql_user_password,
                                      dbsql_user_name, dbsql_user_password]})
-            r = requests.post('http://172.16.21.188:8998/batches', json=payload)
+            r = requests.post('http://127.0.0.1:8998/batches', json=payload) #TODO:CHange while push
             res = {}
             res = r.json()
             spark_job.job_id = res['id']
@@ -156,6 +163,7 @@ def run_test(case_id):
             result = {'res': 3, "src_value": "none", "des_value": "none"}
 
         if case_id.test_name == 'DDLCheck':
+            app.logger.info("DDL Check start")
             db_type = split_db(case_id.test_detail)
             table_name = split_table(case_id.table_src_target)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
@@ -199,3 +207,4 @@ def run_test(case_id):
 # ToNote:
 # status = {0: "new", 1: "pass", 2: "fail", 3: "in progress", 4: "error"}
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
+# select column_name from information_schema.columns where table_name='Inventory';
