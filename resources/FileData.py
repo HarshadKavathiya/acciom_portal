@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
-from flask import request
+from flask import request,send_file
 from models.user import TestSuite, TestCase, TestCaseLog
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from openpyxl import load_workbook,Workbook
+from openpyxl import load_workbook, Workbook
 from io import BytesIO
 import json
 from flask import Response
@@ -94,20 +94,26 @@ class GetUpload(Resource):
         return {"suites": TestSuite.return_all(user_id),
                 "success": True}
 
+
 class LogExport(Resource):
-    def get(self,case_log_id):
+    def get(self, case_log_id):
         print(case_log_id)
         case_log = TestCaseLog.query.filter_by(test_case_log_id=case_log_id).first()
         test_case = case_log.test_cases
         print(test_case.test_name)
         if test_case.test_name == 'DuplicateCheck' or 'NullCheck':
             print(type(case_log.des_execution_log))
-        log=json.loads(case_log.des_execution_log)
+        log = json.loads(case_log.des_execution_log)
+        print("logs @107", type(log))
         book = Workbook()
         sheet = book.active
-        rows=log
-        for row in rows:
-            sheet.append(row)
-        book.save("/home/roja/Desktop/{0}{1}.xlsx".format(test_case.test_name,case_log_id))
-        # return Response(,mimetype=)
-
+        rows = log
+        print(book.sheetnames)
+        # def generate():
+        #     for row in rows:
+        #         lst.append(row)
+        # print(lst)
+        # book.save("/home/akhil/Desktop/{0}{1}.xlsx".format(test_case.test_name, case_log_id))
+        return Response(json.dumps(log), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        headers={"Content-disposition":
+                                     "attachment;"})

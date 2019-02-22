@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect'
+import { ExcelService } from './services/excel.service';
 
 import {MatCardModule} from '@angular/material/card';
 import { AppRoutingModule } from './app-routing.module';
@@ -81,7 +82,7 @@ import { UserdetailComponent } from './userdetail/userdetail.component';
     MatProgressSpinnerModule,
     Ng4LoadingSpinnerModule.forRoot()
   ],
-  providers: [UploadserviceService,CanDeactivateGuard],
+  providers: [UploadserviceService,CanDeactivateGuard,ExcelService],
   bootstrap: [AppComponent],
   entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup]
 

@@ -25,8 +25,6 @@ export class LoginComponent implements OnInit {
      if((this.fileUploadService.loggedIn())) {
      this.router.navigate(['home'])
      }
-    
-  
 }
 
   LogIn()
@@ -40,11 +38,6 @@ export class LoginComponent implements OnInit {
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }
-  //   else{
-  //     console.log(error.success)
-  //     console.log(data.message)
-  //     //Swal("error.success",data.message,"success")
-  // }
 
    
  },err=>{

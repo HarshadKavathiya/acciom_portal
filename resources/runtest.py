@@ -5,10 +5,11 @@ from flask_restful import Resource, reqparse
 
 from models.user import TestSuite
 from utils.runner_class import run_by_case_id
-
+from utils.Response import error, success
 parser = reqparse.RequestParser()
 parser.add_argument('suite_id', type=int)
 parser.add_argument('case_id', type=int)
+
 
 
 class DoTest(Resource):
@@ -16,8 +17,6 @@ class DoTest(Resource):
     def post(self):
         try:
             data = parser.parse_args()
-            print("data =  ", data)
-            print(data['suite_id'])
             if data['suite_id']:
                 time.sleep(1)
                 test_suite = TestSuite.query.filter_by(
@@ -26,12 +25,12 @@ class DoTest(Resource):
                     # my_background_task.delay(each_test.test_case_id)
                     # TODO:CELERY PART.
                     run_by_case_id(each_test.test_case_id)
-                return {"success": True}
+                return success({"success": True})
             else:
                 time.sleep(1)
                 # my_background_task.delay(data['case_id'])
                 run_by_case_id(data['case_id'])
-                return {"success": True}
+                return success({"success": True})
         except Exception as e:
             print(e)
-            return {"success":False, "msg":"could not conenct"}
+            return error({"success": False, "msg": str(e)})

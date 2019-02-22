@@ -138,7 +138,7 @@ export class UploadserviceService {
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
     })
-    return this.http.get<any>(`${this.url}/toexcel/${case_log_id}`,{headers:headers})
+    return this.http.get<any>(`${this.url}/toexcel/${case_log_id}/`,{headers:headers})
   }
 
 

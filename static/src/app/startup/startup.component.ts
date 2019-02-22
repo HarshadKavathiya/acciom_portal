@@ -4,6 +4,9 @@ import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
 import {trigger,state,style,transition,animate  } from '@angular/animations'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import {ExcelService} from '../services/excel.service';
+
 
 export interface DialogData {
   
@@ -159,7 +162,9 @@ export class StartupComponent implements OnInit {
     this.playButtons[x]=!this.playButtons[x]
     this.fileUploadService.ExecuteTestbySuiteId(test_Suite_id).subscribe(data=>{
       if(data.success)
-      {         this.starttimer();
+
+      {   this.Initialize();
+              this.starttimer();
 
         // this.spinnerService.hide();       
         this.playButtons[x]=!this.playButtons[x]
@@ -169,7 +174,8 @@ export class StartupComponent implements OnInit {
   
       }
       else{
-      this.Initialize()
+        this.Initialize();
+        this.starttimer();
         Swal("error","Something went wrong","error")
 
       }
@@ -192,11 +198,13 @@ export class StartupComponent implements OnInit {
         Swal("Success","Test Done Succesfully","success")
   
       }
-      else{
-        this.Initialize();
-        Swal("error","Something went wrong","error")
+      
+      
+    },err=>{
+      this.Initialize();
+      this.starttimer();
+      Swal("error",err.error.msg,"error")
 
-      }
     })
   }
 
@@ -368,6 +376,7 @@ showlog(test_name,case_log){
 export class DialogOverviewExampleDialogstartup {
 
   constructor( private fileUploadService:UploadserviceService,
+    private excelService:ExcelService,
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogstartup>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
@@ -376,10 +385,15 @@ export class DialogOverviewExampleDialogstartup {
   }
 
   onexport(case_log_id){
-    console.log(case_log_id)
     this.fileUploadService.exportinexcel(case_log_id).subscribe(data=>{
       console.log("nothing")
+
+      console.log(data)
+      this.excelService.exportAsExcelFile(data, 'sample');
+
+
   },err=>{
+    console.log(err)
     
   })
 }
