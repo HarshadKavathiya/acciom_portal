@@ -73,7 +73,7 @@ api.add_resource(TokenRefresh, '/api/token/refresh')
 api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
 api.add_resource(DoTest, '/api/testdb/')
 api.add_resource(SparkJobStatus, '/api/spark-job-status/<int:spark_job_id>')
-api.add_resource(LogExport,'/api/toexcel/<int:case_log_id>')
+api.add_resource(LogExport, '/api/toexcel/<int:case_log_id>/')
 db.init_app(app)
 
 levels = {"DEBUG": logging.DEBUG,

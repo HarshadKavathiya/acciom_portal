@@ -1,6 +1,6 @@
-from logger import set_up_logging
+# from logger import set_up_logging
 from utils.Response import success, standard_response, error
-logger = set_up_logging()
+# logger = set_up_logging()
 
 
 def null_check(target_cursor, target_table, column, test_queries):

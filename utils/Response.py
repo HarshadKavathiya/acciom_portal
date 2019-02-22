@@ -18,6 +18,7 @@ def error(error):
     payload = error
     return payload, STATUS_SERVER_ERROR
 
+
 def input_error(error):
     return error, STATUS_BAD_REQUEST
 

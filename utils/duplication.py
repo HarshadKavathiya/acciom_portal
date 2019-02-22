@@ -1,5 +1,5 @@
-from logger import set_up_logging
-logger = set_up_logging()
+#from logger import set_up_logging
+#logger = set_up_logging()
 
 def duplication(target_cursor, target_table,column_name, test_queries):
         try:

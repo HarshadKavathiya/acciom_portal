@@ -32,7 +32,7 @@ def count_check(source_cursor, target_cursor, source_table, target_table, test_q
         for row in target_cursor:
             for target_count in row:
                 pass
-        print(src_count,target_count)
+        print(src_count, target_count)
         if src_count == target_count:
             payload["res"] = 1
             payload["src_value"]=src_count
@@ -40,13 +40,13 @@ def count_check(source_cursor, target_cursor, source_table, target_table, test_q
             app.logger.info("count check sucess")
         else:
             payload["res"] = 0
-            payload["src_value"]=src_count
-            payload["des_value"]=target_count
+            payload["src_value"] = src_count
+            payload["des_value"] = target_count
             app.logger.info("count check fail")
     except Exception as e:
         app.logger.error(e)
-        print(e)
-        return {"res": 2, "src_value": None, "des_value": None}
+        print("line@48", e)
+        return {"res": 2, "src_value": str(e), "des_value": str(e)}
     print(payload)
 
     return payload
