@@ -125,8 +125,8 @@ def run_test(case_id):
             result = duplication(target_cursor=target_cursor,
                                  target_table=table_name[0][1], column_name=case_id.test_column, test_queries=case_id.test_queries)
         if case_id.test_name == 'Datavalidation':
-            dbmysql_user_name = 'root' #TODO:change while tupload
-            dbmysql_user_password = 'Password1234'
+            dbmysql_user_name = 'Acciom_user' #TODO:change while tupload
+            dbmysql_user_password = 'Acciomuser'
             dbsql_user_name = 'SA'
             dbsql_user_password = 'acciom_user@123'
             db_type = split_db(case_id.test_detail)
@@ -149,11 +149,13 @@ def run_test(case_id):
             spark_job.test_case_log_id = case_log.test_case_log_id
             spark_job.save_to_db()#TODO:add memory (executor_memory) while upload.
             payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar", "/sqljdbc42.jar"],
+                            "driverMemory": "13G",
+                            "executorMemory": "11G",
                             "args": [db_type[0][1:], table_name[0][0], db_type[2][1:], db_type[1][1:], table_name[0][1],
                                      db_type[3][1:], spark_job.spark_job_id, row_count,
                                      limit, dbmysql_user_name, dbmysql_user_password,
                                      dbsql_user_name, dbsql_user_password]})
-            r = requests.post('http://127.0.0.1:8998/batches', json=payload) #TODO:CHange while push
+            r = requests.post('http://172.16.21.188:8998/batches', json=payload) #TODO:CHange while push
             res = {}
             res = r.json()
             spark_job.job_id = res['id']
