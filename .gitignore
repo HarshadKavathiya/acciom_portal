@@ -104,3 +104,4 @@ venv.bak/
 static/node_modules
 migrations
 logs
+.idea
