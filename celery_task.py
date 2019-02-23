@@ -24,7 +24,9 @@ def make_celery(app):
 
 
 flask_app = Flask(__name__)
-flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+flask_app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Acciom_user:Acciomuser' \
+                                 '@localhost/Acciom_tool'
 flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 flask_app.secret_key = 'EiEiO'
 flask_app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'

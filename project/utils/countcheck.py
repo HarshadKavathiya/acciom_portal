@@ -1,12 +1,10 @@
-#
-# from flask import Flask
-# app = Flask(__name__)
-arr = []
 from flask import current_app as app
 
+arr = []
 
-def count_check(source_cursor, target_cursor, source_table, target_table,
-                test_query):
+
+def count_check(source_cursor, target_cursor, source_table,
+                target_table, test_query):
     payload = {"res": None, "src_value": None,
                "des_value": None}
     try:
