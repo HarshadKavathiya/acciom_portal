@@ -1,17 +1,17 @@
 import datetime
 
+from db import db
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
                                 jwt_refresh_token_required,
                                 get_jwt_identity,
                                 get_raw_jwt)
 from flask_restful import Resource, reqparse
+from models.user import User, RevokedTokenModel
 from sqlalchemy.exc import SQLAlchemyError
 
-from db import db
-from models.user import User, RevokedTokenModel
-from utils.exception import InvalidInput
-from utils.Response import error,success,input_error
+from project.utils import InvalidInput
+from project.utils import error, success, input_error
 
 parser = reqparse.RequestParser()
 parser.add_argument('email',
@@ -48,7 +48,8 @@ class UserRegistration(Resource):
             data = parser.parse_args()
             print(data)
             if User.find_by_username(data['email']):
-                raise InvalidInput("User {} already exists".format(data['email']))
+                raise InvalidInput(
+                    "User {} already exists".format(data['email']))
             new_user = User(
                 email=data['email'],
                 first_name=data['first_name'],
@@ -56,7 +57,9 @@ class UserRegistration(Resource):
                 password=User.generate_hash(data['password'])
             )
             new_user.save_to_db()
-            return  success({'message': 'user {} was created'.format(data['email']),'success': True})
+            return success(
+                {'message': 'user {} was created'.format(data['email']),
+                 'success': True})
 
         except SQLAlchemyError as e:
             db.session.rollback()
@@ -65,7 +68,6 @@ class UserRegistration(Resource):
 
         except InvalidInput as e:
             return error({"success": False, "message": str(e)})
-
 
 
 class UserLogin(Resource):
@@ -87,22 +89,27 @@ class UserLogin(Resource):
             # TODO: MORE COMPLEX USER OBJECT  TOKEN CREATION.
             # TODO: , expires_delta=expires
             if not current_user:
-                raise InvalidInput("User {} does not exists".format(data['email']))
+                raise InvalidInput(
+                    "User {} does not exists".format(data['email']))
             if User.verify_hash(data['password'], current_user.password):
-                access_token = create_access_token(identity=current_user.user_id,
-                                                   expires_delta=expires)
-                payload = {'message': 'logged in as {} '.format(current_user.email),
-                        'uid': current_user.user_id,
-                        'access_token': access_token,
-                        'success': True,
-                        'user': current_user.email,
-                        'name': current_user.first_name}
+                access_token = create_access_token(
+                    identity=current_user.user_id,
+                    expires_delta=expires)
+                payload = {
+                    'message': 'logged in as {} '.format(current_user.email),
+                    'uid': current_user.user_id,
+                    'access_token': access_token,
+                    'success': True,
+                    'user': current_user.email,
+                    'name': current_user.first_name}
             else:
-                raise InvalidInput("Credentials Does Not Match".format(data['email']))
+                raise InvalidInput(
+                    "Credentials Does Not Match".format(data['email']))
 
         except InvalidInput as e:
             return input_error({"success": False, "message": str(e)})
         return success(payload)
+
 
 class UserLogoutAccess(Resource):
     @jwt_required

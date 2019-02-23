@@ -1,5 +1,4 @@
 # from logger import set_up_logging
-from utils.Response import success, standard_response, error
 # logger = set_up_logging()
 
 
@@ -13,7 +12,8 @@ def null_check(target_cursor, target_table, column, test_queries):
             sub_query = ""
             for each_col in columns:
                 if sub_query == "":
-                    sub_query = "SELECT * FROM {0} WHERE ".format(target_table) + each_col + " is NULL"
+                    sub_query = "SELECT * FROM {0} WHERE ".format(
+                        target_table) + each_col + " is NULL"
                 else:
                     sub_query = sub_query + " or " + each_col + " is NULL"
             print(sub_query)
@@ -29,7 +29,7 @@ def null_check(target_cursor, target_table, column, test_queries):
 
         if all_results:
             return ({"res": 0, "src_value": None,
-                    "des_value": res1})
+                     "des_value": res1})
         else:
             return {"res": 1, "src_value": None,
                     "des_value": None}

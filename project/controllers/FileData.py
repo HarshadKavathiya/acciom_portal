@@ -1,15 +1,15 @@
-from flask_restful import Resource, reqparse
-from flask import request,send_file
-from models.user import TestSuite, TestCase, TestCaseLog
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from openpyxl import load_workbook, Workbook
-from io import BytesIO
 import json
-from flask import Response
+from io import BytesIO
 
-import openpyxl
+from flask import Response
+from flask import request
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_restful import Resource, reqparse
+from models.user import TestSuite, TestCase, TestCaseLog
+from openpyxl import load_workbook, Workbook
+
 # from celery_task import my_background_task
-from utils.runner_class import run_by_case_id
+from project.utils import run_by_case_id
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet',
@@ -41,15 +41,15 @@ class Upload(Resource):
 
         temp_file.save_to_db()
         wb = load_workbook(filename=BytesIO(file.read()))
-        print("wb is",wb)
+        print("wb is", wb)
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
         temp_test = [[str(ws[x][0].value)
-                      for x in range(2, ws.max_row+1)]]
+                      for x in range(2, ws.max_row + 1)]]
         # from column 2nd
         for i in range(1, ws.max_column):
             temp_test.append([str(ws[x][i].value)
-                              for x in range(2, ws.max_row+1)])
+                              for x in range(2, ws.max_row + 1)])
             data = parser.parse_args()
 
         test_case_list = str(data['selectedcase']).split(",")
@@ -59,22 +59,22 @@ class Upload(Resource):
         # TODO: remove the hardcode colummn numbers
         #  and retrive the indexes of column
         # print(temp_test)
-        for j in range(ws.max_row-1):
+        for j in range(ws.max_row - 1):
             if temp_test[i][j] in test_case_list:
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i][j],
                                 test_status=0,
-                                test_priority=temp_test[i+2][j],
-                                test_detail=temp_test[i+3][j],
-                                test_column=temp_test[i+4][j],
-                                table_src_target=temp_test[i+5][j],
-                                test_name=temp_test[i+6][j],
-                                test_queries=temp_test[i+7][j],
-                                test_expected=temp_test[i+8][j],
-                                test_actual=temp_test[i+9][j],
-                                test_created_by=temp_test[i+10][j],
-                                test_executed_by=temp_test[i+11][j],
-                                test_comment=temp_test[i+12][j])
+                                test_priority=temp_test[i + 2][j],
+                                test_detail=temp_test[i + 3][j],
+                                test_column=temp_test[i + 4][j],
+                                table_src_target=temp_test[i + 5][j],
+                                test_name=temp_test[i + 6][j],
+                                test_queries=temp_test[i + 7][j],
+                                test_expected=temp_test[i + 8][j],
+                                test_actual=temp_test[i + 9][j],
+                                test_created_by=temp_test[i + 10][j],
+                                test_executed_by=temp_test[i + 11][j],
+                                test_comment=temp_test[i + 12][j])
                 temp.save_to_db()
 
         if int(data['exvalue']) == 1:
@@ -98,7 +98,8 @@ class GetUpload(Resource):
 class LogExport(Resource):
     def get(self, case_log_id):
         print(case_log_id)
-        case_log = TestCaseLog.query.filter_by(test_case_log_id=case_log_id).first()
+        case_log = TestCaseLog.query.filter_by(
+            test_case_log_id=case_log_id).first()
         test_case = case_log.test_cases
         print(test_case.test_name)
         if test_case.test_name == 'DuplicateCheck' or 'NullCheck':
@@ -114,6 +115,7 @@ class LogExport(Resource):
         #         lst.append(row)
         # print(lst)
         # book.save("/home/akhil/Desktop/{0}{1}.xlsx".format(test_case.test_name, case_log_id))
-        return Response(json.dumps(log), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        return Response(json.dumps(log),
+                        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         headers={"Content-disposition":
                                      "attachment;"})

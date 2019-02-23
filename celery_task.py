@@ -1,8 +1,8 @@
 from celery import Celery
 from flask import Flask
 
-from db import db
-from utils.runner_class import run_by_case_id
+from index import db
+from project.utils import run_by_case_id
 
 
 def make_celery(app):
