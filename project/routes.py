@@ -3,13 +3,13 @@ import os
 from flask import send_from_directory
 
 from index import jwt, app, api
-from project.controllers.FileData import Upload, GetUpload, LogExport
-from project.controllers.dbdetails import DbDetails
-from project.controllers.runtest import DoTest
-from project.controllers.sparkjob import SparkJobStatus
-from project.controllers.user import (UserRegistration,
-                                      UserLogin, UserLogoutAccess,
-                                      TokenRefresh, AllUser)
+from project.api.FileData import Upload, GetUpload, LogExport
+from project.api.dbdetails import DbDetails
+from project.api.runtest import DoTest
+from project.api.sparkjob import SparkJobStatus
+from project.api.user import (UserRegistration,
+                              UserLogin, UserLogoutAccess,
+                              TokenRefresh, AllUser)
 from project.models.user import RevokedTokenModel
 
 
