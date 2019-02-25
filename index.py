@@ -1,6 +1,7 @@
 import logging
-from logging.handlers import RotatingFileHandler
 import os
+from logging.handlers import RotatingFileHandler
+
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -24,9 +25,10 @@ def config_log(app):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_envvar('Acciom_var')
+    app.config.from_pyfile('config.cfg')
     config_log(app)
     return app
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 static_folder = basedir + '/static/dist/uploadfile/'
