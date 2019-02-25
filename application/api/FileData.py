@@ -9,7 +9,7 @@ from models.user import TestSuite, TestCase, TestCaseLog
 from openpyxl import load_workbook, Workbook
 
 # from celery_task import my_background_task
-from project.utils import run_by_case_id
+from application.utils import run_by_case_id
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet',

@@ -10,8 +10,8 @@ from flask_restful import Resource, reqparse
 from models.user import User, RevokedTokenModel
 from sqlalchemy.exc import SQLAlchemyError
 
-from project.utils import InvalidInput
-from project.utils import error, success, input_error
+from application.utils import InvalidInput
+from application.utils import error, success, input_error
 
 parser = reqparse.RequestParser()
 parser.add_argument('email',
