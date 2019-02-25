@@ -1,6 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
-
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -28,6 +28,8 @@ def create_app():
     config_log(app)
     return app
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+static_folder = basedir + '/static/dist/uploadfile/'
 
 app = create_app()
 db = SQLAlchemy(app)

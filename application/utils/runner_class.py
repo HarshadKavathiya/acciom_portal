@@ -4,11 +4,11 @@ import requests
 from flask import current_app as app
 from application.models.user import SparkJob, TestCaseLog, TestCase
 
-from application.utils.countcheck import count_check
-from application.utils.ddlcheck import ddl_check
-from application.utils.duplication import duplication
-from application.utils.nullcheck import null_check
-from application.utils.dbconnect import source_db, dest_db
+from application.helper.countcheck import count_check
+from application.helper.ddlcheck import ddl_check
+from application.helper.duplication import duplication
+from application.helper.nullcheck import null_check
+from application.common.dbconnect import source_db, dest_db
 
 
 def split_table(table_name):

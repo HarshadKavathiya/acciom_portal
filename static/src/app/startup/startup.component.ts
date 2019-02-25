@@ -22,6 +22,8 @@ export interface DialogData {
   key_src:Array<any>;
   value_src:Array<any>;
   case_log_id:number;
+  execution_status:boolean;
+  src_value_dataduplication:Array<any>;
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -80,6 +82,8 @@ export class StartupComponent implements OnInit {
   stilload=false;
   t:number;
   times:any;
+  execution_status:boolean;
+  src_value_dataduplication:Array<any>;
 
   len:number;
   constructor( private router:Router,
@@ -110,9 +114,7 @@ export class StartupComponent implements OnInit {
 
   starttimer(){
     clearInterval(this.times)
- this.times=setInterval(()=>{
-     this.Initialize();
-  },39000)
+ this.times=setInterval(()=>{this.Initialize();},39000)
 
   }
 
@@ -197,12 +199,14 @@ export class StartupComponent implements OnInit {
         this.starttimer();
         Swal("Success","Test Done Succesfully","success")
   
+      }else{
+        this.Initialize();
+        this.starttimer();
+
       }
       
       
     },err=>{
-      this.Initialize();
-      this.starttimer();
       Swal("error",err.error.msg,"error")
 
     })
@@ -242,6 +246,7 @@ topFunction() {
 } 
 showlog(test_name,case_log){
   console.log(case_log)
+  console.log(case_log.test_execution_status)
   if (test_name =='CountCheck'){
     this.countcheck=false
     this.nullcheck=true
@@ -277,6 +282,16 @@ showlog(test_name,case_log){
  
   }
   else if (test_name == "DuplicateCheck"){
+    this.src_value_dataduplication=[]
+  
+    this.len=eval(case_log.destination_log).length
+    if(this)
+    for(var i=0;i<this.len;i++){
+      this.parsed_obj=(eval(case_log.destination_log)[i])
+      this.src_value_dataduplication.push(Object.values(this.parsed_obj))
+      console.log(this.src_value_dataduplication)
+    }
+
     this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
@@ -355,13 +370,13 @@ showlog(test_name,case_log){
    }
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
-    width: '90%',
-    height:'90%',
+    width: '60%',
+    height:'60%',
 
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
-  case_log_id:case_log.test_case_log_id}
+  case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status}
    
   });
   dialogRef.afterClosed().subscribe(result => {

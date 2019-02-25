@@ -1,7 +1,6 @@
 import os
 
 from flask import send_from_directory
-
 from application.api.FileData import Upload, GetUpload, LogExport
 from application.api.dbdetails import DbDetails
 from application.api.runtest import DoTest
@@ -10,7 +9,7 @@ from application.api.user import (UserRegistration,
                                   UserLogin, UserLogoutAccess,
                                   TokenRefresh, AllUser)
 from application.models.user import RevokedTokenModel
-from index import jwt, app, api
+from index import jwt, app, api, static_folder
 
 
 @jwt.token_in_blacklist_loader
@@ -22,8 +21,7 @@ def check_if_token_in_blacklist(decrypted_token):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    static_folder = basedir + '/static/dist/uploadfile/'
+
     if path != "" and os.path.exists(static_folder + path):
         return send_from_directory(static_folder, path)
     elif not (os.path.exists(static_folder + path) or (

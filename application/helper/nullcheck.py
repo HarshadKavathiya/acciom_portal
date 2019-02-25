@@ -10,6 +10,7 @@ def null_check(target_cursor, target_table, column, test_queries):
         query = test_queries.split(':')
         if test_queries == 'None':
             sub_query = ""
+
             for each_col in columns:
                 if sub_query == "":
                     sub_query = "SELECT * FROM {0} WHERE ".format(

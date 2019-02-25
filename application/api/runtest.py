@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
 from application.models.user import TestSuite
 
-from application.utils.Response import error, success
+from application.common.Response import error, success
 from application.utils.runner_class import run_by_case_id
 
 parser = reqparse.RequestParser()
