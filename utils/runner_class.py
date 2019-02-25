@@ -147,7 +147,9 @@ def run_test(case_id):
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
+
             spark_job.save_to_db()#TODO:add memory (executor_memory) while upload.
+
             payload = dict({"file": "/spark_dw2.py", "jars": ["/mysql-connector-java.jar", "/sqljdbc42.jar"],
                             "driverMemory": "13G",
                             "executorMemory": "11G",

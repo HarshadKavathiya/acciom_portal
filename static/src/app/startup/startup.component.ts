@@ -22,6 +22,7 @@ export interface DialogData {
   key_src:Array<any>;
   value_src:Array<any>;
   case_log_id:number;
+  execution_status:number;
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -80,6 +81,7 @@ export class StartupComponent implements OnInit {
   stilload=false;
   t:number;
   times:any;
+  execution_status:boolean;
 
   len:number;
   constructor( private router:Router,
@@ -241,7 +243,14 @@ topFunction() {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
 showlog(test_name,case_log){
-  console.log(case_log)
+  console.log("inside the log")
+  this.execution_status=true
+  console.log((case_log.test_execution_status))
+  if(case_log.test_execution_status==2){
+    this.execution_status=false
+  }else if(case_log.test_execution_status==1){
+    this.execution_status=true
+  }
   if (test_name =='CountCheck'){
     this.countcheck=false
     this.nullcheck=true
@@ -361,7 +370,7 @@ showlog(test_name,case_log){
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
-  case_log_id:case_log.test_case_log_id}
+  case_log_id:case_log.test_case_log_id,execution_status:this.execution_status}
    
   });
   dialogRef.afterClosed().subscribe(result => {

@@ -35,8 +35,8 @@ def count_check(source_cursor, target_cursor, source_table, target_table, test_q
         print(src_count, target_count)
         if src_count == target_count:
             payload["res"] = 1
-            payload["src_value"]=src_count
-            payload["des_value"]=target_count  # pass.
+            payload["src_value"] = src_count
+            payload["des_value"] = target_count  # pass.
             app.logger.info("count check sucess")
         else:
             payload["res"] = 0

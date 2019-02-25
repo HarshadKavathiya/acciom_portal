@@ -1,4 +1,4 @@
-<head>
+ <head>
     <style type="text/css">
    .panel-body {
         /* height:90%; width: 90%; */
@@ -22,8 +22,16 @@
 
 <div class="panel-body">
 <h1>Result</h1>
-<div mat-dialog-content  *ngIf="!data.countcheck">
-    <table cellspacing=12 border=1 >
+
+<div mat-dialog-content  *ngIf="!data.countcheck" >
+    <div *ngIf="!data.execution_Status">
+        <h3> Source and Target count Does not Matches</h3>    
+    </div>
+    <div *ngIf="data.execution_Status">
+        <h3> Source and Target count Matches</h3>    
+    </div>
+    <table cellspacing=12 border=1  >
+        
         <tr><th>Source Table Count</th>
             <th>Target Table Count</th>
         </tr>
@@ -32,22 +40,39 @@
             <td>{{data.destination_log}}</td>
         </tr>
     </table >
-  </div>
-  <div mat-dialog-content  *ngIf="!data.nullcheck">
-        <table>
-            <tr> <th>Target</th></tr>
-            <tr><td>{{data.destination_log}}</td></tr>
-        </table>
-      </div>
+</div>
 
-  <div mat-dialog-content  *ngIf="!data.duplicate">
-        <table>
-            <tr> <th>Target Table </th></tr>
-            <tr>
-                <td>{{data.destination_log}}</td>
-            </tr>
-        </table>
-      </div>
+<div mat-dialog-content  *ngIf="!data.nullcheck">
+<div *ngIf="data.execution_status">
+    <h3> Null values found in Target Table </h3>
+</div>
+<div *ngIf="!data.execution_status">
+        <h3>No Null values </h3>
+    </div>
+<table>
+    <tr> <th>Target</th></tr>
+    <tr><td>{{data.destination_log}}</td></tr>
+</table>
+</div>
+
+<div mat-dialog-content  *ngIf="!data.duplicate">
+    <div *ngIf="data.execution_status">
+        <h3>No duplicate Records Found</h3>
+
+    </div>
+    <div *ngIf="!data.execution_status">
+            <h3>duplicate Records Found</h3>
+    
+        </div>
+<table>
+    <tr> 
+        <th>Target Table </th>
+    </tr>
+    <tr>
+        <td>{{data.destination_log}}</td>
+    </tr>
+</table>
+</div>
 
       <div mat-dialog-content  *ngIf="!data.datavalidation">
 

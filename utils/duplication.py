@@ -4,6 +4,7 @@
 def duplication(target_cursor, target_table,column_name, test_queries):
         try:
             column = column_name.split(';')
+            print(column)
             if test_queries == 'None':
 
                 sub_startquery=""
