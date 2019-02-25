@@ -2,7 +2,7 @@ import datetime
 
 from passlib.hash import pbkdf2_sha256 as sha256
 
-from db import db
+from index import db
 
 
 class User(db.Model):
@@ -136,7 +136,7 @@ class TestSuite(db.Model):
     def return_all(cls, user_id):
         def test_log_to_json(x):
             return {
-                'test_case_log_id':x.test_case_log_id,
+                'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,
                 'test_execution_status': x.execution_status,
                 'source_log': x.src_execution_log,
@@ -190,7 +190,6 @@ class TestCase(db.Model):
     test_executed_by = db.Column(db.String(80), nullable=True)
     test_comment = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
-    test_comment = db.Column(db.Text, nullable=True)
     test_suite = db.relationship(TestSuite,
                                  back_populates='test_case', lazy=True)
     test_case_log = db.relationship("TestCaseLog",
@@ -233,7 +232,8 @@ class TestCaseLog(db.Model):
     error_log = db.Column(db.String(80), nullable=True)
     test_cases = db.relationship(TestCase,
                                  back_populates='test_case_log', lazy=True)
-    spark_job = db.relationship("SparkJob", back_populates='test_cases_log', lazy=True)
+    spark_job = db.relationship("SparkJob", back_populates='test_cases_log',
+                                lazy=True)
     executed_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __init__(self, test_case_id, execution_status,
@@ -255,7 +255,8 @@ class SparkJob(db.Model):
     test_case_log_id = db.Column(db.ForeignKey(TestCaseLog.test_case_log_id))
     job_id = db.Column(db.Integer, nullable=True)
     status = db.Column(db.String(80), nullable=True)
-    test_cases_log = db.relationship(TestCaseLog, back_populates='spark_job', lazy=True)
+    test_cases_log = db.relationship(TestCaseLog, back_populates='spark_job',
+                                     lazy=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
     modified = db.Column(db.DateTime, default=datetime.datetime.now)
 

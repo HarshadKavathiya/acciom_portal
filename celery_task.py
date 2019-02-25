@@ -1,8 +1,8 @@
 from celery import Celery
 from flask import Flask
 
-from db import db
-from utils.runner_class import run_by_case_id
+from application.utils import run_by_case_id
+from index import db
 
 
 def make_celery(app):
@@ -24,7 +24,9 @@ def make_celery(app):
 
 
 flask_app = Flask(__name__)
-flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+flask_app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Acciom_user:Acciomuser' \
+                                 '@localhost/Acciom_tool'
 flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 flask_app.secret_key = 'EiEiO'
 flask_app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
