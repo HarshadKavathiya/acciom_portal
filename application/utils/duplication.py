@@ -1,7 +1,8 @@
 #from logger import set_up_logging
 #logger = set_up_logging()
 
-def duplication(target_cursor, target_table,column_name, test_queries):
+
+def duplication(target_cursor, target_table, column_name, test_queries):
         try:
             column = column_name.split(';')
             if test_queries == 'None':

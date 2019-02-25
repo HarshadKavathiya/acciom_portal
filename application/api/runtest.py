@@ -2,10 +2,10 @@ import time
 
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
-from models.user import TestSuite
+from application.models.user import TestSuite
 
-from application.utils import error, success
-from application.utils import run_by_case_id
+from application.utils.Response import error, success
+from application.utils.runner_class import run_by_case_id
 
 parser = reqparse.RequestParser()
 parser.add_argument('suite_id', type=int)

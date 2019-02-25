@@ -1,17 +1,17 @@
 import datetime
 
-from db import db
+from index import db
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
                                 jwt_refresh_token_required,
                                 get_jwt_identity,
                                 get_raw_jwt)
 from flask_restful import Resource, reqparse
-from models.user import User, RevokedTokenModel
+from application.models.user import User, RevokedTokenModel
 from sqlalchemy.exc import SQLAlchemyError
 
-from application.utils import InvalidInput
-from application.utils import error, success, input_error
+from application.utils.exception import InvalidInput
+from application.utils.Response import error, success, input_error
 
 parser = reqparse.RequestParser()
 parser.add_argument('email',

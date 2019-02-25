@@ -5,11 +5,11 @@ from flask import Response
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, reqparse
-from models.user import TestSuite, TestCase, TestCaseLog
+from application.models.user import TestSuite, TestCase, TestCaseLog
 from openpyxl import load_workbook, Workbook
 
 # from celery_task import my_background_task
-from application.utils import run_by_case_id
+from application.utils.runner_class import run_by_case_id
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet',
