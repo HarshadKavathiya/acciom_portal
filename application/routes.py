@@ -1,13 +1,13 @@
 import os
 
 from flask import send_from_directory
-from application.api.FileData import Upload, GetUpload, LogExport
+
+from application.api.FileData import TestSuites, ExportTestLog
 from application.api.dbdetails import DbDetails
-from application.api.runtest import DoTest
+from application.api.runtest import TestCaseJob
 from application.api.sparkjob import SparkJobStatus
-from application.api.user import (UserRegistration,
-                                  UserLogin, UserLogoutAccess,
-                                  TokenRefresh, AllUser)
+from application.api.user import (Register,
+                                  Login, Logout)
 from application.models.user import RevokedTokenModel
 from index import jwt, app, api, static_folder
 
@@ -21,7 +21,6 @@ def check_if_token_in_blacklist(decrypted_token):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-
     if path != "" and os.path.exists(static_folder + path):
         return send_from_directory(static_folder, path)
     elif not (os.path.exists(static_folder + path) or (
@@ -32,14 +31,12 @@ def serve(path):
         return send_from_directory(static_folder, 'index.html')
 
 
-api.add_resource(UserRegistration, '/api/register')
-api.add_resource(UserLogin, '/api/login')
-api.add_resource(UserLogoutAccess, '/api/logout')
-api.add_resource(AllUser, '/api/users')
-api.add_resource(Upload, '/api/upload')
+api.add_resource(Register, '/api/register')
+api.add_resource(Login, '/api/login')
+api.add_resource(Logout, '/api/logout')
+api.add_resource(TestSuites, '/api/test-suite',
+                 '/api/test-suite/<int:user_id>')
 api.add_resource(DbDetails, '/api/add')
-api.add_resource(TokenRefresh, '/api/token/refresh')
-api.add_resource(GetUpload, '/api/getsuite/<int:user_id>')
-api.add_resource(DoTest, '/api/testdb/')
+api.add_resource(TestCaseJob, '/api/testdb/')
 api.add_resource(SparkJobStatus, '/api/spark-job-status/<int:spark_job_id>')
-api.add_resource(LogExport, '/api/toexcel/<int:case_log_id>/')
+api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>/')

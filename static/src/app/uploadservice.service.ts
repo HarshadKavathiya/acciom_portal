@@ -39,7 +39,7 @@ export class UploadserviceService {
     let headers = new HttpHeaders().set('Authorization',this.newtoken)
 
     
-    return this.http.post<any>(`${this.url}/upload`,upload,{headers: headers}); 
+    return this.http.post<any>(`${this.url}/test-suite`,upload,{headers: headers}); 
   }
 
   authenticateUser(createForm){
@@ -93,7 +93,7 @@ export class UploadserviceService {
   }
   getSuiteById(id){
     let headers=new HttpHeaders().set('Content-Type','application/json')
-    return this.http.get<any>(`${this.url}/getsuite/${id}`,{headers:headers});
+    return this.http.get<any>(`${this.url}/test-suite/${id}`,{headers:headers});
   }
 
   ExecuteTestbySuiteId(suite_id:any):Observable<any>{
@@ -138,7 +138,7 @@ export class UploadserviceService {
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
     })
-    return this.http.get<any>(`${this.url}/toexcel/${case_log_id}/`,{headers:headers})
+    return this.http.get<any>(`${this.url}/export/${case_log_id}/`,{headers:headers})
   }
 
 

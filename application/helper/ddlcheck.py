@@ -2,7 +2,10 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
     try:
         cursor = source_cursor
         cursor.execute(
-            "SELECT COLUMN_NAME,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{}'".format(source_table))
+            "SELECT COLUMN_NAME,"
+            "DATA_TYPE FROM "
+            "INFORMATION_SCHEMA.COLUMNS WHERE"
+            " TABLE_NAME = '{}'".format(source_table))
         data1 = []
         data2 = []
         lr = []
@@ -20,7 +23,10 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
 
         cursor1 = target_cursor
         cursor1.execute(
-            "SELECT COLUMN_NAME,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{}'".format(target_table))
+            "SELECT COLUMN_NAME,DATA_TYPE"
+            " FROM INFORMATION_SCHEMA.COLUMNS"
+            " WHERE "
+            "TABLE_NAME = '{}'".format(target_table))
 
         for row in cursor1:
             data2.append(row)
@@ -75,4 +81,5 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
         else:
             pass
     except Exception as e:
+        print(e)
         return {"res": 2, "src_value": None, "des_value": None}

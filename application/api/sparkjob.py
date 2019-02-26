@@ -15,11 +15,14 @@ class SparkJobStatus(Resource):
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         print("primary key of testcaselog:", spark_job.test_case_log_id)
 
-        case_log = TestCaseLog.query.filter_by(test_case_log_id=spark_job.test_case_log_id).first()
+        case_log = TestCaseLog.query. \
+            filter_by(test_case_log_id=spark_job.test_case_log_id). \
+            first()
         if result_count == 0:
             case_log.execution_status = 1
             case_log.save_to_db()
-            case = TestCase.query.filter_by(test_case_id=case_log.test_case_id).first()
+            case = TestCase.query. \
+                filter_by(test_case_id=case_log.test_case_id).first()
             case.test_status = 1
             case.save_to_db()
 
@@ -28,6 +31,7 @@ class SparkJobStatus(Resource):
             case_log.save_to_db()
             case_log.src_execution_log = str(result)
             case_log.save_to_db()
-            case = TestCase.query.filter_by(test_case_id=case_log.test_case_id).first()
+            case = TestCase.query. \
+                filter_by(test_case_id=case_log.test_case_id).first()
             case.test_status = 2
             case.save_to_db()

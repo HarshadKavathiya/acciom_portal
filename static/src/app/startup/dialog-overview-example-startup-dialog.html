@@ -23,13 +23,16 @@
 
 
 <div class="panel-body">
-    <h1>Result</h1>
+    
     <div mat-dialog-content  *ngIf="!data.countcheck">
+        
         <div *ngIf="data.execution_status === 2">
-            <h3>Fail – Source and Target records count doesn’t match</h3>
+                <h1>Result - Fail</h1>
+            <h3>Source and Target records count doesn’t match</h3>
         </div>
         <div *ngIf="data.execution_status === 1">
-            <h3>Pass – Both Source and Target records count matches</h3>
+                <h1>Result - Pass</h1>
+            <h3>Both Source and Target records count matches</h3>
         </div>
         <table cellspacing=12 border=1 >
             <tr><th>Source Table Count</th>
@@ -43,10 +46,12 @@
     </div>
     <div mat-dialog-content  *ngIf="!data.nullcheck">
         <div *ngIf="data.execution_status === 1">
-            <h3>Pass –  No Null values found in Target Table </h3>
+                <h1>Result - Pass</h1>
+            <h3>No Null values found in Target Table {{data.target_table}} </h3>
         </div>
         <div *ngIf="data.execution_status === 2">
-            <h3>Null values found in Target Table</h3>
+                <h1>Result - Fail</h1>
+            <h3>Null values found in Target Table {{data.target_table}} </h3>
         </div>
         <table>
                 <tr> <th>Target</th></tr>
@@ -56,10 +61,12 @@
 
     <div mat-dialog-content  *ngIf="!data.duplicate">
         <div *ngIf="data.execution_status === 1">
-            <h3> No Duplicate records found in Target Table</h3>
+                <h1>Result - Pass</h1>
+            <h3>No Duplicate records found in Target Table {{data.target_table }}</h3>
         </div>
         <div *ngIf="data.execution_status === 2">
-            <h3> Duplicate records found in Target Table</h3>
+                <h1>Result - Fail</h1>
+            <h3>Duplicate records found in Target Table {{data.target_table }}</h3>
         </div>
             <table>
                 <tr> <th>Target Table </th></tr>
@@ -71,6 +78,7 @@
 
     <div mat-dialog-content  *ngIf="!data.datavalidation">
         <div *ngIf="data.execution_status === 2">
+                <h1>Result - Fail</h1>
             <h3>Source and Target Data doesn’t match</h3>
         </div>
         <table >
@@ -86,10 +94,12 @@
     </div>
     <div mat-dialog-content  *ngIf="!data.datavalidation_pass">
         <div *ngIf="data.execution_status === 1">
-            <h3> Pass – Both Source and Target Data matches</h3>
+                <h1>Result - Pass</h1>
+            <h3>Both Source and Target Data matches</h3>
         </div>
     </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck">
+            <h1>Result - Fail</h1>
         <h3>Both Source and Target schema doesn’t matches</h3>
             <table cellspacing=12 border=1 >
                 <tr>
@@ -102,10 +112,11 @@
             </table>
     </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
-        <h3>Pass – Both Source and Target Data matches</h3>
+            <h1>Result - Pass</h1>
+        <h3>Both Source and Target Data matches</h3>
     </div>
 </div>
 <div mat-dialog-actions class="close">
-        <button mat-stroked-button	color="primary" (click)="onNoClick()">Close</button>
-        <button mat-stroked-button color="warn" (click)="onexport(data.case_log_id) ">Export </button>
+        <button mat-flat-button	color="primary" (click)="onNoClick()">Close</button>
+        <button mat-flat-button color="warn" [disabled]="data.execution_status === 1" (click)="onexport(data.case_log_id) ">Export </button>
     </div>

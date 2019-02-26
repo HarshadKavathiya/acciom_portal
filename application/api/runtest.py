@@ -2,17 +2,17 @@ import time
 
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
-from application.models.user import TestSuite
 
 from application.common.Response import error, success
-from application.utils.runner_class import run_by_case_id
+from application.helper.runner_class import run_by_case_id
+from application.models.user import TestSuite
 
 parser = reqparse.RequestParser()
 parser.add_argument('suite_id', type=int)
 parser.add_argument('case_id', type=int)
 
 
-class DoTest(Resource):
+class TestCaseJob(Resource):
     @jwt_required
     def post(self):
         try:

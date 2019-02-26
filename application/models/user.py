@@ -145,11 +145,15 @@ class TestSuite(db.Model):
             }
 
         def test_case_to_json(x):
+            tables = []
+            tables = x.table_src_target.strip(';').split(':')
             return {
                 'test_case_id': x.test_case_id,
                 'test_name': x.test_name,
                 'test_id': x.test_id,
                 'test_status': x.test_status,
+                'table_src': str(tables[0]),
+                'table_target': str(tables[1]),
                 'test_case_log': list(map(lambda each_case:
                                           test_log_to_json(each_case),
                                           x.test_case_log))

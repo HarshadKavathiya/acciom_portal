@@ -1,17 +1,15 @@
 import datetime
 
-from index import db
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
-                                jwt_refresh_token_required,
-                                get_jwt_identity,
                                 get_raw_jwt)
 from flask_restful import Resource, reqparse
-from application.models.user import User, RevokedTokenModel
 from sqlalchemy.exc import SQLAlchemyError
 
-from application.common.exception import InvalidInput
 from application.common.Response import error, success, input_error
+from application.common.exception import InvalidInput
+from application.models.user import User, RevokedTokenModel
+from index import db
 
 parser = reqparse.RequestParser()
 parser.add_argument('email',
@@ -28,7 +26,7 @@ parser.add_argument('password',
                     required=True)
 
 
-class UserRegistration(Resource):
+class Register(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('email',
                         help='This field cannot be blank',
@@ -70,7 +68,7 @@ class UserRegistration(Resource):
             return error({"success": False, "message": str(e)})
 
 
-class UserLogin(Resource):
+class Login(Resource):
 
     def post(self):
         try:
@@ -111,7 +109,7 @@ class UserLogin(Resource):
         return success(payload)
 
 
-class UserLogoutAccess(Resource):
+class Logout(Resource):
     @jwt_required
     def post(self):
         jti = get_raw_jwt()['jti']
@@ -121,28 +119,3 @@ class UserLogoutAccess(Resource):
             return {'message': 'access_token has been revoked'}
         except Exception as e:
             return {'message': e}
-
-
-class UserLogoutRefresh(Resource):
-    def post(self):
-        return {'message': 'user logout success'}
-
-
-class AllUser(Resource):
-    @jwt_required
-    def get(self):
-        try:
-            return User.return_all()
-        except Exception as e:
-            {'message': e}
-
-    def delete(self):
-        return User.delete_all()
-
-
-class TokenRefresh(Resource):
-    @jwt_refresh_token_required
-    def get(self):
-        current_user = get_jwt_identity()
-        access_token = create_access_token(identity=current_user)
-        return {'access_token': access_token}

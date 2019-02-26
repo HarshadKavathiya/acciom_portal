@@ -2,13 +2,13 @@ import time
 
 import requests
 from flask import current_app as app
-from application.models.user import SparkJob, TestCaseLog, TestCase
 
+from application.common.dbconnect import source_db, dest_db
 from application.helper.countcheck import count_check
 from application.helper.ddlcheck import ddl_check
 from application.helper.duplication import duplication
 from application.helper.nullcheck import null_check
-from application.common.dbconnect import source_db, dest_db
+from application.models.user import SparkJob, TestCaseLog, TestCase
 
 
 def split_table(table_name):
@@ -153,7 +153,7 @@ def run_test(case_id):
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
-            spark_job.save_to_db()  # TODO:add memory (executor_memory) while upload.
+            spark_job.save_to_db()  # TODO:add memory
             payload = dict({"file": "/spark_dw2.py",
                             "jars": ["/mysql-connector-java.jar",
                                      "/sqljdbc42.jar"],
@@ -223,4 +223,5 @@ def run_test(case_id):
 # ToNote:
 # status = {0: "new", 1: "pass", 2: "fail", 3: "in progress", 4: "error"}
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
-# select column_name from information_schema.columns where table_name='Inventory';
+# select column_name from information_schema
+# .columns where table_name='Inventory';

@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit,CanComponentDeactivate  {
   selectedNames: any;
   changessaved=false;
   prog=0
+  url='/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx'
   constructor(private fileUploadService:UploadserviceService,
     private route:ActivatedRoute,
     private router:Router,
@@ -73,6 +74,13 @@ export class HomeComponent implements OnInit,CanComponentDeactivate  {
     } else {
       return true;
     }
+  }
+//TODO
+downloadFile(){
+  let link = document.createElement("a");
+   link.download = "filename.xlsx";
+        link.href = "/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx";
+        link.click();
   }
 
 
