@@ -90,3 +90,23 @@ input, label {
 .closebtn:hover{
   opacity:0.5;
 }
+.btndownlaod{
+    font-family: 'Open Sans', sans-serif;
+    position:relative;
+    text-align:center;
+    color:black;
+
+
+}
+.btndownlaod1{
+  font-family: 'Open Sans', sans-serif;
+    position:relative;
+    text-align:center;
+    color:red;
+    font-size: 18px;
+}
+.btndownlaod1:hover{
+  opacity: 1.6;
+  transition: 0.3s;
+  color:blue
+}

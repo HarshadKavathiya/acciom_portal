@@ -22,7 +22,9 @@ def null_check(target_cursor, target_table, column, test_queries):
         else:
             # print("came in custom query")
             target_cursor.execute(query[1])
+
         all_results = []
+        # all_results.append(columns)
         for row in target_cursor:
             all_results.append(row)
         import json

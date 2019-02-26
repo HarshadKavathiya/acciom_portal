@@ -79,8 +79,10 @@ export class HomeComponent implements OnInit,CanComponentDeactivate  {
 downloadFile(){
   let link = document.createElement("a");
    link.download = "filename.xlsx";
-        link.href = "/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx";
-        link.click();
+   link.setAttribute('type', 'hidden');
+        link.href = "assets/test_cases.xlsx";
+link.click();
+link.remove();
   }
 
 

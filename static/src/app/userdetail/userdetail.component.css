@@ -28,3 +28,12 @@
     font-family: 'Hammersmith One', sans-serif;
     
 }
+.closebtn{
+  background-color: rgb(246, 153, 153);
+  float:right;
+  opacity: 1.6;
+  transition: 0.3s;
+}
+.closebtn:hover{
+  opacity:0.5;
+}

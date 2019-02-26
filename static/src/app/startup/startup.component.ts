@@ -374,8 +374,8 @@ showlog(test_name,src_table,target_table,case_log){
    }
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
-    width: '60%',
-    height:'60%',
+    width: '48%',
+    height:'48%',
 
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
@@ -405,6 +405,7 @@ export class DialogOverviewExampleDialogstartup {
   }
 
   onexport(case_log_id){
+    confirm("Download Excel!");
     this.fileUploadService.exportinexcel(case_log_id).subscribe(data=>{
       console.log("nothing")
 
