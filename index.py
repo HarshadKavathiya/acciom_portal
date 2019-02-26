@@ -25,7 +25,7 @@ def config_log(app):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_envvar('Acciom_var')
+    app.config.from_pyfile('config.cfg')
     config_log(app)
     return app
 
