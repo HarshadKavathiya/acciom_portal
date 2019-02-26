@@ -1,19 +1,10 @@
 <head>
     <style type="text/css">
    .panel-body {
-        /* height:90%; width: 90%; */
-        
-        /* transform: rotate(90deg); */
         max-height: 390px;
-            /* max-width:390px; */
             overflow: scroll;
-        /* transform-origin: 188px 241px 0; */
     }
 .close{
-
-   /* position: relative;
-    right: 0%;
-    bottom:0%; */
     float:right;
 
 }
@@ -29,20 +20,21 @@
         <div *ngIf="data.execution_status === 2">
                 <h1>CountCheck- Fail</h1>
             <h3>Source and Target records count doesn’t match</h3>
+            <table cellspacing=12 border=1 >
+                    <tr><th>Source Table Count</th>
+                        <th>Target Table Count</th>
+                    </tr>
+                    <tr>
+                        <td>{{data.source_log}}</td>
+                        <td>{{data.destination_log}}</td>
+                    </tr>
+                </table >
         </div>
         <div *ngIf="data.execution_status === 1">
                 <h1>CountCheck- Pass</h1>
             <h3>Both Source and Target records count matches</h3>
         </div>
-        <table cellspacing=12 border=1 >
-            <tr><th>Source Table Count</th>
-                <th>Target Table Count</th>
-            </tr>
-            <tr>
-                <td>{{data.source_log}}</td>
-                <td>{{data.destination_log}}</td>
-            </tr>
-        </table >
+      
     </div>
     <div mat-dialog-content  *ngIf="!data.nullcheck">
         <div *ngIf="data.execution_status === 1">
@@ -52,11 +44,12 @@
         <div *ngIf="data.execution_status === 2">
                 <h1>NullCheck - Fail</h1>
             <h3>Null values found in Target Table {{data.target_table}} </h3>
+            <table>
+                    <tr> <th>Target</th></tr>
+                    <tr><td>{{data.destination_log}}</td></tr>
+            </table>
         </div>
-        <table>
-                <tr> <th>Target</th></tr>
-                <tr><td>{{data.destination_log}}</td></tr>
-        </table>
+       
     </div>
 
     <div mat-dialog-content  *ngIf="!data.duplicate">
@@ -67,13 +60,13 @@
         <div *ngIf="data.execution_status === 2">
                 <h1>Data Duplicate- Fail</h1>
             <h3>Duplicate records found in Target Table {{data.target_table }}</h3>
-        </div>
             <table>
-                <tr> <th>Target Table </th></tr>
-                <tr>
-                    <td>{{data.destination_log}}</td>
-                </tr>
-            </table>
+                    <tr> <th>Target Table </th></tr>
+                    <tr>
+                        <td>{{data.destination_log}}</td>
+                    </tr>
+                </table>
+        </div>      
     </div>
 
     <div mat-dialog-content  *ngIf="!data.datavalidation">

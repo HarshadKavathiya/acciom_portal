@@ -288,13 +288,13 @@ showlog(test_name,src_table,target_table,case_log){
   else if (test_name == "DuplicateCheck"){
     this.src_value_dataduplication=[]
   
-    this.len=eval(case_log.destination_log).length
-    if(this)
-    for(var i=0;i<this.len;i++){
-      this.parsed_obj=(eval(case_log.destination_log)[i])
-      this.src_value_dataduplication.push(Object.values(this.parsed_obj))
-      console.log(this.src_value_dataduplication)
-    }
+    // this.len=eval(case_log.destination_log).length
+    // if(this)
+    // for(var i=0;i<this.len;i++){
+    //   this.parsed_obj=(eval(case_log.destination_log)[i])
+    //   this.src_value_dataduplication.push(Object.values(this.parsed_obj))
+    //   console.log(this.src_value_dataduplication)
+    // }
 
     this.countcheck=true
     this.nullcheck=true
@@ -375,7 +375,7 @@ showlog(test_name,src_table,target_table,case_log){
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     width: '48%',
-    height:'48%',
+    height:'50%',
 
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
