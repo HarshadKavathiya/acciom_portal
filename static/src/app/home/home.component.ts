@@ -80,7 +80,7 @@ downloadFile(){
   let link = document.createElement("a");
    link.download = "filename.xlsx";
    link.setAttribute('type', 'hidden');
-        link.href = "assets/test_cases.xlsx";
+        link.href = "assets/test_cases_acciom_tool.xlsx";
 link.click();
 link.remove();
   }
