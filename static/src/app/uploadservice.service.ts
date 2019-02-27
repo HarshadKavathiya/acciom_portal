@@ -106,10 +106,6 @@ export class UploadserviceService {
       // 'Content-Type':'application/json',
       
     })
-    // headers = headers.append('Content-Type','application/json')
-    // // let headers = new HttpHeaders().set('Authorization',this.newtoken)
-
-    // headers = headers.append('Authorization',this.newtoken)
     run.append("suite_id",suite_id)
 
     return this.http.post<any>(`${this.url}/testdb/`,run,{headers: headers}); 

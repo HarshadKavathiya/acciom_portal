@@ -26,8 +26,7 @@ export interface DialogData {
   src_value_dataduplication:Array<any>;
   src_table:string;
   target_table:string;
-
-
+  value_src_nullcheck:Array<any>;
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -82,6 +81,7 @@ export class StartupComponent implements OnInit {
   keys_src=[]
   value_src=[]
   first_obj=[]
+  value_src_nullcheck=[]
   parsed_obj=""
   stilload=false;
   t:number;
@@ -248,80 +248,100 @@ topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
-showlog(test_name,src_table,target_table,case_log){
-  console.log(case_log)
-  console.log(src_table)
-  if (test_name =='CountCheck'){
-    this.countcheck=false
+ isNull(val){
+   return val == null
+      
+}
+
+show_logdialog(test_name){
+  this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
     this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=true
+    if(test_name =='CountCheck'){
+      this.countcheck=false
+    }
+    if(test_name =='NullCheck'){
+      this.nullcheck=false
+    }
+    if(test_name =='DuplicateCheck'){
+      this.duplicate=false
+    }
+    if(test_name =='Datavalidation'){
+      this.datavalidation_pass=false
+    }
+    if(test_name =='DDLCheck'){
+      this.ddlcheck_pass=false    }
+}
+
+showlog(test_name,src_table,target_table,case_log){
+  if (test_name =='CountCheck'){
+    this.show_logdialog(test_name)
   }
   else if (test_name == 'NullCheck'){
-    this.value_src=[]
-
-    this.countcheck=true
-    this.nullcheck=false
-    this.datavalidation=true
-    this.datavalidation_pass=true
-    this.ddlcheck_pass=true
-    this.duplicate=true
-    this.ddlcheck=true
+    this.value_src_nullcheck=[]
+    this.show_logdialog(test_name)
+    
     if(case_log.destination_log==null){
-      //pass
       console.log("in null")
-    }
-    else{
-      console.log(case_log.destination_log)
-      // this.len=eval(case_log.destination_log).length
-      // JSON.parse(case_log.)
-      // for(var i=0;i<this.len;i++){
-      //   this.first_obj=(JSON.parse(String(this.parsed_obj)))
-      //   this.value_src.push(Object.values()
-      // }
-    }
- 
+    }else{
+      this.len=eval(case_log.destination_log).length
+      for(var i=0;i<this.len;i++){
+        var temp=[]
+        temp=Object.values(eval(case_log.destination_log)[i])
+        if(temp.some(this.isNull)){
+          console.log('come inside')
+          temp.forEach(function(item){
+            var index = temp.indexOf(null)
+            if (~index){
+          temp[index]= "null"
+            }
+          }); }
+        this.value_src_nullcheck.push(temp)
+    } 
   }
+}
   else if (test_name == "DuplicateCheck"){
+    this.len;
     this.src_value_dataduplication=[]
-  
-    // this.len=eval(case_log.destination_log).length
-    // if(this)
-    // for(var i=0;i<this.len;i++){
-    //   this.parsed_obj=(eval(case_log.destination_log)[i])
-    //   this.src_value_dataduplication.push(Object.values(this.parsed_obj))
-    //   console.log(this.src_value_dataduplication)
-    // }
-
-    this.countcheck=true
-    this.nullcheck=true
-    this.datavalidation=true
-    this.datavalidation_pass=true
-    this.ddlcheck_pass=true
-    this.duplicate=false
-    this.ddlcheck=true
+    this.show_logdialog(test_name)
+    if(case_log.destination_log==null 
+      || case_log.destination_log == "No Duplicate Records Available"
+    ){
+      console.log("in null")
+    }else{
+      this.len=eval(case_log.destination_log).length
+      for(var i=0;i<this.len;i++){
+        var temp=[]
+        temp=Object.values(eval(case_log.destination_log)[i])
+        if(temp.some(this.isNull)){
+          console.log('come inside')
+          temp.forEach(function(item){
+            var index = temp.indexOf(null)
+            if (~index){
+              temp[index]= "null"
+                }
+          }); }
+        this.src_value_dataduplication.push(temp)
+        console.log(this.src_value_dataduplication)
+    } 
+  }
 
   }
   else if (test_name == "Datavalidation"){
     this.value_src=[]
     this.keys_src=[]
     if(case_log.source_log=='none'){
-      this.countcheck=true
-      this.nullcheck=true
-      this.datavalidation=true
-      this.datavalidation_pass=false
-      this.ddlcheck_pass=true
-      this.duplicate=true
-      this.ddlcheck=true
+      this.show_logdialog(test_name)
     }
     else{
       this.parsed_obj=(eval(case_log.source_log)[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
-    //console.log(this.keys_src.length)
+    //console.log(this.keys_src.leng
      this.len=eval(case_log.source_log).length
      //console.log((Object.values(this.first_obj)))
      console.log(this.len)
@@ -345,23 +365,12 @@ showlog(test_name,src_table,target_table,case_log){
   
    if(case_log.source_log=='none1')
     {
-      this.countcheck=true
-      this.nullcheck=true
-      this.datavalidation=true
-      this.datavalidation_pass=true
-      this.ddlcheck_pass=false
-      this.duplicate=true
-      this.ddlcheck=true
+      this.show_logdialog(test_name)
     }
    else if(case_log.destination_log=='none1')
     {
-      this.countcheck=true
-      this.nullcheck=true
-      this.datavalidation=true
-      this.datavalidation_pass=true
-      this.ddlcheck_pass=false
-      this.duplicate=true
-      this.ddlcheck=true
+      this.show_logdialog(test_name)
+
     }
    else {
     this.countcheck=true
@@ -376,19 +385,15 @@ showlog(test_name,src_table,target_table,case_log){
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     width: '48%',
     height:'50%',
-
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
-      src_table:src_table,target_table:target_table}
+      src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
    
   });
   dialogRef.afterClosed().subscribe(result => {
-    console.log(result)
-   });
-}
-}
+   });}}
 @Component({
   selector: 'dialog-overview-example-startup-dialog',
   templateUrl: 'dialog-overview-example-startup-dialog.html',
@@ -400,24 +405,13 @@ export class DialogOverviewExampleDialogstartup {
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogstartup>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
+  onNoClick(): void {this.dialogRef.close();}
   onexport(case_log_id){
-    confirm("Download Excel!");
+
+    if(confirm("Download Excel!")){
     this.fileUploadService.exportinexcel(case_log_id).subscribe(data=>{
-      console.log("nothing")
-
-      console.log(data)
       this.excelService.exportAsExcelFile(data, 'sample');
-
-
-  },err=>{
-    console.log(err)
-    
-  })
-}
-
-
-}
+},err=>{console.log(err)})
+}else{
+  return;
+}}}

@@ -1,18 +1,16 @@
 <app-navbarlogout></app-navbarlogout>
 <div class="body">
 <mat-card class="card">
-  <h1 class="heading">Get Started</h1>
-  <button  [color]="'success'" (click)="ToHome()" mat-button>Upload Your File</button>
+  <!-- <h1 class="heading">Get Started</h1> -->
+  <!-- <button  [color]="'success'" (click)="ToHome()" mat-button>Upload Your File</button> -->
 <div  class="droppanel">
   
   <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
     <mat-expansion-panel class="dropdown" 
     (opened)="suitestatusopen(x)"
     (closed)="suitestatusclose(x)"
-    [expanded]="checkstatus(x)"
-    >
-    <!-- [expanded]="true" -->
-      <mat-expansion-panel-header   > <!-- aria-expanded="true"   TODO:-->
+    [expanded]="checkstatus(x)">
+      <mat-expansion-panel-header>
         <mat-panel-title *ngIf="i.test_suite_name !='undefined'"  class="panel_title"> <!-- TODO: USE *ngIf-->
         {{i.test_suite_name}}
         </mat-panel-title>
@@ -23,7 +21,7 @@
             <div class="paneldesc"> {{ i.excel_name }},<b class="bold">Uploaded At:</b> {{ i.created | date:'medium'}}
           </div>
           
- <!-- break;--> <button mat-mini-fab [disabled]="!playButtons[x] || !show[x]" (click)="executeTestCase(i.test_suite_id,$event,x)" color="black" class="btnplay" > 
+         <button mat-mini-fab [disabled]="!playButtons[x] || !show[x]" (click)="executeTestCase(i.test_suite_id,$event,x)" color="black" class="btnplay" > 
             <i class="material-icons">
               <div *ngIf="playButtons[x]">
                   play_circle_outline

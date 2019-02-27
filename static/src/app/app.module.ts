@@ -4,6 +4,7 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect'
 import { ExcelService } from './services/excel.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {MatCardModule} from '@angular/material/card';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +22,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {LoginComponent } from './login/login.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -40,6 +43,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { CanDeactivate } from '@angular/router/src/utils/preactivation';
 import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
 import { UserdetailComponent } from './userdetail/userdetail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +59,8 @@ import { UserdetailComponent } from './userdetail/userdetail.component';
     DialogOverviewExampleDialogstartup,
     ColorDirective,
     AppcolorDirective,
-    UserdetailComponent
+    UserdetailComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -76,8 +81,10 @@ import { UserdetailComponent } from './userdetail/userdetail.component';
     MatRadioModule,
     MatProgressBarModule,
     MatExpansionModule,
+    MatSidenavModule,
     MatTooltipModule,
     NgxPaginationModule,
+    FlexLayoutModule,
     MultiselectDropdownModule,
     MatProgressSpinnerModule,
     Ng4LoadingSpinnerModule.forRoot()

@@ -8,8 +8,9 @@
   
     height:150vh;
     /* background-color: lime; */
-     background-image: linear-gradient(to bottom right, #050505, #373636); 
+     /* background-image: linear-gradient(to bottom right, #050505, #373636);  */
     color:whitesmoke;
+    background-color: #eee
 }
 .heading{
     font-family: 'Quicksand', sans-serif;

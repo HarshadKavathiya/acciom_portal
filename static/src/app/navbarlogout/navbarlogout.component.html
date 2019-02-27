@@ -1,25 +1,33 @@
-<mat-toolbar class="nav"> <div class="yellowcss"> <button  mat-button (click)="refresh()" class="heading" >
-  Axiom Tool  <img  src="assets/images/accion1.png">
+<mat-toolbar class="nav"> 
+    <div class="yellowcss"> 
+        <button  mat-button (click)="refresh()" class="heading" >
+          Acciom<img  src="assets/images/accion1.png">
+        </button>
+    </div> 
+    <div class="menu">
+        <a  (click)="dashboard()"class="menubtn" mat-button><i class="material-icons">
+            dashboard
+            </i>DashBoard</a> 
+        <a  class="menubtn" mat-button (click)="upload()"> <i class="material-icons">
+            cloud_upload
+            </i>Upload Suite</a>
+        <a class="menubtn1"  (click)="refresh()" mat-button><i class="material-icons">
+                view_list
+                </i>Test Suites </a> 
+  </div>
   
-</button></div> 
-  <!-- <button  class='loginbut' mat-button color="primary" (click)="logout()" >Logout</button> -->
   
-  <div class="dropdown">
-      <button mat-button color="primary" class="dropbtn">Account<i class="material-icons">
-          account_circle
-          </i>
-          
-          </button>
-      <div class="dropdown-content">
-        <a (click)="logout()">Logout</a>
-        <a (click) ="Userdetail()" >User Details</a>
-        <a href="#">More</a>
-        
-      </div>
+    <div class="dropdown">
+        <button mat-button color="primary" class="dropbtn">Account<i class="material-icons">
+            account_circle
+            </i>
+        </button>
+          <div class="dropdown-content">
+            <a (click)="logout()">Logout</a>
+            <a (click) ="Userdetail()" >User Details</a>    
+          </div>
     </div>
-   
-    
-
-</mat-toolbar>
-  <!-- <button *ngIf="!login" class='loginbut' mat-button color="primary" >Logout</button> -->
-
+  </mat-toolbar>
+  
+  
+  

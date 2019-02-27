@@ -16,16 +16,21 @@ export class NavbarlogoutComponent implements OnInit {
 
   logout(){
     this.fileUploadService.logout();
-    // this.flashMessage.show("You are now logged Out", {cssClass: 'alert-success', timeout:3000})
     this.router.navigate(['/login']);
       this.login1=false
   }
-
+  dashboard(){
+    this.router.navigate(['/dashboard'])
+  }
   refresh(){
     this.router.navigate(['/startup'])
   }
   Userdetail(){
     this.router.navigate(['/user'])
+  }
+
+  upload(){
+    this.router.navigate(['home'])
   }
   
 

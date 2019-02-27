@@ -4,13 +4,18 @@
 
 def null_check(target_cursor, target_table, column, test_queries):
     try:
-        # print("test query", column)
+        col_list = []
         columns = column.split(';')
+        target_cursor.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='{0}'".format(target_table))
 
+        for col in target_cursor:
+            for each_col in col:
+                col_list.append(each_col)
+        print(col_list)
         query = test_queries.split(':')
         if test_queries == 'None':
             sub_query = ""
-
             for each_col in columns:
                 if sub_query == "":
                     sub_query = "SELECT * FROM {0} WHERE ".format(
@@ -20,11 +25,10 @@ def null_check(target_cursor, target_table, column, test_queries):
             print(sub_query)
             target_cursor.execute(sub_query)
         else:
-            # print("came in custom query")
             target_cursor.execute(query[1])
 
         all_results = []
-        # all_results.append(columns)
+        all_results.append(col_list)
         for row in target_cursor:
             all_results.append(row)
         import json

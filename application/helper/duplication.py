@@ -47,7 +47,7 @@ def duplication(target_cursor, target_table, column_name, test_queries):
         else:
             # logger.debug("Duplication check Successfull")
             return {"res": 1, "src_value": "src_value not require",
-                    "des_value": "No Duplicate Records Available"}
+                    "des_value": None}
 
     except Exception as e:
         # logger.debug(e)
