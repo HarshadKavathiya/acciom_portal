@@ -102,11 +102,9 @@ export class StartupComponent implements OnInit {
   }
 
   suitestatusopen(x){
-    console.log("suite"+x+"is opened")
     localStorage.setItem('suite'+x,x)
   }  
   suitestatusclose(x){
-    console.log("suite"+x+"is closed")
     localStorage.removeItem('suite'+x)
   }
   checkstatus(x){
@@ -186,12 +184,10 @@ export class StartupComponent implements OnInit {
 
       }
     },err=>{
-      console.log("error")
     })
   }
   executeTestByCaseId(test_case_id,event:Event,z,x){
     event.stopPropagation();
-    console.log(x)
     this.playButtons2[x][z]=false
     this.show[x]=false;
     this.fileUploadService.ExecuteTestbyCaseId(test_case_id).subscribe(data=>{
@@ -293,7 +289,6 @@ showlog(test_name,src_table,target_table,case_log){
         var temp=[]
         temp=Object.values(eval(case_log.destination_log)[i])
         if(temp.some(this.isNull)){
-          console.log('come inside')
           temp.forEach(function(item){
             var index = temp.indexOf(null)
             if (~index){
@@ -317,7 +312,6 @@ showlog(test_name,src_table,target_table,case_log){
         var temp=[]
         temp=Object.values(eval(case_log.destination_log)[i])
         if(temp.some(this.isNull)){
-          console.log('come inside')
           temp.forEach(function(item){
             var index = temp.indexOf(null)
             if (~index){
@@ -325,7 +319,6 @@ showlog(test_name,src_table,target_table,case_log){
                 }
           }); }
         this.src_value_dataduplication.push(temp)
-        console.log(this.src_value_dataduplication)
     } 
   }
 
@@ -340,16 +333,12 @@ showlog(test_name,src_table,target_table,case_log){
       this.parsed_obj=(eval(case_log.source_log)[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
-    //console.log(this.keys_src.leng
      this.len=eval(case_log.source_log).length
-     //console.log((Object.values(this.first_obj)))
-     console.log(this.len)
     for(var i=0;i<this.len;i++){
         this.parsed_obj=(eval(case_log.source_log)[i])
         this.first_obj=(JSON.parse(String(this.parsed_obj)))
         this.value_src.push(Object.values(this.first_obj))
       }
-      console.log(this.value_src)
       this.countcheck=true
       this.nullcheck=true
       this.datavalidation=false
