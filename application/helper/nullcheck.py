@@ -1,5 +1,6 @@
 # from logger import set_up_logging
 # logger = set_up_logging()
+import json
 
 
 def null_check(target_cursor, target_table, column, test_queries):
@@ -28,13 +29,12 @@ def null_check(target_cursor, target_table, column, test_queries):
             target_cursor.execute(query[1])
 
         all_results = []
-        all_results.append(col_list)
         for row in target_cursor:
             all_results.append(row)
-        import json
-        res1 = json.dumps(all_results)
 
         if all_results:
+            all_results.insert(0, col_list)
+            res1 = json.dumps(all_results)
             return ({"res": 0, "src_value": None,
                      "des_value": res1})
         else:
