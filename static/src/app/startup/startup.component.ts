@@ -305,7 +305,6 @@ showlog(test_name,src_table,target_table,case_log){
   }
 }
   else if (test_name == "DuplicateCheck"){
-    this.len;
     this.src_value_dataduplication=[]
     this.show_logdialog(test_name)
     if(case_log.destination_log==null 
