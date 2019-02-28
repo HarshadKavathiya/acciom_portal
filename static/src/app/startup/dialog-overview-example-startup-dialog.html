@@ -2,6 +2,7 @@
     <style type="text/css">
    .panel-body {
         max-height: 390px;
+        overflow:initial;
             
     }
     .panel-body1{
@@ -16,7 +17,7 @@
 </head>
 
 <div class="panel-body">
-    <div mat-dialog-content  *ngIf="!data.countcheck">
+    <div mat-dialog-content  class="panel-body1"  *ngIf="!data.countcheck">
         
         <div *ngIf="data.execution_status === 2">
                 <h1>CountCheck</h1>  <h2>Result:Fail</h2>
@@ -57,7 +58,7 @@
         </div>
        
     </div>
-    <div mat-dialog-content  *ngIf="!data.duplicate">
+    <div mat-dialog-content  class="panel-body1"  *ngIf="!data.duplicate">
         <div *ngIf="data.execution_status === 1">
                 <h1>Data Duplicate</h1>  <h2>Result:Pass</h2>
             <h3>No Duplicate records found in Target Table {{data.target_table }}</h3>
@@ -76,7 +77,7 @@
         </div>      
     </div>
 
-    <div mat-dialog-content  *ngIf="!data.datavalidation">
+    <div mat-dialog-content class="panel-body1"  *ngIf="!data.datavalidation">
         <div *ngIf="data.execution_status === 2">
                 <h1>Data Validation</h1>  <h2>Result:Fail</h2>
             <h3>Source and Target Data doesn’t match</h3>
@@ -92,14 +93,14 @@
             </tr>
         </table>
     </div>
-    <div mat-dialog-content  *ngIf="!data.datavalidation_pass">
+    <div mat-dialog-content  class="panel-body1"  *ngIf="!data.datavalidation_pass">
         <div *ngIf="data.execution_status === 1">
                 <h1>Data Validation</h1>  <h2>Result:Pass</h2>
 
             <h3>Both Source and Target Data matches</h3>
         </div>
     </div>
-    <div mat-dialog-content  *ngIf="!data.ddlcheck">
+    <div mat-dialog-content  class="panel-body1"  *ngIf="!data.ddlcheck">
             <h1>DDL Check</h1>  <h2>Result:Fail</h2>
         <h3>Both Source and Target schema doesn’t matches</h3>
             <table cellspacing=12 border=1 >

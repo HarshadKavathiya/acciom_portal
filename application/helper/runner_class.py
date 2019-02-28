@@ -1,10 +1,8 @@
-import time
-
-import requests
 from flask import current_app as app
 
 from application.common.dbconnect import source_db, dest_db
 from application.helper.countcheck import count_check
+from application.helper.datavalidation import datavalidation
 from application.helper.ddlcheck import ddl_check
 from application.helper.duplication import duplication
 from application.helper.nullcheck import null_check
@@ -128,7 +126,7 @@ def run_test(case_id):
                                  column_name=case_id.test_column,
                                  test_queries=case_id.test_queries)
         if case_id.test_name == 'Datavalidation':
-            dbmysql_user_name = 'Acciom_user'  # TODO:change while tupload
+            dbmysql_user_name = 'Acciom_user'  # TODO:change while tuploa
             dbmysql_user_password = 'Acciomuser'
             dbsql_user_name = 'SA'
             dbsql_user_password = 'acciom_user@123'
@@ -143,38 +141,21 @@ def run_test(case_id):
                                   db_type[2][1:], db_type[1][1:],
                                   table_name[0][1],
                                   db_type[3][1:])
-            print(row_count)
             if row_count < 10000:
                 limit = 10000
             elif row_count > 10000 and row_count < 100000:
                 limit = 50000
             else:
                 limit = 200000
+
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
             spark_job.save_to_db()  # TODO:add memory
-            payload = dict({"file": "/spark_dw2.py",
-                            "jars": ["/mysql-connector-java.jar",
-                                     "/sqljdbc42.jar"],
-                            "driverMemory": "13G",
-                            "executorMemory": "11G",
-                            "args": [db_type[0][1:], table_name[0][0],
-                                     db_type[2][1:], db_type[1][1:],
-                                     table_name[0][1],
-                                     db_type[3][1:], spark_job.spark_job_id,
-                                     row_count,
-                                     limit, dbmysql_user_name,
-                                     dbmysql_user_password,
-                                     dbsql_user_name, dbsql_user_password]})
-            r = requests.post('http://172.16.21.188:8998/batches',
-                              json=payload)  # TODO:CHange while push
-            res = {}
-            res = r.json()
-            spark_job.job_id = res['id']
-            spark_job.status = res['state']
+
+            spark_job.job_id = 1
+            spark_job.status = "any"
             spark_job.save_to_db()
-            time.sleep(2)
             result = {'res': 3, "src_value": "none", "des_value": "none"}
 
         if case_id.test_name == 'DDLCheck':
@@ -201,6 +182,12 @@ def run_test(case_id):
             case_log.des_execution_log = result['des_value']
             case_log.error_log = None
             case_log.save_to_db()
+            if case_id.test_name == 'Datavalidation':
+                datavalidation(db_type[0][1:], table_name[0][0], db_type[2][1:],
+                               db_type[1][1:], table_name[0][1], db_type[3][1:],
+                               spark_job.spark_job_id, row_count, limit, dbmysql_user_name,
+                               dbmysql_user_password, dbsql_user_name, dbsql_user_password)
+
 
         elif result['res'] == 0:
             save_test_status(case_id, 2)

@@ -108,7 +108,7 @@ export class UploadserviceService {
     })
     run.append("suite_id",suite_id)
 
-    return this.http.post<any>(`${this.url}/testdb/`,run,{headers: headers}); 
+    return this.http.post<any>(`${this.url}/test-case-job/`,run,{headers: headers}); 
 
   }
   ExecuteTestbyCaseId(case_id:any):Observable<any>{
@@ -124,7 +124,7 @@ export class UploadserviceService {
       // 'Content-Type':'application/json',
       
     })
-    return this.http.post<any>(`${this.url}/testdb/`,run,{headers:headers});
+    return this.http.post<any>(`${this.url}/test-case-job/`,run,{headers:headers});
   }
 
   exportinexcel(case_log_id){

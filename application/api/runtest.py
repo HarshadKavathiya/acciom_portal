@@ -1,21 +1,22 @@
 import time
 
 from flask_jwt_extended import jwt_required
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
+from flask_restful import reqparse
 
 from application.common.Response import error, success
 from application.helper.runner_class import run_by_case_id
+from application.models.user import SparkJob, TestCaseLog, TestCase
 from application.models.user import TestSuite
-
-parser = reqparse.RequestParser()
-parser.add_argument('suite_id', type=int)
-parser.add_argument('case_id', type=int)
 
 
 class TestCaseJob(Resource):
     @jwt_required
     def post(self):
         try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('suite_id', type=int)
+            parser.add_argument('case_id', type=int)
             data = parser.parse_args()
             if data['suite_id']:
                 time.sleep(1)
@@ -32,5 +33,37 @@ class TestCaseJob(Resource):
                 run_by_case_id(data['case_id'])
                 return success({"success": True})
         except Exception as e:
-            print(e)
+            print("error", e)
             return error({"success": False, "msg": str(e)})
+
+    def put(self, spark_job_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('result', required=True, type=list)
+        parser.add_argument('result_count', required=True, type=int)
+        data = parser.parse_args()
+        import ast
+        result = ast.literal_eval(data['result'])
+        result_count = data['result_count']
+        spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
+
+        case_log = TestCaseLog.query. \
+            filter_by(test_case_log_id=spark_job.test_case_log_id). \
+            first()
+        if result_count == 0:
+            case_log.execution_status = 1
+            case_log.save_to_db()
+            case = TestCase.query. \
+                filter_by(test_case_id=case_log.test_case_id).first()
+            case.test_status = 1
+            case.save_to_db()
+
+        elif result_count != 0:
+            print("going in elif")
+            case_log.execution_status = 2
+            case_log.save_to_db()
+            case_log.src_execution_log = str(result)
+            case_log.save_to_db()
+            case = TestCase.query. \
+                filter_by(test_case_id=case_log.test_case_id).first()
+            case.test_status = 2
+            case.save_to_db()

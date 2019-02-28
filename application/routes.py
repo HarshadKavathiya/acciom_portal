@@ -3,9 +3,7 @@ import os
 from flask import send_from_directory
 
 from application.api.FileData import TestSuites, ExportTestLog
-from application.api.dbdetails import DbDetails
 from application.api.runtest import TestCaseJob
-from application.api.sparkjob import SparkJobStatus
 from application.api.user import (Register,
                                   Login, Logout)
 from application.models.user import RevokedTokenModel
@@ -34,9 +32,11 @@ def serve(path):
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
 api.add_resource(Logout, '/api/logout')
-api.add_resource(TestSuites, '/api/test-suite',
+api.add_resource(TestSuites,
+                 '/api/test-suite',
                  '/api/test-suite/<int:user_id>')
-api.add_resource(DbDetails, '/api/add')
-api.add_resource(TestCaseJob, '/api/testdb/')
-api.add_resource(SparkJobStatus, '/api/spark-job-status/<int:spark_job_id>')
+# api.add_resource(DbDetails, '/api/add')
+api.add_resource(TestCaseJob,
+                 '/api/test-case-job/',
+                 '/api/test-case-job/<int:spark_job_id>')
 api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>/')
