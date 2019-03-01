@@ -31,7 +31,7 @@ def create_app():
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-static_folder = basedir + '/static/dist/uploadfile/'
+static_folder = basedir + '/static/acciom_ui/'
 
 app = create_app()
 db = SQLAlchemy(app)
