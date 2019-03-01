@@ -1,6 +1,7 @@
 import datetime
 
 from passlib.hash import pbkdf2_sha256 as sha256
+from sqlalchemy.dialects.mysql import LONGTEXT
 
 from index import db
 
@@ -231,8 +232,8 @@ class TestCaseLog(db.Model):
     test_case_log_id = db.Column(db.Integer, primary_key=True)
     test_case_id = db.Column(db.ForeignKey(TestCase.test_case_id))
     execution_status = db.Column(db.Integer, nullable=True)
-    src_execution_log = db.Column(db.Text, nullable=True)
-    des_execution_log = db.Column(db.Text, nullable=True)
+    src_execution_log = db.Column(LONGTEXT, nullable=True)
+    des_execution_log = db.Column(LONGTEXT, nullable=True)
     error_log = db.Column(db.String(80), nullable=True)
     test_cases = db.relationship(TestCase,
                                  back_populates='test_case_log', lazy=True)

@@ -9,7 +9,7 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
                    des_table, des_db_type, spark_job_id, row_count,
                    limit_row, dbmysql_user_name, dbmysql_user_password, dbsql_user_name,
                    dbsql_user_password):
-    api_end_point = current_app.config.get('API_END_POINT') + "/api/test-case-job/{0}".format(spark_job_id)
+    api_end_point = current_app.config.get('API_END_POINT') + "/api/spark-job-status/{0}".format(spark_job_id)
     driver_mem = current_app.config.get('DRIVER_MEMORY')
     executor_mem = current_app.config.get('EXECUTOR_MEMORY')
 

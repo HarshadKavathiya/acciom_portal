@@ -2,10 +2,10 @@ import os
 
 from flask import send_from_directory
 
-from application.api.FileData import TestSuites, ExportTestLog
-from application.api.runtest import TestCaseJob
-from application.api.user import (Register,
-                                  Login, Logout)
+from application.api.login import (Register,
+                                   Login, Logout)
+from application.api.testcase import TestCaseJob, TestCaseSparkJob
+from application.api.testsuite import TestSuites, ExportTestLog
 from application.models.user import RevokedTokenModel
 from index import jwt, app, api, static_folder
 
@@ -35,8 +35,7 @@ api.add_resource(Logout, '/api/logout')
 api.add_resource(TestSuites,
                  '/api/test-suite',
                  '/api/test-suite/<int:user_id>')
-# api.add_resource(DbDetails, '/api/add')
 api.add_resource(TestCaseJob,
-                 '/api/test-case-job/',
-                 '/api/test-case-job/<int:spark_job_id>')
+                 '/api/test-case-job/')
+api.add_resource(TestCaseSparkJob, '/api/spark-job-status/<int:spark_job_id>')
 api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>/')
