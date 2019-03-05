@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  mysql_database:
+    image: mysql:8.0.2
+    container_name: mysql_database
+    environment:
+      MYSQL_DATABASE: Acciom_tool
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: Acciom_user
+      MYSQL_PASSWORD: Acciomuser
+    ports:
+      - "3306:3306"
+
+  flask_web:
+    container_name: flask_web
+    build: .
+    command: >
+      bash -c " flask db upgrade
+      && python3 app.py"
+    volumes:
+      - .:/acciom
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql_database
