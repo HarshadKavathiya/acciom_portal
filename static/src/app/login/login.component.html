@@ -1,24 +1,28 @@
-<app-navbar></app-navbar>
-<ng4-loading-spinner> </ng4-loading-spinner>
+<!-- <app-navbar></app-navbar> -->
+
 <div class="body">
-        <mat-card class="card">
-            <div class="heading" > Log In Yourself</div>
-<form class="form" [formGroup]="createForm">
-   
-    <mat-form-field class="example-full-width">
-        <input type="email" autocomplete="off" matInput placeholder="email*" formControlName="email">
-        <mat-error>please enter valid email</mat-error>
-    </mat-form-field>
+ <img class="Acciom" src="/assets/images/group.png" /> 
+    <mat-card class="card">
+            <!-- <div class="heading" > Log In Yourself -->
+        <form class="form" [formGroup]="createForm">
+             
+            <mat-form-field class="example-full-width">
+                
+                <input type="email" autocomplete="off" matInput formControlName="email">
+                <mat-placeholder class="placeholder">Email </mat-placeholder>
+                <mat-error>please enter valid email</mat-error>
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-        <input type="password" autocomplete="off" matInput placeholder=" Password*" formControlName="password">
-        <mat-error>please enter valid password</mat-error>
-    </mat-form-field>
-    <button mat-raised-button (click)="LogIn()" color="primary" >Login</button>
-    
-</form>
-<div class="register">Not registered? <button  mat-button color="primary" (click)="signup()" >Signup here</button></div>
+            <mat-form-field class="example-full-width">
+                <input type="password" autocomplete="off" matInput  formControlName="password">
+                <mat-placeholder class="placeholder">Password </mat-placeholder>
 
-</mat-card>
+                <mat-error>please enter valid password</mat-error>
+            </mat-form-field>
+            <button mat-raised-button (click)="LogIn()" class="loginbtn"><div class="Log-in">Log in</div></button>
+        </form>
+         <button mat-button color="primary" (click)="signup()" class="signupbtn"><div class="Signup">Signup</div> </button>
+  
+    </mat-card>
 </div>
 

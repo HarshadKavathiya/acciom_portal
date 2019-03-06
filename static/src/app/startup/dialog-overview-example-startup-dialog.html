@@ -1,6 +1,93 @@
 <head>
     <style type="text/css">
+    .test-heading{
+        font-family: 'OpenSans-Regular', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  
+  margin-bottom: 25px;
+
+    }
+    .table1{
+        border: solid 1px #979797;
+  background-color: #ffffff;
+    }
+.tableheader{
+    font-family: 'OpenSans-Light',sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+}
+.tabledata{
+    font-family: 'OpenSans',sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+}
+    .test-result{
+        font-family: 'OpenSans-Light', sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-right: 10px;
+  margin-bottom:10px;
+  margin-top:5px;
+
+    }
+.close-btn{
+background-color: #ffffff;
+opacity: 0.9;
+  transition: 0.3s;
+  color:black;
+}
+@media screen and (max-width:600px){
+
+}
+    .export-btn{
+        width: 150px;
+  height: 21px;
+        background-color: #b72e34;
+        font-family: 'OpenSans-Light',sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #ffffff;
+
+  border-radius: 24px;
+  width:auto;
+    }
+    .result{
+        display:flex;
+        justify-content: flex-start;
+    }
+
    .panel-body {
+       background-color: #ffffff;
         max-height: 390px;
         overflow:initial;
             
@@ -13,39 +100,76 @@
     float:right;
 
 }
+.bold-text{
+    font-weight: bold;
+}
     </style>
 </head>
-
+<div mat-dialog-content align="end" class="close-btn">
+<button mat-flat-button class="close-btn" (click)="onNoClick()">  <i  class="material-icons"> close
+    </i></button>
+</div>
 <div class="panel-body">
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.countcheck">
-        
+         <div class="test-heading">Count Check</div>
         <div *ngIf="data.execution_status === 2">
-                <h1>CountCheck</h1>  <h2>Result:Fail</h2>
-               
-            <h3>Source and Target records count does not match</h3>
-            <table cellspacing=12 border=1 >
-                    <tr><th>Source Table-{{ data.src_table }}</th>
+            <div class="result">
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Fail</td>
+                                <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
+                                </tr>
+                        </table> 
+                </div>
+            <div class="test-result">Source and Target records count does not match</div>
+            <table  cellspacing=12 class="table1" >
+                    <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
                         <th>Target Table-{{ data.target_table }}</th>
                     </tr>
-                    <tr>
+                    <tr class="tabledata">
                         <td>{{data.source_log}}</td>
                         <td>{{data.destination_log}}</td>
                     </tr>
                 </table >
         </div>
         <div *ngIf="data.execution_status === 1">
-                <h1>CountCheck</h1>  <h2>Result:Pass</h2>
-            <h3>Both Source and Target records count matches</h3>
+                <div class="result">
+                        <table>
+                                <tr>
+                                    <td class="test-result">Result: Pass</td>
+                                    <td><img src="assets/images/003-verification-symbol.png"/>
+                                    </tr>
+                            </table>
+                     </div>
+            <div class="test-result">Both Source and Target records count matches</div>
         </div>
     </div>
+
     <div mat-dialog-content class="panel-body1" *ngIf="!data.nullcheck">
+            <div class="test-heading">Null Check</div>
         <div *ngIf="data.execution_status === 1">
-                <h1>NullCheck</h1>  <h2>Result:Pass</h2>
-            <h3>No Null values found in Target Table {{data.target_table}} </h3>
+                <div class="result">
+                        <table>
+                                <tr>
+                                    <td class="test-result">Result: Pass</td>
+                                    <td><img src="assets/images/003-verification-symbol.png"/>
+                                    </tr>
+                            </table>                    
+                     </div>
+            <div class="test-result">No Null values found in Target Table <span class="bold-text" >{{data.target_table}}</span> </div>
         </div>
         <div *ngIf="data.execution_status === 2">
-                <h1>NullCheck</h1>  <h2>Result:Fail</h2>
-            <h3>Null values found in Target Table {{data.target_table}} </h3>
+            <div class="result">
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Fail</td>
+                                <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
+                                </tr>
+                        </table>
+
+               
+            </div>
+            <div class="test-result">Null values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
             <table border=1>
                     <!-- <tr> <th>Target</th></tr>
                     <tr><td>{{data.destination_log}}</td></tr> -->
@@ -58,14 +182,31 @@
         </div>
        
     </div>
+
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.duplicate">
+            <div class="test-heading">Data Duplicate</div> 
         <div *ngIf="data.execution_status === 1">
-                <h1>Data Duplicate</h1>  <h2>Result:Pass</h2>
-            <h3>No Duplicate records found in Target Table {{data.target_table }}</h3>
+            <div>
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Pass</td>
+                                <td><img src="assets/images/003-verification-symbol.png"/>
+                                </tr>
+                        </table>
+                
+            </div>
+            <div class="test-result">No Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
         </div>
         <div *ngIf="data.execution_status === 2">
-                <h1>Data Duplicate</h1>  <h2>Result:Fail</h2>
-            <h3>Duplicate records found in Target Table {{data.target_table }}</h3>
+            <div class="result">
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Fail</td>
+                                <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
+                                </tr>
+                        </table>
+            </div>
+            <div class="test-result">Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
             <table>
                     <tr> <th>Target Table </th></tr>
                     <tr *ngFor="let y of data.src_value_dataduplication" cellspacing=2>
@@ -78,12 +219,23 @@
     </div>
 
     <div mat-dialog-content class="panel-body1"  *ngIf="!data.datavalidation">
+            <div class="test-heading">Data Validation</div>
         <div *ngIf="data.execution_status === 2">
-                <h1>Data Validation</h1>  <h2>Result:Fail</h2>
-            <h3>Source and Target Data doesn’t match</h3>
+                <div class="result">
+                        <table>
+                                <tr>
+                                    <td class="test-result">Result: Fail</td>
+                                    <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
+                                    </tr>
+                            </table>     
+                 <!-- <div class="test-result">Result:Fail</div>
+                 <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
+
+                </div>
+            <div class="test-result">Source and Target Data doesn’t match</div>
         </div>
-        <table >
-            <tr cellspacing=2>
+        <table class="table1">
+            <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_src">
                     <div>{{i}}</div></th>
             </tr>
@@ -94,33 +246,65 @@
         </table>
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.datavalidation_pass">
-        <div *ngIf="data.execution_status === 1">
-                <h1>Data Validation</h1>  <h2>Result:Pass</h2>
+            <div class="test-heading">Data Validation</div>
 
-            <h3>Both Source and Target Data matches</h3>
+        <div *ngIf="data.execution_status === 1">
+                <div class="result">
+                        <table>
+                                <tr>
+                                    <td class="test-result">Result: Pass</td>
+                                    <td><img src="assets/images/003-verification-symbol.png"/> </td>
+                                </tr>
+                            </table> 
+            </div>
+            <div class="test-result">Both Source and Target Data matches</div>
         </div>
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.ddlcheck">
-            <h1>DDL Check</h1>  <h2>Result:Fail</h2>
-        <h3>Both Source and Target schema doesn’t matches</h3>
-            <table cellspacing=12 border=1 >
-                <tr>
+            <div class="test-heading">DDL Check</div> 
+            <div class="result">
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Fail</td>
+                                <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
+                                </td>
+                            </tr>
+                        </table>
+             <!-- <div class="test-result">Result:Fail</div>
+             <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
+
+            </div>
+        <div class="test-result">Both Source and Target schema doesn’t matches</div>
+            <table cellspacing=12 class="table1">
+                <tr class="tableheader">
                 <th>Source Table</th>
-                <th>Target Table </th></tr>
-                <tr>
+                <th>Target Table </th>
+                </tr>
+                <tr class="tabledata">
                     <td>{{data.source_log}}</td>
                     <td>{{data.destination_log}}</td>
                 </tr>
             </table>
     </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
-            <h1>DDL Check</h1>  <h2>Result:Pass</h2>
+            <div class="test-heading">DDL Check</div> 
+            <div class="result">
+                    <table>
+                            <tr>
+                                <td class="test-result">Result: Pass</td>
+                                <td><img src="assets/images/003-verification-symbol.png"/>
+                                </td>
+                            </tr>
+                        </table>
+             <!-- <div class="test-result">Result:Pass</div>
+             <img src="assets/images/003-verification-symbol.png"/> -->
 
-        <h3>Both Source and Target Data matches</h3>
+            </div>
+        <div class="test-result">Both Source and Target Data matches</div>
     </div>
 </div>
 <div mat-dialog-actions class="close">
-        <button mat-flat-button color="primary" [disabled]="data.execution_status === 1" (click)="onexport(data.case_log_id) ">Export </button>
-        <button mat-flat-button	color="warn" (click)="onNoClick()">Close</button>
+        <button mat-flat-button  
+        class="export-btn" [disabled]="data.execution_status === 1" (click)="onexport(data.case_log_id) ">Export </button>
 
     </div>

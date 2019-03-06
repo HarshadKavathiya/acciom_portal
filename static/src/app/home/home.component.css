@@ -1,58 +1,35 @@
 .card{
- 
-  background-color: #eee;
+  background-color: #ffffff;
   display:flex;
+  flex-grow:1;
   justify-content: center;
-  padding-top:10px;
-  background-image: linear-gradient(to bottom right, #050505, #373636);
+  vertical-align: center;
+  /* position: absolute; */
+  overflow:auto;
+  /* padding-top:140px; */
+  /* background-image: linear-gradient(to bottom right, #050505, #373636); */
   float:left;
     width:100%;
-  
-    height:100vh;
+    height:auto;
 }
-
-@media screen and (min-height:100vh)
-{
-  .card{
- 
-    background-color: #eee;
-    display:flex;
-    justify-content: center;
-    padding-top:10px;
-    background-image: linear-gradient(to bottom right, #050505, #373636);
-    float:left;
-      width:100%;
-      height:190vh;
-  }
-  
+.app-home-container{  
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+  width:100vw;
 }
 
 .file{
   margin-bottom: 5px;
 }
-
-
-input, label {
-    display: block;
-    border:2px solid black;
-  }
-  
   input[type=file]::-webkit-file-upload-button {
-    border: 0.3px solid grey;
-    background: rgb(20, 20, 20);
+
+    background-color: #f2f2f2;
+
     font-family:'Open Sans', sans-serif;
     color:white;
   }
-  .btn{
-    background: rgb(20, 20, 20);
-    color:white;
-  }
 
-  .res{
-    font-size:20px;
-    letter-spacing: 1px;
-    font-weight: 10px;
-  }
   .result{
     font-size: size 20px;
     font-weight: 600;
@@ -60,30 +37,105 @@ input, label {
     align-content: center
     /* font-family:inherit */
   }
+
   .result-card{
-    min-width:300px;
-    min-height:200px;
-    border:2px solid black;
+    width:458px;
+   
+    height:auto;
+    /* border:2px solid black; */
   }
 
   .cright{
     text-align: center;
-    margin: 12px 12px 12px 12px;
+    margin: 0px;
 }
 
 .testcase{
   text-align: center
 }
-.uploadbtn{
+/* .uploadbtn{
   margin-right:15px;
+} */
+.card-title{
+  display: flex;
+  justify-content: space-between;
 }
+.upload-image{
+  width:25px;
+  height:25px;
+  margin:4px;
+}
+.Upload-File-Box{
+  cursor: pointer;
+  height:150px;
+  display:flex;
+flex-direction: column;
+justify-content: center;
+border-radius: 24px;
+border: solid 1px #979797;
+background-color: #d8d8d8;
+}
+.Upload-File-Box-content{
+  text-align: center;
+  font-family: 'OpenSans-Light',sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #2f2f2f;
 
+}
+.btn-next{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+    width: 103px;
+    height: 49px;
+    border-radius: 24px;
+    background-color: #b72e34;
+    margin-right:5%;
+}
+.result-card{
+ 
+  font-family: OpenSans;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  /* border-radius:24px; */
+}
+.title{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:0px;
+  margin:0px;
+}
+.title-content{
+  font-family: 'OpenSans-Light',sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+
+}
 .for-form{
-  border:2px solid black; 
+  /* border:2px solid black;  */
+  width: auto;
+  /* border-radius:24px; */
 }
 .closebtn{
-  background-color: rgb(246, 153, 153);
-  float:right;
+ 
   opacity: 1.6;
   transition: 0.3s;
 }
@@ -99,7 +151,7 @@ input, label {
 
 }
 .btndownlaod1{
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'OpenSans-Light', sans-serif;
     position:relative;
     text-align:center;
     color:red;
@@ -109,4 +161,75 @@ input, label {
   opacity: 1.6;
   transition: 0.3s;
   color:blue
+}
+.afterupload-showtestcase{
+  font-family: 'OpenSans-Regular',sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #020202;
+}
+.btn-container{
+  display: flex;
+  max-width: 320px;
+  /* direction: row; */
+  /* justify-content:space-around; */
+  flex-wrap: wrap;
+}
+.uploadbtn{
+  display:flex;
+flex-direction: row;
+justify-content: center;
+  width: 103px;
+  height: 49px;
+  border-radius: 24px;
+  background-color: #b72e34;
+  margin-right:5%;
+}
+.uploadexecute{
+  text-align: center;
+  width: 171px;
+  height: 49px;
+  border-radius: 24px;
+  background-color: #b72e34;
+}
+.btn-content{
+  display: flex;
+  text-align: center;
+flex-wrap: wrap;
+white-space: wrap;
+  font-family: OpenSans;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #ffffff;
+}
+@media screen and (max-width:600px)
+{
+  .for-form{
+    width:300px;
+    height: auto;
+  }
+  .result-card{
+    width:300px;
+    height: auto;
+  }
+  .uploadbtn{
+    width: 120px;
+    height: 49px;
+  }
+  .uploadexecute{
+    width: 120px;
+    height: 49px;
+  }
+
+
 }

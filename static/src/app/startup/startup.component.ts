@@ -217,11 +217,11 @@ export class StartupComponent implements OnInit {
       case 0:
       return 'blue';
       case 1:
-      return '#45CE30';
+      return '#4ac69b';
       case 2:
-      return "#E84342";
+      return "#e56868";
       case 3:
-      return '#F7861B'
+      return '#f3a563'
       case 4:
       return 'red';
     }
@@ -371,8 +371,9 @@ showlog(test_name,src_table,target_table,case_log){
    }
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
+    panelClass: 'my-class',
     width: '48%',
-    height:'50%',
+    height:'55%',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,

@@ -503,9 +503,6 @@ SOFTWARE.
 
 
 
-ng4-loading-spinner
-MIT
-
 file-saver
 MIT
 The MIT License
@@ -520,6 +517,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
   [1]: http://eligrey.com
 
+
+ng4-loading-spinner
+MIT
 
 @angular/router
 MIT
@@ -587,8 +587,6 @@ MIT
 @angular/material/button
 
 @angular/material/toolbar
-
-@angular/material/progress-bar
 
 @angular/material/form-field
 
