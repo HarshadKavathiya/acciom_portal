@@ -23,46 +23,50 @@ class SparkCheck(object):
     def load_source(self, offset, limit, src_db_type):
         if src_db_type == 'mysql':
             self.dataframe_mysql_source = self.sqlContext.read.format("jdbc").option("url",
-                                                                                     "jdbc:mysql://localhost/{0}".format(
+                                                                                     "jdbc:mysql://{0}/{1}".format(
+                                                                                         source_hostname,
                                                                                          source_db)).option("driver",
                                                                                                             "com.mysql.jdbc.Driver").option(
                 "dbtable",
                 "(SELECT * FROM {0} ORDER BY 1 LIMIT {1},{2}) AS t".format(source_table, offset, limit)).option("user",
                                                                                                                 '{0}'.format(
-                                                                                                                    dbmysql_user_name)).option(
-                "password", "{0}".format(dbmysql_user_password)).load()
+                                                                                                                    source_name)).option(
+                "password", "{0}".format(source_password)).load()
         if src_db_type == 'sqlserver':
             print(offset, limit)
             self.dataframe_mysql_source = self.sqlContext.read.format("jdbc").option("url",
-                                                                                     "jdbc:sqlserver://localhost;databaseName={0}".format(
+                                                                                     "jdbc:sqlserver://{0);databaseName={1}".format(
+                                                                                         source_hostname,
                                                                                          source_db)).option("driver",
                                                                                                             "com.microsoft.sqlserver.jdbc.SQLServerDriver").option(
                 "dbtable",
                 "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY) AS t".format(source_table,
                                                                                                       offset,
                                                                                                       limit)).option(
-                "user", "{0}".format(dbsql_user_name)).option("password", "{0}".format(dbsql_user_password)).load()
+                "user", "{0}".format(source_name)).option("password", "{0}".format(source_password)).load()
 
     # print("select * from table limit {0} {1}".format(offset,limit))
     def load_destination(self, offset, limit, des_db_type):
         if des_db_type == 'mysql':
             self.dataframe_mysql_destination = self.sqlContext.read.format("jdbc").option("url",
-                                                                                          "jdbc:mysql://localhost/{0}".format(
+                                                                                          "jdbc:mysql://{0}/{1}".format(
+                                                                                              destination_hostname,
                                                                                               des_db)).option("driver",
                                                                                                               "com.mysql.jdbc.Driver").option(
                 "dbtable", "(SELECT * FROM {0} ORDER BY 1 LIMIT {1},{2}) AS t".format(des_table, offset, limit)).option(
-                "user", "{0}".format(dbmysql_user_name)).option("password", "{0}".format(dbmysql_user_password)).load()
+                "user", "{0}".format(destination_name)).option("password", "{0}".format(destination_password)).load()
         if des_db_type == 'sqlserver':
             print(offset, limit)
             print(des_table)
             self.dataframe_mysql_destination = self.sqlContext.read.format("jdbc").option("url",
-                                                                                          "jdbc:sqlserver://localhost;databaseName={0}".format(
+                                                                                          "jdbc:sqlserver://{0};databaseName={1}".format(
+                                                                                              destination_hostname,
                                                                                               des_db)).option("driver",
                                                                                                               "com.microsoft.sqlserver.jdbc.SQLServerDriver").option(
                 "dbtable",
                 "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY) AS t".format(des_table, offset,
                                                                                                       limit)).option(
-                "user", "{0}".format(dbsql_user_name)).option("password", "{0}".format(dbsql_user_password)).load()
+                "user", "{0}".format(destination_name)).option("password", "{0}".format(destination_password)).load()
         # print("select * from table limit {0} {1}".format(offset,limit))
 
     def datadiff(self):
@@ -80,10 +84,12 @@ if __name__ == '__main__':
     api_end_point = sys.argv[7]
     row_count = sys.argv[8]
     limit_row = sys.argv[9]
-    dbmysql_user_name = sys.argv[10]
-    dbmysql_user_password = sys.argv[11]
-    dbsql_user_name = sys.argv[12]
-    dbsql_user_password = sys.argv[13]
+    source_name = sys.argv[10]
+    source_password = sys.argv[11]
+    source_hostname = sys.argv[12]
+    destination_name = sys.argv[13]
+    destination_password = sys.argv[14]
+    destination_hostname = sys.argv[15]
     total_count = 0
     final_result = []
     sc = SparkCheck()
@@ -106,3 +112,4 @@ if __name__ == '__main__':
 
     data = {"result": final_result, "result_count": total_count}
     result = requests.post(api_end_point, json=data)
+

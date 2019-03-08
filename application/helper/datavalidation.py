@@ -7,8 +7,8 @@ from index import basedir
 
 def datavalidation(source_db, source_table, src_db_type, des_db,
                    des_table, des_db_type, spark_job_id, row_count,
-                   limit_row, dbmysql_user_name, dbmysql_user_password, dbsql_user_name,
-                   dbsql_user_password):
+                   limit_row, source_name, source_password, source_hostname,
+                   destination_name, destination_password, destination_hostname):
     api_end_point = current_app.config.get('API_END_POINT') + "/api/spark-job-status/{0}".format(spark_job_id)
     driver_mem = current_app.config.get('DRIVER_MEMORY')
     executor_mem = current_app.config.get('EXECUTOR_MEMORY')
@@ -22,18 +22,26 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
                      ' {2}'
                      ' {3} {4} {5} {6} {7} {8} {9}'
                      ' {10} {11} {12} '
-                     '{13} {14} {15} --driver-memory {16} --executor-memory {17}'.format(sqljdbc, mysql_connector,
-                                                                                         py_spark_file,
-                                                                                         source_db,
-                                                                                         source_table, src_db_type,
-                                                                                         des_db,
-                                                                                         des_table, des_db_type,
-                                                                                         api_end_point,
-                                                                                         row_count, limit_row,
-                                                                                         dbmysql_user_name,
-                                                                                         dbmysql_user_password,
-                                                                                         dbsql_user_name,
-                                                                                         dbsql_user_password,
-                                                                                         driver_mem, executor_mem),
+                     '{13} {14} {15} {16} {17} --driver-memory {18} --executor-memory {19}'.format(sqljdbc,
+                                                                                                   mysql_connector,
+                                                                                                   py_spark_file,
+                                                                                                   source_db,
+                                                                                                   source_table,
+                                                                                                   src_db_type,
+                                                                                                   des_db,
+                                                                                                   des_table,
+                                                                                                   des_db_type,
+                                                                                                   api_end_point,
+                                                                                                   row_count, limit_row,
+                                                                                                   source_name,
+                                                                                                   source_password,
+                                                                                                   source_hostname,
+                                                                                                   destination_name,
+                                                                                                   destination_password,
+                                                                                                   destination_hostname,
+                                                                                                   driver_mem,
+                                                                                                   executor_mem),
                      shell=True,
                      universal_newlines=False)
+
+

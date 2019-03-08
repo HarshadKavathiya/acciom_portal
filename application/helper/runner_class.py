@@ -7,6 +7,8 @@ from application.helper.ddlcheck import ddl_check
 from application.helper.duplication import duplication
 from application.helper.nullcheck import null_check
 from application.models.user import SparkJob, TestCaseLog, TestCase
+from db_config import (SOURCE_DB_USERNAME, SOURCE_DB_PASSWORD, SOURCE_DB_HOSTNAME, \
+                       DEST_DB_USERNAME, DEST_DB_PASSWORD, DEST_DB_HOSTNAME)
 
 
 def split_table(table_name):
@@ -126,10 +128,12 @@ def run_test(case_id):
                                  column_name=case_id.test_column,
                                  test_queries=case_id.test_queries)
         if case_id.test_name == 'Datavalidation':
-            dbmysql_user_name = 'Acciom_user'  # TODO:change while tuploa
-            dbmysql_user_password = 'Acciomuser'
-            dbsql_user_name = 'SA'
-            dbsql_user_password = 'acciom_user@123'
+            src_user_name = SOURCE_DB_USERNAME
+            src_user_password = SOURCE_DB_PASSWORD
+            src_hostname = SOURCE_DB_HOSTNAME
+            des_user_name = DEST_DB_USERNAME
+            des_user_password = DEST_DB_PASSWORD
+            des_hostname = DEST_DB_HOSTNAME
             db_type = split_db(case_id.test_detail)
             source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
             table_name = split_table(case_id.table_src_target)
@@ -185,8 +189,9 @@ def run_test(case_id):
             if case_id.test_name == 'Datavalidation':
                 datavalidation(db_type[0][1:], table_name[0][0], db_type[2][1:],
                                db_type[1][1:], table_name[0][1], db_type[3][1:],
-                               spark_job.spark_job_id, row_count, limit, dbmysql_user_name,
-                               dbmysql_user_password, dbsql_user_name, dbsql_user_password)
+                               spark_job.spark_job_id, row_count, limit, src_user_name,
+                               src_user_password, src_hostname,
+                               des_user_name, des_user_password, des_hostname)
 
 
         elif result['res'] == 0:
