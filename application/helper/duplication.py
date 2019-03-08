@@ -3,9 +3,9 @@
 
 
 def duplication(target_cursor, target_table, column_name, test_queries):
+    my_list = []
     try:
         column = column_name.split(';')
-        print(column)
         if test_queries == 'None':
             print(len(column))
             sub_startquery = ""
@@ -28,6 +28,9 @@ def duplication(target_cursor, target_table, column_name, test_queries):
                            "FROM {0} ".format(target_table) + \
                            "GROUP BY " + sub_endquery + " HAVING COUNT(*) >1;"
             print("custom query", custom_query)
+            column.append('Count')
+            print(column)
+            my_list.append(column)
         else:
             custom_query = test_queries.split(':')[1]
 
@@ -35,7 +38,6 @@ def duplication(target_cursor, target_table, column_name, test_queries):
 
         target_cursor.execute(custom_query)
 
-        my_list = []
         for row in target_cursor:
             my_list.append(row)
         import json

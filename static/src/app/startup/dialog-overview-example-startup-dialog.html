@@ -304,7 +304,9 @@ opacity: 0.9;
     </div>
 </div>
 <div mat-dialog-actions class="close">
-        <button mat-flat-button  
-        class="export-btn" [disabled]="data.execution_status === 1" (click)="onexport(data.case_log_id) ">Export </button>
+        <a mat-flat-button  
+        class="export-btn" [disabled]="data.execution_status === 1"
+        href="{{onexport(data.case_log_id)}}" >Export </a>
 
     </div>
+

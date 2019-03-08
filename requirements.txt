@@ -1,5 +1,5 @@
 alembic==1.0.5
-amqp==2.4.1
+amqp==2.4.2
 aniso8601==4.0.1
 asn1crypto==0.24.0
 bcrypt==3.1.4
@@ -33,6 +33,7 @@ MarkupSafe==1.1.0
 mccabe==0.6.1
 openpyxl==2.5.12
 passlib==1.7.1
+psycopg2==2.7.7
 psycopg2-binary==2.7.6.1
 py4j==0.10.7
 pycodestyle==2.5.0
@@ -40,12 +41,13 @@ pycparser==2.19
 pyflakes==2.1.0
 PyJWT==1.4.2
 PyMySQL==0.9.3
-pyodbc==4.0.25
+pyodbc==4.0.26
 pyspark==2.4.0
 python-dateutil==2.7.5
 python-editor==1.0.3
 pytz==2018.7
 redis==3.0.1
+relativetimebuilder==0.2.0
 requests==2.21.0
 six==1.11.0
 SQLAlchemy==1.2.14

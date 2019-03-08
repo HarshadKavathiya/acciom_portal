@@ -138,7 +138,7 @@
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 3">Waiting</td>
                       <td> <div class="tableheader-test-date">{{ case_log.executed_at | date:'short' }}</div> </td>
-                      <td><button  mat-button (click)="showlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">
+                      <td><button  mat-button (click)="getlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">
                         dehaze
                         </i></button></td>
                       </tr>

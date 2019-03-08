@@ -140,8 +140,6 @@ class TestSuite(db.Model):
                 'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,
                 'test_execution_status': x.execution_status,
-                'source_log': x.src_execution_log,
-                'destination_log': x.des_execution_log,
                 'executed_at': str(x.executed_at)[0:19]
             }
 
@@ -252,6 +250,21 @@ class TestCaseLog(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def return_all_log(cls, test_case_log_id):
+        def test_case_log_json(x):
+            return {
+                'test_case_log_id': x.test_case_log_id,
+                'test_case_id': x.test_case_id,
+                'test_execution_status': x.execution_status,
+                'source_log': x.src_execution_log,
+                'destination_log': x.des_execution_log,
+            }
+
+        return {"data": test_case_log_json(TestCaseLog.query.filter_by(
+            test_case_log_id=test_case_log_id
+        ).first())}
 
 
 class SparkJob(db.Model):

@@ -4,7 +4,6 @@ import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
 import {trigger,state,style,transition,animate  } from '@angular/animations'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import {ExcelService} from '../services/excel.service';
 
 
@@ -30,6 +29,7 @@ export interface DialogData {
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-startup',
@@ -273,7 +273,21 @@ show_logdialog(test_name){
       this.ddlcheck_pass=false    }
 }
 
+getlog(test_name,src_table,target_table,case_log_id){
+  //calls rest api with case_log_id and fetch the
+  // case_name , case_src_log and case_des_log.
+  this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
+
+    console.log(data.test_case_log.data)
+    this.showlog(test_name, src_table, target_table, data.test_case_log.data)
+    // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
+  });
+
+
+}
+
 showlog(test_name,src_table,target_table,case_log){
+  console.log(case_log.test_case_log_id)
   if (test_name =='CountCheck'){
     this.show_logdialog(test_name)
   }
@@ -379,7 +393,6 @@ showlog(test_name,src_table,target_table,case_log){
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
       src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
-   
   });
   dialogRef.afterClosed().subscribe(result => {
    });}}
@@ -388,19 +401,11 @@ showlog(test_name,src_table,target_table,case_log){
   templateUrl: 'dialog-overview-example-startup-dialog.html',
 })
 export class DialogOverviewExampleDialogstartup {
-
   constructor( private fileUploadService:UploadserviceService,
     private excelService:ExcelService,
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogstartup>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
-
   onNoClick(): void {this.dialogRef.close();}
   onexport(case_log_id){
-
-    if(confirm("Download Excel!")){
-    this.fileUploadService.exportinexcel(case_log_id).subscribe(data=>{
-      this.excelService.exportAsExcelFile(data, 'sample');
-},err=>{console.log(err)})
-}else{
-  return;
-}}}
+    return `/api/export/${case_log_id}`
+}}

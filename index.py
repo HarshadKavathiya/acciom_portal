@@ -34,6 +34,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 static_folder = basedir + '/static/acciom_ui/'
 
 app = create_app()
+app.url_map.strict_slashes = False
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 api = Api(app)

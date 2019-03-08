@@ -116,13 +116,9 @@ export class UploadserviceService {
     run.append('case_id',case_id)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    // let headers = new HttpHeaders()
-    // headers.append('Content-Type','application/json')
-    // headers.append('Authorization',this.newtoken)
+    
     let headers =new HttpHeaders({
-      'Authorization':this.newtoken,
-      // 'Content-Type':'application/json',
-      
+      'Authorization':this.newtoken,      
     })
     return this.http.post<any>(`${this.url}/test-case-job/`,run,{headers:headers});
   }
@@ -136,7 +132,15 @@ export class UploadserviceService {
     })
     return this.http.get<any>(`${this.url}/export/${case_log_id}/`,{headers:headers})
   }
-
+  testcase_log_byid(test_case_log){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/test-case-log/${test_case_log}/`,{headers:headers})
+  }
 
 
 
