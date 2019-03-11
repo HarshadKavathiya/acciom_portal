@@ -34,16 +34,22 @@ class SparkCheck(object):
                 "password", "{0}".format(source_password)).load()
         if src_db_type == 'sqlserver':
             print(offset, limit)
-            self.dataframe_mysql_source = self.sqlContext.read.format("jdbc").option("url",
-                                                                                     "jdbc:sqlserver://{0);databaseName={1}".format(
-                                                                                         source_hostname,
-                                                                                         source_db)).option("driver",
-                                                                                                            "com.microsoft.sqlserver.jdbc.SQLServerDriver").option(
-                "dbtable",
-                "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY) AS t".format(source_table,
-                                                                                                      offset,
-                                                                                                      limit)).option(
-                "user", "{0}".format(source_name)).option("password", "{0}".format(source_password)).load()
+            self.dataframe_mysql_source = self.sqlContext.read.format("jdbc"). \
+                option("url", "jdbc:sqlserver://{0};databaseName={1}".format(source_hostname, source_db)). \
+                option("driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver"). \
+                option("dbtable", "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY) AS t".format(
+                source_table, offset, limit)). \
+                option("user", "{0}".format(source_name)). \
+                option("password", "{0}".format(source_password)).load()
+        if src_db_type == 'postgres':
+            self.dataframe.mysql_source = self.sqlContext.read.format("jdbc"). \
+                option("url", "jdbc:postgresql://{0}/{1}".
+                       format(source_hostname, source_db)). \
+                option("driver", "org.postgresql.Driver"). \
+                option("dbtable", "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} LIMIT {2} ) AS t".format(
+                source_table, offset, limit)). \
+                option("user", "{0}".format(source_name)). \
+                option("password", "{0}".format(source_password)).load()
 
     # print("select * from table limit {0} {1}".format(offset,limit))
     def load_destination(self, offset, limit, des_db_type):
@@ -67,7 +73,15 @@ class SparkCheck(object):
                 "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY) AS t".format(des_table, offset,
                                                                                                       limit)).option(
                 "user", "{0}".format(destination_name)).option("password", "{0}".format(destination_password)).load()
-        # print("select * from table limit {0} {1}".format(offset,limit))
+
+        if des_db_type == 'postgres':
+            self.dataframe_mysql_destination = self.sqlContext.read.format("jdbc"). \
+                option("url", "jdbc:postgresql://{0}/{1}".format(destination_hostname, des_db)). \
+                option("driver", "org.postgresql.Driver"). \
+                option("dbtable", "(SELECT * FROM {0} ORDER BY 1 OFFSET {1} LIMIT {2} ) AS t".format(
+                des_table, offset, limit)). \
+                option("user", "{0}".format(destination_name)). \
+                option("password", "{0}".format(destination_password)).load()
 
     def datadiff(self):
         output = self.dataframe_mysql_source.subtract(self.dataframe_mysql_destination)
@@ -109,6 +123,7 @@ if __name__ == '__main__':
         final_result.extend(result_op)
         rc = rc - limit
         offset = offset + limit
+        # datadiff
 
     data = {"result": final_result, "result_count": total_count}
     result = requests.post(api_end_point, json=data)

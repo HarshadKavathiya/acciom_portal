@@ -217,3 +217,4 @@ def run_test(case_id):
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
 # select column_name from information_schema
 # .columns where table_name='Inventory';
+
