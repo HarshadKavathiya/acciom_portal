@@ -13,6 +13,13 @@ RUN apt-get install -y default-jdk
 RUN python3 -m pip install pip --upgrade
 RUN python3 -m pip install PyMySQL
 
+RUN wget http://mirrors.estointernet.in/apache/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz
+RUN tar xvf spark-2.4.0-bin-hadoop2.7.tgz
+RUN mv spark-2.4.0-bin-hadoop2.7 /usr/local/
+RUN rm spark-2.4.0-bin-hadoop2.7.tgz
+RUN ln -s /usr/local/spark-2.4.0-bin-hadoop2.7/ /usr/local/spark
+ENV SPARK_HOME="/usr/local/spark"
+
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /acciom
 WORKDIR /acciom
@@ -23,10 +30,5 @@ ENV LC_ALL="C.UTF-8"
 ENV LANG="C.UTF-8"
 ENV FLASK_APP="manage.py"
 
-RUN wget http://mirrors.estointernet.in/apache/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz
-RUN tar xvf spark-2.4.0-bin-hadoop2.7.tgz
-RUN mv spark-2.4.0-bin-hadoop2.7 /usr/local/
-RUN rm spark-2.4.0-bin-hadoop2.7.tgz
-RUN ln -s /usr/local/spark-2.4.0-bin-hadoop2.7/ /usr/local/spark
-ENV SPARK_HOME="/usr/local/spark"
+
 
