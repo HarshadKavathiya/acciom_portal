@@ -10,6 +10,7 @@ from openpyxl import load_workbook
 # from celery_task import my_background_task
 from application.helper.runner_class import run_by_case_id
 from application.models.user import TestSuite, TestCase, TestCaseLog
+from index import db
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet',
@@ -63,17 +64,17 @@ class TestSuites(Resource):
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i][j],
                                 test_status=0,
-                                test_priority=temp_test[i + 2][j],
-                                test_detail=temp_test[i + 3][j],
-                                test_column=temp_test[i + 4][j],
-                                table_src_target=temp_test[i + 5][j],
-                                test_name=temp_test[i + 6][j],
-                                test_queries=temp_test[i + 7][j],
-                                test_expected=temp_test[i + 8][j],
-                                test_actual=temp_test[i + 9][j],
-                                test_created_by=temp_test[i + 10][j],
-                                test_executed_by=temp_test[i + 11][j],
-                                test_comment=temp_test[i + 12][j])
+                                test_priority=None,
+                                test_detail=temp_test[i + 1][j],
+                                test_column=temp_test[i + 2][j],
+                                table_src_target=temp_test[i + 3][j],
+                                test_name=temp_test[i + 4][j],
+                                test_queries=temp_test[i + 5][j],
+                                test_expected=None,
+                                test_actual=None,
+                                test_created_by=None,
+                                test_executed_by=None,
+                                test_comment=None)
                 temp.save_to_db()
 
         if int(data['exvalue']) == 1:
@@ -154,3 +155,44 @@ class ExportTestLog(Resource):
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             headers={"Content-disposition":
                          "attachment; filename=export123.xlsx"})
+
+
+class EditTestCase(Resource):
+    @jwt_required
+    def delete(self, case_id):
+        del_obj = TestCase.query.filter_by(test_case_id=case_id).one()
+        db.session.delete(del_obj)
+        db.session.commit()
+        return {"success": True, "message": "Succesfully Deleted case {0}".format(case_id)}
+
+    @jwt_required
+    def get(self, case_id):
+        obj = TestCase.query.filter_by(test_case_id=case_id).one()
+        print(type(obj.table_src_target))
+        table_src_tar = obj.table_src_target.strip(';')
+        src_target_table = table_src_tar.split(":")
+        lst1 = []
+        lst2 = []
+        strip_db_detail = obj.test_detail.strip("@'").split("'@")
+        for i in range(len(strip_db_detail)):
+            lst1.append(strip_db_detail[i].split(':'))
+        lst2.append(lst1[2][1].strip('\n'))
+        lst2.append(lst1[4][1].strip('\n'))
+        lst2.append(lst1[0][1].strip('\n'))
+        lst2.append(lst1[3][1].strip('\n'))
+        print(lst2)
+        # test_qry = obj.test_queries.split(':')
+        # src_qry = test_qry[0]
+        # des_qry = test_qry[1]
+        payload = {"test_case_id": obj.test_case_id,
+                   "test_name": obj.test_name,
+                   "test_status": obj.test_status,
+                   "src_table": src_target_table[0],
+                   "target_table": src_target_table[1],
+                   "test_queries": obj.test_queries,
+                   "src_db_name": lst2[0][1:],
+                   "des_db_name": lst2[1][1:],
+                   "src_db_type": lst2[2][1:],
+                   "des_db_type": lst2[3][1:]}
+
+        return {"success": True, "res": payload}

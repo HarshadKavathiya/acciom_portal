@@ -1,0 +1,47 @@
+<head>
+        <style type="text/css">
+.bold-text{
+    font-weight: bold;
+}
+.display-detail{
+    display: flex;
+    flex-direction: column;
+    font-family: 'OpenSans-Light',sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+}
+.heading{
+    font-family: 'OpenSans-Regular', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-bottom: 25px;
+}
+        </style>
+</head>
+<mat-card>
+    <div class="heading">Case-Detail</div>
+<div mat-dialog-content class="display-detail">
+  <div><span class="bold-text">Source DB Name:</span>{{data.src_db_name}}</div> 
+   <div> <span class="bold-text">Target DB Name:</span>{{data.des_db_name}}</div>
+  <div><span class="bold-text">Source Table:</span>{{data.src_table_name}}</div>
+    <div><span class="bold-text">Target Table:</span>{{data.des_table_name}}</div>
+    <div><span class="bold-text">Source DB:</span>{{data.src_db_type}}</div>
+    <div><span class="bold-text">Target DB:</span>{{data.des_db_type}}</div>
+</div>
+</mat-card>
+<div mat-dialog-actions class="close">
+        <button mat-flat-button  
+        class="export-btn" (click)="onNoClick()">close</button>
+
+    </div>

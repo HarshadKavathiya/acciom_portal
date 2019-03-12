@@ -5,7 +5,7 @@ from flask import send_from_directory
 from application.api.login import (Register,
                                    Login, Logout)
 from application.api.testcase import TestCaseJob, TestCaseSparkJob
-from application.api.testsuite import TestSuites, ExportTestLog
+from application.api.testsuite import TestSuites, ExportTestLog, EditTestCase
 from application.models.user import RevokedTokenModel
 from index import jwt, app, api, static_folder
 
@@ -39,4 +39,4 @@ api.add_resource(TestCaseJob,
                  '/api/test-case-job')
 api.add_resource(TestCaseSparkJob, '/api/spark-job-status/<int:spark_job_id>')
 api.add_resource(ExportTestLog, '/api/export/<int:case_log_id>')
-# api.add_resource(TestCaseLogDetail, '/api/test-case-log/<int:test_case_log_id>')
+api.add_resource(EditTestCase, '/api/edit-test-case/<int:case_id>')

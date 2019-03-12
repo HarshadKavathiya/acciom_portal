@@ -27,6 +27,15 @@ export interface DialogData {
   target_table:string;
   value_src_nullcheck:Array<any>;
 }
+export interface DialogDataCaseDetail {
+ src_db_name:string;
+ des_db_name:string;
+ src_table_name:string;
+ des_table_name:string;
+ query:string;
+ src_db_type:String;
+ des_db_type:String;
+}
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { $ } from 'protractor';
@@ -88,7 +97,12 @@ export class StartupComponent implements OnInit {
   times:any;
   execution_status:number;
   src_value_dataduplication:Array<any>;
-
+  src_db_name:String;
+  des_db_name:String;
+  src_table:String;
+  target_table:String;
+  src_db_type:String;
+  des_db_type:String;
   len:number;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
@@ -202,16 +216,41 @@ export class StartupComponent implements OnInit {
       }else{
         this.Initialize();
         this.starttimer();
-
       }
-      
-      
     },err=>{
       Swal("error",err.error.msg,"error")
 
     })
   }
-
+getcasedetails(case_id){
+//   this.src_db_name="",this.des_db_name="",this.src_table="",this.target_table="",
+// this.src_db_type="",this.des_db_type="";
+  event.stopPropagation();
+  this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
+console.log(data.res)
+this.src_db_name=data.res.src_db_name;
+this.des_db_name=data.res.des_db_name
+this.src_table=data.res.src_table
+this.target_table=data.res.target_table
+this.src_db_type=data.res.src_db_type
+this.des_db_type=data.res.des_db_type
+  this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
+    this.des_db_type)
+  });
+}
+showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type){
+  const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
+    panelClass: 'my-class',
+    width: '45%',
+    height:'45%',
+    data : {src_db_name:src_db_name,des_db_name:des_db_name,
+    src_table_name:src_table,des_table_name:target_table,
+    src_db_type:src_db_type,des_db_type:des_db_type }
+  });
+  
+  dialogRef.afterClosed().subscribe(result => {
+   });
+}
   getcolor(x){
     switch(x){
       case 0:
@@ -409,3 +448,19 @@ export class DialogOverviewExampleDialogstartup {
   onexport(case_log_id){
     return `/api/export/${case_log_id}`
 }}
+//<------------------------------------------------>
+@Component({
+  selector: 'dialog-overview-example-dialog-case-detail',
+  templateUrl: 'dialog-overview-example-dialog-case-detail.html',
+})
+export class DialogOverviewExampleDialogCaseDetail {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialogCaseDetail>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+}

@@ -12,7 +12,9 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { DbdetailsComponent } from './dbdetails/dbdetails.component';
+
 import { StartupComponent } from './startup/startup.component';
+import{DialogOverviewExampleDialogCaseDetail} from './startup/startup.component'
 import {DialogOverviewExampleDialog} from './home/home.component';
 import{DialogOverviewExampleDialogstartup} from './startup/startup.component';
 import {UploadserviceService} from './uploadservice.service';
@@ -57,10 +59,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     DbdetailsComponent,
     DialogOverviewExampleDialog,
     DialogOverviewExampleDialogstartup,
+    DialogOverviewExampleDialogCaseDetail,
     ColorDirective,
     AppcolorDirective,
     UserdetailComponent,
-    DashboardComponent
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,7 +94,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   ],
   providers: [UploadserviceService,CanDeactivateGuard,ExcelService],
   bootstrap: [AppComponent],
-  entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup]
+  entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup,
+    DialogOverviewExampleDialogCaseDetail]
 
 
 })

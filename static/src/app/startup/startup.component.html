@@ -62,8 +62,11 @@
                       {{ each_test.test_id }}
                     </td> 
                     <td style="width:50%">
+                        <button mat-button (click)="getcasedetails(each_test.test_case_id)">
+                            More</button>
                     </td>
                     <td style="width:10%">
+                      
                         TestStatus: 
                     </td>
                     <td style="width:10%">

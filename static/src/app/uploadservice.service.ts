@@ -142,6 +142,16 @@ export class UploadserviceService {
     return this.http.get<any>(`${this.url}/test-case-log/${test_case_log}/`,{headers:headers})
   }
 
+  getcasedetails(case_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/edit-test-case/${case_id}`,{headers:headers})
+  }
+
 
 
 }
