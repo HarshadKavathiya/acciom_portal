@@ -22,7 +22,7 @@ services:
       - mysql_database
     build: .
     command: >
-      bash -c "flask db upgrade && python3 app.py"
+      bash -c "flask db upgrade && gunicorn --bind 0.0.0.0:5000 --workers 3 --reload app:app"
     volumes:
       - .:/acciom
     ports:
