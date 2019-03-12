@@ -228,6 +228,8 @@ export class StartupComponent implements OnInit {
       }
     },err=>{
       Swal("error",err.error.msg,"error")
+      this.Initialize();
+        this.starttimer();
 
     })
   }
