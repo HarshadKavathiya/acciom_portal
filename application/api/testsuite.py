@@ -58,7 +58,7 @@ class TestSuites(Resource):
         i = 0
         # TODO: remove the hardcode colummn numbers
         #  and retrive the indexes of column
-        # print(temp_test)
+        print(temp_test)
         for j in range(ws.max_row - 1):
             if temp_test[i][j] in test_case_list:
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
@@ -167,6 +167,8 @@ class EditTestCase(Resource):
 
     @jwt_required
     def get(self, case_id):
+        src_qry = ''
+        des_qry = ''
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
         print(type(obj.table_src_target))
         table_src_tar = obj.table_src_target.strip(';')
@@ -180,19 +182,44 @@ class EditTestCase(Resource):
         lst2.append(lst1[4][1].strip('\n'))
         lst2.append(lst1[0][1].strip('\n'))
         lst2.append(lst1[3][1].strip('\n'))
-        print(lst2)
-        # test_qry = obj.test_queries.split(':')
-        # src_qry = test_qry[0]
-        # des_qry = test_qry[1]
+        if obj.test_column is not 'None':
+            print(obj.test_column)
+            column = obj.test_column
+        print("line 188 testqry", type(obj.test_queries))
+        if obj.test_queries == 'None':
+            print('came inif')
+            src_qry = 'None'
+            des_qry = 'None'
+        else:
+            print("came in else")
+            print(obj.test_queries)
+            if obj.test_name == 'CountCheck':
+                lst = obj.test_queries.split(';')
+                newlst = [i.split(':') for i in lst]
+                print("countcheck qry", newlst)
+                src_qry = newlst[0][1]
+                des_qry = newlst[1][1]
+                print(src_qry)
+                print(des_qry)
+            else:
+                lst = obj.test_queries.split(':')
+                print(lst)
+                src_qry = 'None'
+                des_qry = lst[1]
+
         payload = {"test_case_id": obj.test_case_id,
                    "test_name": obj.test_name,
                    "test_status": obj.test_status,
                    "src_table": src_target_table[0],
                    "target_table": src_target_table[1],
                    "test_queries": obj.test_queries,
+                   "src_column": 'None',
+                   "des_column": column,
                    "src_db_name": lst2[0][1:],
                    "des_db_name": lst2[1][1:],
                    "src_db_type": lst2[2][1:],
-                   "des_db_type": lst2[3][1:]}
+                   "des_db_type": lst2[3][1:],
+                   "src_qry": src_qry,
+                   "des_qry": des_qry}
 
         return {"success": True, "res": payload}

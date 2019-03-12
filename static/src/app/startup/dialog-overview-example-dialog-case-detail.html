@@ -1,8 +1,6 @@
 <head>
         <style type="text/css">
-.bold-text{
-    font-weight: bold;
-}
+
 .display-detail{
     display: flex;
     flex-direction: column;
@@ -27,18 +25,75 @@
   color: #2f2f2f;
   margin-bottom: 25px;
 }
+.case-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.bold-text{
+    font-weight: bold;
+}
+input{
+  min-width:10ch;
+  width: calc(var(--size) * 1ch);
+}
+.td1{
+  width:40%;
+
+}
+/* .td2{
+  width:15%;
+} */
+.td3{
+  width:60%;
+}
+
         </style>
 </head>
 <mat-card>
     <div class="heading">Case-Detail</div>
 <div mat-dialog-content class="display-detail">
-  <div><span class="bold-text">Source DB Name:</span>{{data.src_db_name}}</div> 
-   <div> <span class="bold-text">Target DB Name:</span>{{data.des_db_name}}</div>
-  <div><span class="bold-text">Source Table:</span>{{data.src_table_name}}</div>
-    <div><span class="bold-text">Target Table:</span>{{data.des_table_name}}</div>
-    <div><span class="bold-text">Source DB:</span>{{data.src_db_type}}</div>
-    <div><span class="bold-text">Target DB:</span>{{data.des_db_type}}</div>
-</div>
+  <table style="width:100%">
+    <tr>  <div> <td class="td1"><span class="bold-text">Source DB Name:</span></td>
+      <td class="td2"></td>
+      <td class="td3">{{data.src_db_name}}</td></div>
+    </tr>
+      <tr>  <div> <td  class="td1"><span class="bold-text">Target DB Name:</span></td>
+        <td></td>
+        <td class="td3">{{data.des_db_name}}</td></div>
+      </tr>
+      <tr>  <div> <td class="td1"><span class="bold-text">Source Table:</span></td>
+        <td></td>
+        <td class="td3">{{data.src_table_name}}</td></div>
+      </tr>
+        <tr>  <div> <td class="td1"><span class="bold-text">Target Table:</span></td>
+          <td></td>
+          <td class="td3">{{data.des_table_name}}</td></div>
+        </tr>
+          <tr>  <div> <td class="td1"><span class="bold-text">Source DB:</span></td>
+            <td></td>
+            <td class="td3">{{data.src_db_type}}</td></div></tr>
+            <tr>  <div> <td class="td1"><span class="bold-text">Target DB:</span></td>
+              <td></td>
+              <td class="td3">{{data.des_db_type}}</td></div></tr>
+              <tr>  <div> <td class="td1"><span class="bold-text">Source Column:</span></td>
+                <td></td>
+                <td class="td3">{{data.src_column}}</td></div></tr>
+                <tr>  <div> <td class="td1"><span class="bold-text">Target Column:</span></td>
+                  <td></td>
+                  <td class="td3">{{data.des_column}}</td></div></tr>
+                  <tr>  <div> <td class="td1"><span class="bold-text">Source Query:</span></td>
+                    <td></td>
+                    <td class="td3">{{data.src_qry}}</td></div></tr>
+                    <tr>  <div> <td class="td1"><span class="bold-text">Target Query:</span></td>
+                      <td></td>
+                      <td class="td3">{{data.des_qry}}</td></div></tr>
+   
+  
+  </table>
+
+  </div>
 </mat-card>
 <div mat-dialog-actions class="close">
         <button mat-flat-button  

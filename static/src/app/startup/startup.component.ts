@@ -25,6 +25,7 @@ export interface DialogData {
   src_value_dataduplication:Array<any>;
   src_table:string;
   target_table:string;
+  
   value_src_nullcheck:Array<any>;
 }
 export interface DialogDataCaseDetail {
@@ -35,6 +36,10 @@ export interface DialogDataCaseDetail {
  query:string;
  src_db_type:String;
  des_db_type:String;
+ src_column:String
+ des_column:String;
+ src_qry:String;
+ des_qry:String;
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -103,6 +108,10 @@ export class StartupComponent implements OnInit {
   target_table:String;
   src_db_type:String;
   des_db_type:String;
+  src_column:String
+  des_column:String;
+  src_qry:String;
+  des_qry:String;
   len:number;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
@@ -234,18 +243,23 @@ this.src_table=data.res.src_table
 this.target_table=data.res.target_table
 this.src_db_type=data.res.src_db_type
 this.des_db_type=data.res.des_db_type
+this.src_column=data.res.src_column
+this.des_column=data.res.des_column
+this.src_qry=data.res.src_qry
+this.des_qry=data.res.des_qry
   this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
-    this.des_db_type)
+    this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry)
   });
 }
-showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type){
+showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry){
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
     panelClass: 'my-class',
-    width: '45%',
-    height:'45%',
+    width: '60%',
+    height:'70%',
     data : {src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
-    src_db_type:src_db_type,des_db_type:des_db_type }
+    src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
+  src_qry:src_qry, des_qry:des_qry}
   });
   
   dialogRef.afterClosed().subscribe(result => {
