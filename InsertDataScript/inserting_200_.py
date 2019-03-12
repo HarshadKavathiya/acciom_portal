@@ -3,7 +3,7 @@ DBName = "NewTestDB";
 UserName = "Acciom_user";
 PWD = "Acciomuser";
 TableName = "Inventory_test3";
-ranges=1000000   #changes as per required rows to be inserted
+ranges=1000   #changes as per required rows to be inserted
 
 connection=pymysql.connect(host="localhost",user=UserName,password=PWD,db=DBName)
 cursor=connection.cursor()
