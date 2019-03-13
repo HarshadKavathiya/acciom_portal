@@ -30,7 +30,7 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             print("custom query", custom_query)
             column.append('Count')
             print(column)
-            my_list.append(column)
+            # my_list.append(column)
         else:
             custom_query = test_queries.split(':')[1]
 
