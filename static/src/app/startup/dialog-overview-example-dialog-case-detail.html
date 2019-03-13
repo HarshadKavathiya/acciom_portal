@@ -24,6 +24,25 @@
   text-align: justify;
   color: #2f2f2f;
   margin-bottom: 25px;
+  
+}
+.casename{
+  font-family: 'OpenSans-Regular', sans-serif;
+  font-size: 30px;
+  font-weight: 200;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-bottom: 25px;
+ 
+}
+.heading-grp{
+  display: flex;
+  justify-content: flex-start;
+  width:100%;
 }
 .case-item{
   display: flex;
@@ -52,8 +71,10 @@ input{
         </style>
 </head>
 <mat-card>
-    <div class="heading">Case-Detail</div>
-<div mat-dialog-content class="display-detail">
+  <div class="heading-grp">
+    <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+  </div>
+    <div mat-dialog-content class="display-detail">
   <table style="width:100%">
     <tr>  <div> <td class="td1"><span class="bold-text">Source DB Name:</span></td>
       <td class="td2"></td>
@@ -97,6 +118,6 @@ input{
 </mat-card>
 <div mat-dialog-actions class="close">
         <button mat-flat-button  
-        class="export-btn" (click)="onNoClick()">close</button>
+        class="export-btn" (click)="onNoClick()">Close</button>
 
     </div>

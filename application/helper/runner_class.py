@@ -147,7 +147,7 @@ def run_test(case_id):
                                   db_type[3][1:])
             if row_count < 10000:
                 limit = 10000
-            elif row_count > 10000 and row_count < 100000:
+            elif row_count >= 10000 and row_count < 100000:
                 limit = 50000
             else:
                 limit = 200000
@@ -217,4 +217,3 @@ def run_test(case_id):
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
 # select column_name from information_schema
 # .columns where table_name='Inventory';
-

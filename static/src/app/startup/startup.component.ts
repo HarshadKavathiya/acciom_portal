@@ -40,6 +40,7 @@ export interface DialogDataCaseDetail {
  des_column:String;
  src_qry:String;
  des_qry:String;
+ casename:string;
 }
 
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -113,6 +114,7 @@ export class StartupComponent implements OnInit {
   src_qry:String;
   des_qry:String;
   len:number;
+  case_name:String;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -233,10 +235,11 @@ export class StartupComponent implements OnInit {
 
     })
   }
-getcasedetails(case_id){
+getcasedetails(case_id,case_name){
 //   this.src_db_name="",this.des_db_name="",this.src_table="",this.target_table="",
 // this.src_db_type="",this.des_db_type="";
   event.stopPropagation();
+  console.log(case_name)
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
 console.log(data.res)
 this.src_db_name=data.res.src_db_name;
@@ -249,11 +252,12 @@ this.src_column=data.res.src_column
 this.des_column=data.res.des_column
 this.src_qry=data.res.src_qry
 this.des_qry=data.res.des_qry
+this.case_name=case_name
   this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
-    this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry)
+    this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry,this.case_name)
   });
 }
-showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry){
+showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
     panelClass: 'my-class',
     width: '60%',
@@ -261,7 +265,7 @@ showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db
     data : {src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
     src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
-  src_qry:src_qry, des_qry:des_qry}
+  src_qry:src_qry, des_qry:des_qry,casename:case_name}
   });
   
   dialogRef.afterClosed().subscribe(result => {
