@@ -4,7 +4,8 @@ import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
 import {trigger,state,style,transition,animate  } from '@angular/animations'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {Observable} from "rxjs"
+import {ExcelService} from '../services/excel.service';
+
 
 export interface DialogData {
   
@@ -15,13 +16,35 @@ export interface DialogData {
   duplicate:boolean;
   datavalidation:boolean;log:string;
   datavalidation_pass:boolean;
+  ddlcheck_pass:boolean;
   ddlcheck:boolean;
   key_src:Array<any>;
   value_src:Array<any>;
+  case_log_id:number;
+  execution_status:number;
+  src_value_dataduplication:Array<any>;
+  src_table:string;
+  target_table:string;
+  
+  value_src_nullcheck:Array<any>;
+}
+export interface DialogDataCaseDetail {
+ src_db_name:string;
+ des_db_name:string;
+ src_table_name:string;
+ des_table_name:string;
+ query:string;
+ src_db_type:String;
+ des_db_type:String;
+ src_column:String
+ des_column:String;
+ src_qry:String;
+ des_qry:String;
+ casename:string;
 }
 
-// import { interval } from 'rxjs';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-startup',
@@ -67,14 +90,31 @@ export class StartupComponent implements OnInit {
   nullcheck:boolean=true;
   duplicate:boolean=true;
   datavalidation_pass:boolean=true;
+  ddlcheck_pass:boolean=true;
   datavalidation:boolean=true;
   ddlcheck:boolean=true;
   keys_src=[]
   value_src=[]
   first_obj=[]
+  value_src_nullcheck=[]
   parsed_obj=""
-
+  stilload=false;
+  t:number;
+  times:any;
+  execution_status:number;
+  src_value_dataduplication:Array<any>;
+  src_db_name:String;
+  des_db_name:String;
+  src_table:String;
+  target_table:String;
+  src_db_type:String;
+  des_db_type:String;
+  src_column:String
+  des_column:String;
+  src_qry:String;
+  des_qry:String;
   len:number;
+  case_name:String;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -83,27 +123,37 @@ export class StartupComponent implements OnInit {
 
   ngOnInit() {
     this.Initialize()
+    
   }
 
+  suitestatusopen(x){
+    localStorage.setItem('suite'+x,x)
+  }  
+  suitestatusclose(x){
+    localStorage.removeItem('suite'+x)
+  }
+  checkstatus(x){
+    if(x == localStorage.getItem('suite'+x)){
+      return 'true'
+    }
+
+  }
+
+  starttimer(){
+    clearInterval(this.times)
+ this.times=setInterval(()=>{this.Initialize();},39000)
+
+  }
 
   Initialize(){
     this.id=localStorage.getItem('id')
     this.fileUploadService.getSuiteById(this.id).subscribe(data => {
       if(data.success){
-      // console.log(data.suites.user) 
-      //  console.log(data.suites.user.length)
-      // for(var x=0;x<data.suites.user.length;x++)
-      // {
-      //   // console.log(data.suites.user[x].test_case_list)
-
-      //   for(var y=0;y<data.suites.user[x].test_case_list.length;y++)
-      //   {
-      //   }
-      //  console.log(this.playButtons1)
-      // }
+        this.stilload=false;    
       this.all_test_suite=data.suites.user
+      // this.all_test_suite.expandCol = localStorage.getItem("col");
+      console.log(this.all_test_suite)
        this.arr1=[]
-      // console.log(this.all_test_suite)
       for (var i=0;i<this.all_test_suite.length;i++)
       {
         this.arr1.push(this.all_test_suite[i]['test_case_list']) //TO DO:HARD CODED.['Test Class']
@@ -113,7 +163,6 @@ export class StartupComponent implements OnInit {
    
       this.playButtons2 = new Array();
       this.show2=[]
-       //console.log(this.arr1)
       for(var i=0;i<this.arr1.length;i++)
       {
         this.temparr=[]
@@ -125,30 +174,16 @@ export class StartupComponent implements OnInit {
         }
         this.playButtons2.push(this.temparr)
       }
-      // console.log(this.playButtons2)
 
       }
    });
   }
-
-
-  ngOnChanges(changes:SimpleChanges){
-    this.Initialize()
-    // console.log(changes)
-    
-  }
-
-
   ToHome(){
     this.router.navigate(['home'])
   }
-
-
   ToDB(){
     this.router.navigate(['db'])
   }
-
-
   executeTestCase(test_Suite_id,event:Event,x){
     event.stopPropagation();
     // this.spinnerService.show();
@@ -156,59 +191,96 @@ export class StartupComponent implements OnInit {
     this.playButtons[x]=!this.playButtons[x]
     this.fileUploadService.ExecuteTestbySuiteId(test_Suite_id).subscribe(data=>{
       if(data.success)
-      { this.ngOnInit()
+
+      {   this.Initialize();
+              this.starttimer();
+
         // this.spinnerService.hide();       
-this.playButtons[x]=!this.playButtons[x]
+        this.playButtons[x]=!this.playButtons[x]
       this.show2[x]=true;
 
         Swal("Success","Test Done Succesfully","success")
   
       }
       else{
-      this.ngOnInit()
+        this.Initialize();
+        this.starttimer();
         Swal("error","Something went wrong","error")
 
       }
+    },err=>{
     })
   }
-
-  
   executeTestByCaseId(test_case_id,event:Event,z,x){
     event.stopPropagation();
-    console.log(x)
     this.playButtons2[x][z]=false
     this.show[x]=false;
-    // this.spinnerService.show();
     this.fileUploadService.ExecuteTestbyCaseId(test_case_id).subscribe(data=>{
       if(data.success)
       {
-        // this.show=true;
         this.show[x]=true;
-        // this.spinnerService.hide();
         this.playButtons2[x][z]=true
-        this.ngOnInit()
-
+        this.Initialize();
+        this.starttimer();
         Swal("Success","Test Done Succesfully","success")
   
+      }else{
+        this.Initialize();
+        this.starttimer();
       }
-      else{
-        this.ngOnInit()
-        Swal("error","Something went wrong","error")
+    },err=>{
+      Swal("error",err.error.msg,"error")
+      this.Initialize();
+        this.starttimer();
 
-      }
     })
   }
-
+getcasedetails(case_id,case_name){
+//   this.src_db_name="",this.des_db_name="",this.src_table="",this.target_table="",
+// this.src_db_type="",this.des_db_type="";
+  event.stopPropagation();
+  console.log(case_name)
+  this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
+console.log(data.res)
+this.src_db_name=data.res.src_db_name;
+this.des_db_name=data.res.des_db_name
+this.src_table=data.res.src_table
+this.target_table=data.res.target_table
+this.src_db_type=data.res.src_db_type
+this.des_db_type=data.res.des_db_type
+this.src_column=data.res.src_column
+this.des_column=data.res.des_column
+this.src_qry=data.res.src_qry
+this.des_qry=data.res.des_qry
+this.case_name=case_name
+  this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
+    this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry,this.case_name)
+  });
+}
+showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
+  const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
+    panelClass: 'my-class',
+    width: '60%',
+    height:'70%',
+    data : {src_db_name:src_db_name,des_db_name:des_db_name,
+    src_table_name:src_table,des_table_name:target_table,
+    src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
+  src_qry:src_qry, des_qry:des_qry,casename:case_name}
+  });
+  
+  dialogRef.afterClosed().subscribe(result => {
+   });
+}
   getcolor(x){
     switch(x){
       case 0:
       return 'blue';
       case 1:
-      return '#45CE30';
+      return '#4ac69b';
       case 2:
-      return "#E84342";
+      return "#e56868";
       case 3:
-      return '#F7861B'
+      return '#f3a563'
       case 4:
       return 'red';
     }
@@ -231,105 +303,181 @@ topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
+ isNull(val){
+   return val == null
+      
+}
 
-showlog(test_name,case_log){
-  if (test_name =='CountCheck'){
-    this.countcheck=false
+show_logdialog(test_name){
+  this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=true
+    if(test_name =='CountCheck'){
+      this.countcheck=false
+    }
+    if(test_name =='NullCheck'){
+      this.nullcheck=false
+    }
+    if(test_name =='DuplicateCheck'){
+      this.duplicate=false
+    }
+    if(test_name =='Datavalidation'){
+      this.datavalidation_pass=false
+    }
+    if(test_name =='DDLCheck'){
+      this.ddlcheck_pass=false    }
+}
+
+getlog(test_name,src_table,target_table,case_log_id){
+  //calls rest api with case_log_id and fetch the
+  // case_name , case_src_log and case_des_log.
+  this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
+
+    console.log(data.test_case_log.data)
+    this.showlog(test_name, src_table, target_table, data.test_case_log.data)
+    // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
+  });
+
+
+}
+
+showlog(test_name,src_table,target_table,case_log){
+  console.log(case_log.test_case_log_id)
+  if (test_name =='CountCheck'){
+    this.show_logdialog(test_name)
   }
   else if (test_name == 'NullCheck'){
-    this.countcheck=true
-    this.nullcheck=false
-    this.datavalidation=true
-    this.datavalidation_pass=true
-    this.duplicate=true
-    this.ddlcheck=true
+    this.value_src_nullcheck=[]
+    this.show_logdialog(test_name)
+    
+    if(case_log.destination_log==null){
+      console.log("in null")
+    }else{
+      this.len=eval(case_log.destination_log).length
+      for(var i=0;i<this.len;i++){
+        var temp=[]
+        temp=Object.values(eval(case_log.destination_log)[i])
+        if(temp.some(this.isNull)){
+          temp.forEach(function(item){
+            var index = temp.indexOf(null)
+            if (~index){
+          temp[index]= "null"
+            }
+          }); }
+        this.value_src_nullcheck.push(temp)
+    } 
   }
+}
   else if (test_name == "DuplicateCheck"){
-    this.countcheck=true
-    this.nullcheck=true
-    this.datavalidation=true
-    this.datavalidation_pass=true
-    this.duplicate=false
-    this.ddlcheck=true
+    this.src_value_dataduplication=[]
+    this.show_logdialog(test_name)
+    if(case_log.destination_log==null 
+      || case_log.destination_log == "No Duplicate Records Available"
+    ){
+      console.log("in null")
+    }else{
+      this.len=eval(case_log.destination_log).length
+      for(var i=0;i<this.len;i++){
+        var temp=[]
+        temp=Object.values(eval(case_log.destination_log)[i])
+        if(temp.some(this.isNull)){
+          temp.forEach(function(item){
+            var index = temp.indexOf(null)
+            if (~index){
+              temp[index]= "null"
+                }
+          }); }
+        this.src_value_dataduplication.push(temp)
+    } 
+  }
 
   }
   else if (test_name == "Datavalidation"){
     this.value_src=[]
     this.keys_src=[]
     if(case_log.source_log=='none'){
-      this.countcheck=true
-      this.nullcheck=true
-      this.datavalidation=true
-      this.datavalidation_pass=false
-      this.duplicate=true
-      this.ddlcheck=true
+      this.show_logdialog(test_name)
     }
-   
     else{
       this.parsed_obj=(eval(case_log.source_log)[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
-    //console.log(this.keys_src.length)
      this.len=eval(case_log.source_log).length
-     //console.log((Object.values(this.first_obj)))
-     console.log(this.len)
     for(var i=0;i<this.len;i++){
         this.parsed_obj=(eval(case_log.source_log)[i])
         this.first_obj=(JSON.parse(String(this.parsed_obj)))
         this.value_src.push(Object.values(this.first_obj))
       }
-      console.log(this.value_src)
       this.countcheck=true
       this.nullcheck=true
       this.datavalidation=false
       this.datavalidation_pass=true
+      this.ddlcheck_pass=true
       this.duplicate=true
       this.ddlcheck=true
 
     }
   }
-  else if(test_name == 'DDLCheck')
+  else if(test_name == 'DDLCheck'){
+  
+   if(case_log.source_log=='none1')
+    {
+      this.show_logdialog(test_name)
+    }
+   else if(case_log.destination_log=='none1')
+    {
+      this.show_logdialog(test_name)
 
-  {
+    }
+   else {
     this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
+    this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=false
+   }
   }
-
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
-    width: '90%',
-    height:'90%',
-
+    panelClass: 'my-class',
+    width: '48%',
+    height:'55%',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
-    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck:this.ddlcheck}
-   
+    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
+  case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
+      src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
   });
   dialogRef.afterClosed().subscribe(result => {
-    console.log( result)
-   });
-}
-
-
-}
-
+   });}}
 @Component({
   selector: 'dialog-overview-example-startup-dialog',
   templateUrl: 'dialog-overview-example-startup-dialog.html',
 })
 export class DialogOverviewExampleDialogstartup {
-
-  constructor(
+  constructor( private fileUploadService:UploadserviceService,
+    private excelService:ExcelService,
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogstartup>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  onNoClick(): void {this.dialogRef.close();}
+  onexport(case_log_id){
+    return `/api/export/${case_log_id}`
+}}
+//<------------------------------------------------>
+@Component({
+  selector: 'dialog-overview-example-dialog-case-detail',
+  templateUrl: 'dialog-overview-example-dialog-case-detail.html',
+})
+export class DialogOverviewExampleDialogCaseDetail {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialogCaseDetail>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail) {}
 
   onNoClick(): void {
     this.dialogRef.close();

@@ -3,3 +3,10 @@
 body{
     margin:0px;
 }
+
+.my-class .mat-dialog-container{
+    border-radius: 4px;
+    border: solid 1px #979797;
+    background-color: #ffffff;
+
+}

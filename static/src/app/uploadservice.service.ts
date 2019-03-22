@@ -39,7 +39,7 @@ export class UploadserviceService {
     let headers = new HttpHeaders().set('Authorization',this.newtoken)
 
     
-    return this.http.post<any>(`${this.url}/upload`,upload,{headers: headers}); 
+    return this.http.post<any>(`${this.url}/test-suite`,upload,{headers: headers}); 
   }
 
   authenticateUser(createForm){
@@ -93,7 +93,7 @@ export class UploadserviceService {
   }
   getSuiteById(id){
     let headers=new HttpHeaders().set('Content-Type','application/json')
-    return this.http.get<any>(`${this.url}/getsuite/${id}`,{headers:headers});
+    return this.http.get<any>(`${this.url}/test-suite/${id}`,{headers:headers});
   }
 
   ExecuteTestbySuiteId(suite_id:any):Observable<any>{
@@ -106,13 +106,9 @@ export class UploadserviceService {
       // 'Content-Type':'application/json',
       
     })
-    // headers = headers.append('Content-Type','application/json')
-    // // let headers = new HttpHeaders().set('Authorization',this.newtoken)
-
-    // headers = headers.append('Authorization',this.newtoken)
     run.append("suite_id",suite_id)
 
-    return this.http.post<any>(`${this.url}/testdb/`,run,{headers: headers}); 
+    return this.http.post<any>(`${this.url}/test-case-job/`,run,{headers: headers}); 
 
   }
   ExecuteTestbyCaseId(case_id:any):Observable<any>{
@@ -120,18 +116,41 @@ export class UploadserviceService {
     run.append('case_id',case_id)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    // let headers = new HttpHeaders()
-    // headers.append('Content-Type','application/json')
-    // headers.append('Authorization',this.newtoken)
+    
     let headers =new HttpHeaders({
-      'Authorization':this.newtoken,
-      // 'Content-Type':'application/json',
-      
+      'Authorization':this.newtoken,      
     })
-    return this.http.post<any>(`${this.url}/testdb/`,run,{headers:headers});
+    return this.http.post<any>(`${this.url}/test-case-job/`,run,{headers:headers});
   }
 
+  exportinexcel(case_log_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/export/${case_log_id}/`,{headers:headers})
+  }
+  testcase_log_byid(test_case_log){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/test-case-log/${test_case_log}/`,{headers:headers})
+  }
 
+  getcasedetails(case_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })
+    return this.http.get<any>(`${this.url}/edit-test-case/${case_id}`,{headers:headers})
+  }
 
 
 

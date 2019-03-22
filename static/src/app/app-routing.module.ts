@@ -8,6 +8,8 @@ import {UserdetailComponent} from './userdetail/userdetail.component';
 import { DbdetailsComponent } from './dbdetails/dbdetails.component';
 import { AuthGuard } from "./guards/auth.guard";
 import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
+import {DashboardComponent} from './dashboard/dashboard.component'
+
 const routes: Routes = [
   {path:'', redirectTo:'/startup', pathMatch:'full'},
   {path:'*', component:HomeComponent},
@@ -17,6 +19,7 @@ const routes: Routes = [
   {path: 'user',component:UserdetailComponent,canActivate:[AuthGuard]},
   {path:'startup',component:StartupComponent,canActivate:[AuthGuard]},
   {path:'db',component:DbdetailsComponent,canActivate:[AuthGuard]},
+  {path:'dashboard',component:DashboardComponent},
   {path:'**',redirectTo:'/startup', pathMatch: 'full' },
  
 

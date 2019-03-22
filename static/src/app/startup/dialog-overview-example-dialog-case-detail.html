@@ -1,0 +1,123 @@
+<head>
+        <style type="text/css">
+
+.display-detail{
+    display: flex;
+    flex-direction: column;
+    font-family: 'OpenSans-Light',sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+}
+.heading{
+    font-family: 'OpenSans-Regular', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-bottom: 25px;
+  
+}
+.casename{
+  font-family: 'OpenSans-Regular', sans-serif;
+  font-size: 30px;
+  font-weight: 200;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-bottom: 25px;
+ 
+}
+.heading-grp{
+  display: flex;
+  justify-content: flex-start;
+  width:100%;
+}
+.case-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.bold-text{
+    font-weight: bold;
+}
+input{
+  min-width:10ch;
+  width: calc(var(--size) * 1ch);
+}
+.td1{
+  width:40%;
+
+}
+/* .td2{
+  width:15%;
+} */
+.td3{
+  width:60%;
+}
+
+        </style>
+</head>
+<mat-card>
+  <div class="heading-grp">
+    <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+  </div>
+    <div mat-dialog-content class="display-detail">
+  <table style="width:100%">
+    <tr>  <div> <td class="td1"><span class="bold-text">Source DB Name:</span></td>
+      <td class="td2"></td>
+      <td class="td3">{{data.src_db_name}}</td></div>
+    </tr>
+      <tr>  <div> <td  class="td1"><span class="bold-text">Target DB Name:</span></td>
+        <td></td>
+        <td class="td3">{{data.des_db_name}}</td></div>
+      </tr>
+      <tr>  <div> <td class="td1"><span class="bold-text">Source Table:</span></td>
+        <td></td>
+        <td class="td3">{{data.src_table_name}}</td></div>
+      </tr>
+        <tr>  <div> <td class="td1"><span class="bold-text">Target Table:</span></td>
+          <td></td>
+          <td class="td3">{{data.des_table_name}}</td></div>
+        </tr>
+          <tr>  <div> <td class="td1"><span class="bold-text">Source DB:</span></td>
+            <td></td>
+            <td class="td3">{{data.src_db_type}}</td></div></tr>
+            <tr>  <div> <td class="td1"><span class="bold-text">Target DB:</span></td>
+              <td></td>
+              <td class="td3">{{data.des_db_type}}</td></div></tr>
+              <tr>  <div> <td class="td1"><span class="bold-text">Source Column:</span></td>
+                <td></td>
+                <td class="td3">{{data.src_column}}</td></div></tr>
+                <tr>  <div> <td class="td1"><span class="bold-text">Target Column:</span></td>
+                  <td></td>
+                  <td class="td3">{{data.des_column}}</td></div></tr>
+                  <tr>  <div> <td class="td1"><span class="bold-text">Source Query:</span></td>
+                    <td></td>
+                    <td class="td3">{{data.src_qry}}</td></div></tr>
+                    <tr>  <div> <td class="td1"><span class="bold-text">Target Query:</span></td>
+                      <td></td>
+                      <td class="td3">{{data.des_qry}}</td></div></tr>
+   
+  
+  </table>
+
+  </div>
+</mat-card>
+<div mat-dialog-actions class="close">
+        <button mat-flat-button  
+        class="export-btn" (click)="onNoClick()">Close</button>
+
+    </div>

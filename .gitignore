@@ -102,5 +102,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 static/node_modules
+logs
 .idea
-migrations

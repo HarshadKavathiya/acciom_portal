@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit,CanComponentDeactivate  {
   selectedNames: any;
   changessaved=false;
   prog=0
+  url='/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx'
   constructor(private fileUploadService:UploadserviceService,
     private route:ActivatedRoute,
     private router:Router,
@@ -73,6 +74,15 @@ export class HomeComponent implements OnInit,CanComponentDeactivate  {
     } else {
       return true;
     }
+  }
+//TODO
+downloadFile(){
+  let link = document.createElement("a");
+   link.download = "demo_file.xlsx";
+   link.setAttribute('type', 'hidden');
+        link.href = "assets/demo_file.xlsx";
+link.click();
+link.remove();
   }
 
 
@@ -191,7 +201,10 @@ return true;
 
  }
 
+ closed(){
+  this.router.navigate(['/startup'])
 
+}
  testselect(){
    console.log('trueeeee')
    this.dis=true

@@ -1,97 +1,154 @@
 <app-navbarlogout></app-navbarlogout>
-<div class="body">
 <mat-card class="card">
-  <h1 class="heading">Get Started</h1>
-  <button  [color]="'success'" (click)="ToHome()" mat-button>Upload Your File</button>
-  <!-- <button [disabled]=true [color]="'success1'"  mat-button>Update DB Credetials</button> -->
-<div  class="droppanel">
-  
-  <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
-    <mat-expansion-panel class="dropdown" 
-    (opened)="yellow = true"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title *ngIf="i.test_suite_name !='undefined'"  class="panel_title"> <!-- TODO: USE *ngIf-->
-        {{i.test_suite_name}}
-        </mat-panel-title>
-        <mat-panel-title *ngIf="i.test_suite_name =='undefined' "  class="panel_title"> <!-- TODO: USE *ngIf-->
-          Test Suite{{x+1}}
+  <div class="droppanel">
+    <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
+      <mat-expansion-panel class="dropdown" 
+        (opened)="suitestatusopen(x)"
+        (closed)="suitestatusclose(x)"
+        [expanded]="checkstatus(x)">
+        <mat-expansion-panel-header class="mat-panel-header">
+          <mat-panel-title 
+            *ngIf="i.test_suite_name !='undefined'"
+            class="panel_title-outer"> 
+            {{i.test_suite_name}}
           </mat-panel-title>
-        <mat-panel-description class="panel_title1" [@divState]= "state">
-            <div class="paneldesc"> {{ i.excel_name }},<b class="bold">Uploaded At:</b> {{ i.created | date:'medium'}}
-          </div>
-          
- <!-- break;--> <button mat-mini-fab [disabled]="!playButtons[x] || !show[x]" (click)="executeTestCase(i.test_suite_id,$event,x)" color="black" class="btnplay" > 
-            <i class="material-icons">
-              <div *ngIf="playButtons[x]">
-                  play_circle_outline
-              </div>
-              <div *ngIf="!playButtons[x]" >
-                  pause
-              </div>
-            </i>
-          </button> 
+          <mat-panel-title 
+            *ngIf="i.test_suite_name =='undefined' " 
+            class="panel_title-outer"> 
+              Quality Suite{{x+1}}
+          </mat-panel-title>
+          <mat-panel-description 
+            class="panel-desc-outer"
+            [@divState]= "state">
+            <div class="paneldesc"> 
+              {{i.excel_name}},<div class="bold">Uploaded At:</div> {{ i.created | date:'medium'}}
+            </div>
+            <div class="btn-container">   
+              <button mat-button
+                [disabled]="!playButtons[x] || !show[x]" 
+                (click)="executeTestCase(i.test_suite_id,$event,x)" 
+                color="black" 
+                class="btn-play-outer" > 
+                <div *ngIf="playButtons[x]">
+                  <img  src="assets/images/Play1.png"/>      
+                </div>  
+                <div *ngIf="!playButtons[x]" >
+                  <i class="material-icons">pause </i>
+                </div>
+              </button> 
+            </div>
 
           </mat-panel-description>
-    
-          </mat-expansion-panel-header>
+        </mat-expansion-panel-header>
             <!-- test_case_list from backend -->
-          <div *ngFor="let each_test of i.test_case_list;let z = index"> 
-            <mat-accordion  class="dropdownInsde1">
-                <mat-expansion-panel  [ngClass]="{'myOwnBgRed':each_test.test_status ==2 ,'myOwnBg':each_test.test_status ==1,'blue':each_test.test_status ==0,'red':each_test.test_status ==4,'myOwnBgOrange':each_test.test_status ==3 }">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title  class="panel_title"> 
-                      {{ each_test.test_id }}  <!-- test_name from backend-->
-                    </mat-panel-title>
-                    <mat-panel-description 
-                    class="panel_title1">
-                
-                     TestStatus: 
-                   <i  *ngIf="each_test.test_status == 0"    class="material-icons">
-                    fiber_new
-                    </i> 
-                      <i *ngIf="each_test.test_status == 2"  class="material-icons">
-                        cancel
-                        </i> 
-                        <i *ngIf="each_test.test_status == 3"  class="material-icons">
-                            refresh
-                          </i> 
-                          <i *ngIf="each_test.test_status == 1"  class="material-icons">
-                            check_circle
-                            </i> <b class="bold">{{each_test.test_name}} </b> 
-                    <!-- break; --> 
-                              <button [disabled]="!playButtons2[x][z] || !show2[x]"  (change)="ngOnChanges(x)" mat-mini-fab (click)="executeTestByCaseId(each_test.test_case_id,$event,z,x)"  color="black"  class="btnplay1"> 
-                              <i  class="material-icons">
-                            <div *ngIf="playButtons2[x][z]">play_circle_outline</div>
-                            <div *ngIf="!playButtons2[x][z]"> pause </div>
-                              </i>  
-                            </button>
-                    </mat-panel-description>
-                  </mat-expansion-panel-header>
+            
+        <div *ngFor="let each_test of i.test_case_list;let z = index"> 
+          <mat-accordion  >
+            <mat-expansion-panel
+              class="dropdownInside"
+              [disabled]="each_test.test_status===0">
+              <mat-expansion-panel-header class="mat-panel-header-inside">
+                <table style="width:100%">
+                  <tr>
+                    <td style="
+                      font-family: 'OpenSans',sans-serif;
+                      font-size: 18px;
+                      font-weight: 300;
+                      font-style: normal;
+                      font-stretch: normal;
+                      line-height: normal;
+                      width:30%;
+                      letter-spacing: normal;
+                      color: #000000;">
+                      {{ each_test.test_id }}
+                    </td> 
+                    <td style="width:20%">
+                        <button  mat-button (click)="getcasedetails(each_test.test_case_id, each_test.test_name)">
+                            View</button>
+                    </td>
+                    <td style="width:10%">
+                      
+                        Status: 
+                    </td>
+                    <td style="width:10%">
+                        <div *ngIf="each_test.test_status == 0">
+                            <img src="assets/images/002-new-tag.png"/> 
+                        </div>
+                        <div  *ngIf="each_test.test_status == 2">
+                          <img src="assets/images/001-cross-delete-black-circular-button.png"/> 
+                        </div>
+                        <div *ngIf="each_test.test_status == 3">
+                          <img src="assets/images/fill-1.png"/> 
+                        </div>
+                        <div *ngIf="each_test.test_status == 1">
+                          <img src="assets/images/003-verification-symbol.png"/> 
+                        </div>
+                    </td>
+                    <td style="width:15%">
+                        <b
+                          [ngClass]="{'myOwnBgRed':each_test.test_status ==2 ,'myOwnBg':each_test.test_status ==1,'blue':each_test.test_status ==0,'red':each_test.test_status ==4,'myOwnBgOrange':each_test.test_status ==3 }">
+                            {{each_test.test_name}}
+                        </b> 
+                    </td>
+                    <td style=" display: flex;
+                    justify-content:flex-end;">
+                        <button
+                            [disabled]="!playButtons2[x][z] || !show2[x]"  
+                            (change)="ngOnChanges(x)"
+                            mat-button
+                            (click)="executeTestByCaseId(each_test.test_case_id,$event,z,x)" 
+                            color="black" 
+                            class="btnplay-inside"> 
+                            <div *ngIf="playButtons2[x][z]"><img  src="assets/images/Play1.png"/></div>
+
+                            <div *ngIf="!playButtons2[x][z]">
+                                <i  class="material-icons"> pause
+                                </i>   
+                            </div>
+                        </button>
+                    </td>
+                  </tr>
+                    
+                </table>
+              </mat-expansion-panel-header>
                   <table  class="t1" cellspacing=22>
-                    <tr class="table1">
-                   
-                      <th>Test Case ID</th>
-                      <th>Test Execution_status</th>
+                    <tr class="tableheading">
+                      <th>Run ID</th> <!-- Run Id-->
+                      <th>Execution_status</th>
                       <th>Executed At</th>
                       <th>Log</th>
-                   
                     </tr>
-                    <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log "
-                    [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                    >
-                      <td>{{case_log.test_case_id}}</td>
-                      <td *ngIf="case_log.test_execution_status== 0">New</td>
-                      <td *ngIf="case_log.test_execution_status== 1" >Pass</td>
-                      <td *ngIf="case_log.test_execution_status== 2" >Fail</td>
-                      <td *ngIf="case_log.test_execution_status== 4">Error</td>
-                      <td *ngIf="case_log.test_execution_status== 3">Waiting</td>
-                      <td> {{ case_log.executed_at | date:'short' }}</td>
-                      <td><button  mat-button (click)="showlog(each_test.test_name,case_log)"><i class="material-icons">
+                    <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log; let run_id=index ">
+                      <td>{{run_id+1}}
+                        <!-- {{case_log.test_case_id}} -->
+
+                      </td>
+                      <td class="tableheader-test-execution" 
+                      [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
+                      *ngIf="case_log.test_execution_status== 0">New
+                      </td>
+                      <td class="tableheader-test-execution"
+                      [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
+                      *ngIf="case_log.test_execution_status== 1" >Pass
+                      </td>
+                      <td class="tableheader-test-execution" 
+                      [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
+                      *ngIf="case_log.test_execution_status== 2" >Fail
+                      </td>
+                      <td class="tableheader-test-execution"
+                      [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
+                      *ngIf="case_log.test_execution_status== 4">Error
+                      </td>
+                      <td class="tableheader-test-execution" 
+                      [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
+                      *ngIf="case_log.test_execution_status== 3">Waiting</td>
+                      <td> <div class="tableheader-test-date">{{ case_log.executed_at | date:'short' }}</div> </td>
+                      <td><button  mat-button (click)="getlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">
                         dehaze
                         </i></button></td>
-                    </tr>
-                              </table>
+                      </tr>
+                    </table>
+
               </mat-expansion-panel>
             </mat-accordion>
           </div>
@@ -107,4 +164,3 @@
       </i></button>
 </div>
 </mat-card>
-</div>

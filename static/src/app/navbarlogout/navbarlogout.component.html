@@ -1,25 +1,53 @@
-<mat-toolbar class="nav"> <div class="yellowcss"> <button  mat-button (click)="refresh()" class="heading" >
-  Acciom Tool  <img  src="assets/images/accion1.png">
+<mat-toolbar class="nav"> 
+    <div class="yellowcss"> 
+        <button  mat-button (click)="refresh()" class="heading" >
+          <table><tr><td><img href="/"  width="100px" height="100%" src="assets/images/acciom_logo.png"></td><td style="padding-left: 59px;">Acciom</td></tr></table>
+        </button>
+    </div> 
+    <div class="menu">
+        <a  (click)="dashboard()"class="menubtn" mat-button>
+            <div class="iconimage">
+                <span class="imagespan"><img style="height:26px;width:27px" src="/assets/images/Dashboard1.png"/></span>
+                <span class="textspan">DashBoard</span>
+            </div>
+            <!-- <i class="material-icons">
+            dashboard
+            </i> DashBoard -->
+        </a>
+        <a class="menubtn" mat-button (click)="upload()">
+             <!-- <i class="material-icons">
+            cloud_upload
+            </i> -->
+            <!-- Upload Suite -->
+            <div class="iconimage">
+                    <span class="imagespan"><img style="height:26px;width:27px" src="/assets/images/Upload Suite1.png"/></span>
+                    <span class="textspan">Upload Suite</span>
+                </div>
+        </a>
+        <a class="menubtn1"  (click)="refresh()" mat-button>
+            <div class="iconimage">
+               <span class="imagespan"> <img style="height: 26px;width:27px;" src="/assets/images/Test Suite1.png"/></span>
+               <span class="textspan">Quality Suites</span>
+            </div>
+                <!-- <div class="icontext">TestSuite</div> -->
+             </a>
+<!-- <i class="material-icons"> view_list</i> -->
+  </div>
   
-</button></div> 
-  <!-- <button  class='loginbut' mat-button color="primary" (click)="logout()" >Logout</button> -->
   
-  <div class="dropdown">
-      <button mat-button color="primary" class="dropbtn">Account<i class="material-icons">
-          account_circle
-          </i>
-          
-          </button>
-      <div class="dropdown-content">
-        <a (click)="logout()">Logout</a>
-        <a (click) ="Userdetail()" >User Details</a>
-        <a href="#">More</a>
-        
-      </div>
+    <div class="dropdown">
+        <button mat-button color="primary" class="dropbtn">Account
+            <i class="material-icons">
+            account_circle
+            </i>
+            <!-- <img class="account-img" src="assets/images/Circle1.png"/> -->
+        </button>
+          <div class="dropdown-content">
+            <a (click)="logout()">Logout</a>
+            <a (click) ="Userdetail()" >User Details</a>    
+          </div>
     </div>
-   
-    
-
-</mat-toolbar>
-  <!-- <button *ngIf="!login" class='loginbut' mat-button color="primary" >Logout</button> -->
-
+  </mat-toolbar>
+  
+  
+  

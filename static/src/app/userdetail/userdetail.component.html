@@ -1,7 +1,9 @@
 <app-navbarlogout></app-navbarlogout>
 <div class="card">
+    
     <mat-card class="for-form">
         <mat-card-title class="title">User Details<hr></mat-card-title>
+        
       <table cellspacing=10>
         <tr>
         <th>Name:</th>
@@ -11,11 +13,11 @@
           <th>Email:</th>
           <th>{{ email }}</th>
         </tr>
-        <tr>
-            <th>Test Suites:</th>
-            <th></th>
-          </tr>
+      
       </table>
+      <button mat-icon-button class="closebtn" (click)="closed()"color="warn">
+          Close
+    </button>
 
     </mat-card>
 

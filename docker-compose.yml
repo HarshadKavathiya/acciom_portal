@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  mysql_database:
+    image: mysql:8.0.15
+    restart: always
+    environment:
+      MYSQL_DATABASE: acciom_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: acciom_user
+      MYSQL_PASSWORD: acciom_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - my-datavolume:/var/lib/mysql
+
+  flask_web:
+    container_name: flask_web
+    restart: always
+    depends_on:
+      - mysql_database
+    build: .
+    command: >
+      bash -c "flask db upgrade && gunicorn --bind 0.0.0.0:5000 --workers 3 --reload app:app"
+    volumes:
+      - .:/acciom
+    ports:
+      - "5000:5000"
+
+volumes:
+  my-datavolume:
