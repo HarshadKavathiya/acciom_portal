@@ -13,7 +13,7 @@ import {DashboardComponent} from './dashboard/dashboard.component'
 const routes: Routes = [
   {path:'', redirectTo:'/startup', pathMatch:'full'},
   {path:'*', component:HomeComponent},
-  {path:'home',component:HomeComponent,canActivate:[AuthGuard], canDeactivate: [CanDeactivateGuard]},
+  {path:'home',component:HomeComponent,canActivate:[AuthGuard]},
   {path:'login',component:LoginComponent},
   {path:'register',component:RegisterComponent},
   {path: 'user',component:UserdetailComponent,canActivate:[AuthGuard]},
@@ -24,7 +24,7 @@ const routes: Routes = [
  
 
 ];
-
+// canDeactivate: [CanDeactivateGuard]
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

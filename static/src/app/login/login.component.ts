@@ -29,21 +29,15 @@ export class LoginComponent implements OnInit {
 
   LogIn()
 {
-  console.log(this.createForm.value);
   this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
     if(data.success==true){
       Swal("success",data.message,"success")
-
-      console.log(data.expires_time)
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }
-
-   
  },err=>{
    console.log(err.success)
    Swal("error",err.error.message,"error")
-  
   });
 
 

@@ -1,5 +1,4 @@
 import ast
-import time
 
 from flask import request
 from flask_jwt_extended import jwt_required
@@ -20,7 +19,6 @@ class TestCaseJob(Resource):
             parser.add_argument('case_id', type=int)
             data = parser.parse_args()
             if data['suite_id']:
-                time.sleep(1)
                 test_suite = TestSuite.query.filter_by(
                     test_suite_id=data['suite_id']).first()
                 for each_test in test_suite.test_case:
@@ -29,7 +27,6 @@ class TestCaseJob(Resource):
                     run_by_case_id(each_test.test_case_id)
                 return success({"success": True})
             else:
-                time.sleep(1)
                 # my_background_task.delay(data['case_id'])
                 run_by_case_id(data['case_id'])
                 return success({"success": True})
@@ -44,7 +41,6 @@ class TestCaseSparkJob(Resource):
         res = ast.literal_eval(dict1)
         result = str(res['result'])
         result_count = res['result_count']
-        print(result, result_count)
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         print("primary key of testcaselog:", spark_job.test_case_log_id)
 

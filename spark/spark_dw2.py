@@ -118,6 +118,7 @@ if __name__ == '__main__':
         sc.load_source(offset, limit, src_db_type)
         sc.load_destination(offset, limit, des_db_type)
         result = sc.datadiff()
+        print(result.toJSON().collect())
         result_op = result.toJSON().collect()
         total_count += result.toJSON().count()
         final_result.extend(result_op)
@@ -127,4 +128,3 @@ if __name__ == '__main__':
 
     data = {"result": final_result, "result_count": total_count}
     result = requests.post(api_end_point, json=data)
-
