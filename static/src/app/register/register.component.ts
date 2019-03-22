@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
 }
 
   signIn(){
-    console.log(this.createForm.value);
     if(!this.createForm.valid || (this.createForm.controls.password.value != this.createForm.controls.cpassword.value))
     { alert("please enter correct passwords")
   }

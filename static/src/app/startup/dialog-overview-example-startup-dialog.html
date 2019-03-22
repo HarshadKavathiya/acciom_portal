@@ -141,7 +141,17 @@ opacity: 0.9;
                                     </tr>
                             </table>
                      </div>
+
             <div class="test-result">Both Source and Target records count matches</div>
+            <table  cellspacing=12 class="table1" >
+                    <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
+                        <th>Target Table-{{ data.target_table }}</th>
+                    </tr>
+                    <tr class="tabledata">
+                        <td>{{data.source_log}}</td>
+                        <td>{{data.destination_log}}</td>
+                    </tr>
+                </table >
         </div>
     </div>
 

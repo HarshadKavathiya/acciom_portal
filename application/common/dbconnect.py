@@ -19,6 +19,7 @@ dest_hostname = DEST_DB_HOSTNAME
 
 
 def source_db(src_db, src_db_type):
+    print("IN dbconnect", src_db_type)
     if src_db_type == 'sqlserver':
         server = source_hostname
         database = src_db
@@ -63,4 +64,3 @@ def dest_db(target_db, dest_db_type):
                                 user=dest_username,
                                 password=dest_password)
         return cnxn
-

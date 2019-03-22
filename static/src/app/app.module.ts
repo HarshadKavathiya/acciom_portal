@@ -39,7 +39,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import {ColorDirective} from './directive/color1.directive';
-import { AppcolorDirective } from './appcolor.directive'
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { CanDeactivate } from '@angular/router/src/utils/preactivation';
@@ -61,7 +60,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     DialogOverviewExampleDialogstartup,
     DialogOverviewExampleDialogCaseDetail,
     ColorDirective,
-    AppcolorDirective,
     UserdetailComponent,
     DashboardComponent,
   ],

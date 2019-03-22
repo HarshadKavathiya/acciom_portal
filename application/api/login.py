@@ -44,7 +44,6 @@ class Register(Resource):
     def post(self):
         try:
             data = parser.parse_args()
-            print(data)
             if User.find_by_username(data['email']):
                 raise InvalidInput(
                     "User {} already exists".format(data['email']))
@@ -82,7 +81,7 @@ class Login(Resource):
 
             data = parser.parse_args()
             current_user = User.query.filter_by(email=data['email']).first()
-            expires = datetime.timedelta(hours=24)
+            expires = datetime.timedelta(hours=240)
             # userobject=User(id=current_user.id,username=current_user.username)
             # TODO: MORE COMPLEX USER OBJECT  TOKEN CREATION.
             # TODO: , expires_delta=expires
@@ -90,6 +89,7 @@ class Login(Resource):
                 raise InvalidInput(
                     "User {} does not exists".format(data['email']))
             if User.verify_hash(data['password'], current_user.password):
+
                 access_token = create_access_token(
                     identity=current_user.user_id,
                     expires_delta=expires)

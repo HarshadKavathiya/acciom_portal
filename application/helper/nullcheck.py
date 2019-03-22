@@ -3,28 +3,40 @@
 import json
 
 
+def qry_generator(columns, target_table):
+    sub_query = ""
+    for each_col in columns:
+        if sub_query == "":
+            sub_query = "SELECT * FROM {0} WHERE ".format(
+                target_table) + each_col + " is NULL"
+        else:
+            sub_query = sub_query + " or " + each_col + " is NULL"
+    return sub_query
+
+
 def null_check(target_cursor, target_table, column, test_queries):
     try:
         col_list = []
-        columns = column.split(';')
+        columns = column.split(':')
+        print(columns)
         target_cursor.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='{0}'".format(target_table))
-
+            "SELECT COLUMN_NAME FROM "
+            "INFORMATION_SCHEMA.COLUMNS"
+            " WHERE table_name='{0}'".format(target_table))
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
         print(col_list)
         query = test_queries.split(':')
+        print(query)
         if test_queries == 'None':
-            sub_query = ""
-            for each_col in columns:
-                if sub_query == "":
-                    sub_query = "SELECT * FROM {0} WHERE ".format(
-                        target_table) + each_col + " is NULL"
-                else:
-                    sub_query = sub_query + " or " + each_col + " is NULL"
-            print(sub_query)
-            target_cursor.execute(sub_query)
+            if column == 'None':
+                sub_query = qry_generator(col_list, target_table)
+                target_cursor.execute(sub_query)
+
+            else:
+                sub_query = qry_generator(columns, target_table)
+                target_cursor.execute(sub_query)
         else:
             target_cursor.execute(query[1])
 

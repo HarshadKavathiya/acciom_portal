@@ -18,7 +18,7 @@ def split_table(table_name):
     """
 
     lst1 = []
-    lst = table_name.strip(';').split(':')
+    lst = table_name.split(':')
     lst1.append(lst)
     return lst1
 
@@ -51,17 +51,16 @@ def save_test_status(test_case_id, status):
 def split_db(test_db_detail):
     lst1 = []
     lst2 = []
-
-    strip_db_detail = test_db_detail.strip("@'").split("'@")
-
+    strip_db_detail = test_db_detail.split(";")
     for i in range(len(strip_db_detail)):
         lst1.append(strip_db_detail[i].split(':'))
-
-    lst2.append(lst1[2][1].strip('\n'))
-    lst2.append(lst1[4][1].strip('\n'))
-    lst2.append(lst1[0][1].strip('\n'))
-    lst2.append(lst1[3][1].strip('\n'))
-
+    print("list1@57", lst1)
+    lst2.append(lst1[2][1])
+    lst2.append(lst1[4][1])
+    lst2.append(lst1[0][1])
+    lst2.append(lst1[3][1])
+    lst2.append(lst1[1][1])
+    lst2.append(lst1[5][1])
     return lst2
 
 
@@ -102,8 +101,8 @@ def run_test(case_id):
         if case_id.test_name == 'CountCheck':  # 1st Test
             app.logger.debug("count check start")
             db_type = split_db(case_id.test_detail)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
+            source_cursor = source_db(db_type[0], db_type[2].lower()).cursor()
+            target_cursor = dest_db(db_type[1], db_type[3].lower()).cursor()
             table_name = split_table(case_id.table_src_target)
             result = count_check(source_cursor,
                                  target_cursor,
@@ -113,7 +112,7 @@ def run_test(case_id):
         if case_id.test_name == 'NullCheck':  # 2nd Test
             app.logger.debug("Null check start")
             db_type = split_db(case_id.test_detail)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
+            target_cursor = dest_db(db_type[1], db_type[3].lower()).cursor()
             table_name = split_table(case_id.table_src_target)
             result = null_check(target_cursor, table_name[0][1],
                                 case_id.test_column, case_id.test_queries)
@@ -121,7 +120,7 @@ def run_test(case_id):
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
             app.logger.debug("Duplicate check start")
             db_type = split_db(case_id.test_detail)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
+            target_cursor = dest_db(db_type[1], db_type[3].lower()).cursor()
             table_name = split_table(case_id.table_src_target)
             result = duplication(target_cursor=target_cursor,
                                  target_table=table_name[0][1],
@@ -135,16 +134,16 @@ def run_test(case_id):
             des_user_password = DEST_DB_PASSWORD
             des_hostname = DEST_DB_HOSTNAME
             db_type = split_db(case_id.test_detail)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
+            source_cursor = source_db(db_type[0], db_type[2].lower()).cursor()
             table_name = split_table(case_id.table_src_target)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
+            target_cursor = dest_db(db_type[1], db_type[3].lower()).cursor()
             table_name = split_table(case_id.table_src_target)
-            print(db_type[0][1:], table_name[0][0], db_type[2][1:],
-                  db_type[1][1:], table_name[0][1], db_type[3][1:])
-            row_count = get_count(db_type[0][1:], table_name[0][0],
-                                  db_type[2][1:], db_type[1][1:],
+            # print(db_type[0], table_name[0][0], db_type[2],
+            #       db_type[1], table_name[0][1], db_type[3])
+            row_count = get_count(db_type[0], table_name[0][0],
+                                  db_type[2].lower(), db_type[1],
                                   table_name[0][1],
-                                  db_type[3][1:])
+                                  db_type[3].lower())
             if row_count < 10000:
                 limit = 10000
             elif row_count >= 10000 and row_count < 100000:
@@ -166,8 +165,8 @@ def run_test(case_id):
             app.logger.info("DDL Check start")
             db_type = split_db(case_id.test_detail)
             table_name = split_table(case_id.table_src_target)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
+            source_cursor = source_db(db_type[0], db_type[2].lower()).cursor()
+            target_cursor = dest_db(db_type[1], db_type[3].lower()).cursor()
             result = ddl_check(source_cursor, target_cursor, table_name[0][0],
                                table_name[0][1])
 
@@ -187,8 +186,8 @@ def run_test(case_id):
             case_log.error_log = None
             case_log.save_to_db()
             if case_id.test_name == 'Datavalidation':
-                datavalidation(db_type[0][1:], table_name[0][0], db_type[2][1:],
-                               db_type[1][1:], table_name[0][1], db_type[3][1:],
+                datavalidation(db_type[0], table_name[0][0], db_type[2].lower(),
+                               db_type[1], table_name[0][1], db_type[3].lower(),
                                spark_job.spark_job_id, row_count, limit, src_user_name,
                                src_user_password, src_hostname,
                                des_user_name, des_user_password, des_hostname)

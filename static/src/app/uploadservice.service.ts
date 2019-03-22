@@ -9,7 +9,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root'
 })
 
-
 export class UploadserviceService {
   authToken: any;
   user: any;
@@ -18,15 +17,13 @@ export class UploadserviceService {
   url='/api';
 
   constructor(private http:HttpClient) { }
-  
-  
-
   inputFile:File
 
   postFile(fileToUpload: File,selectedsheet:any,selectedCase:any,suitename:any,executevalue:any):Observable<any>{
     const upload=new FormData()
     console.log(selectedCase)
     console.log(suitename)
+    console.log(selectedCase)
     upload.append('inputFile',fileToUpload)
     upload.append('sheet',selectedsheet)
     upload.append('selectedcase',selectedCase)
@@ -34,8 +31,7 @@ export class UploadserviceService {
     upload.append('exvalue',executevalue)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    console.log(this.newtoken)
-    console.log(upload)
+    // console.log(this.newtoken)
     let headers = new HttpHeaders().set('Authorization',this.newtoken)
 
     
@@ -87,7 +83,6 @@ export class UploadserviceService {
   }
 
   StoreDB(createForm){
-  
     let headers= new HttpHeaders().set('Content-Type','application/json')
     return this.http.post<any>(`${this.url}/add`,createForm,{headers:headers})
   }
@@ -151,7 +146,4 @@ export class UploadserviceService {
     })
     return this.http.get<any>(`${this.url}/edit-test-case/${case_id}`,{headers:headers})
   }
-
-
-
 }

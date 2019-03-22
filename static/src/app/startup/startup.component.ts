@@ -2,7 +2,6 @@ import { Component, OnInit,OnChanges,Inject, SimpleChanges,ChangeDetectionStrate
 import { Routes, RouterModule, Router } from '@angular/router';
 import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
-import {trigger,state,style,transition,animate  } from '@angular/animations'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ExcelService} from '../services/excel.service';
 
@@ -51,24 +50,7 @@ import { $ } from 'protractor';
   templateUrl: './startup.component.html',
   styleUrls: ['./startup.component.css'],
   changeDetection: ChangeDetectionStrategy.Default,
-  animations:[
-    trigger('divState',[
-      state('normal',style({
-        'background-color':'transarent',
-        transform:'translateX(0px)'
-      })),
-      state('high',
-      style({
-        backgroundColor:'black',
-        transform:'translateX(0px)'
-      })),
-      transition('normal => high', [
-        style({transform: 'translateX(-100%)'}),
-        animate(100)
-    ]),
-     
-    ])
-  ]
+  
 })
 
 
@@ -122,9 +104,10 @@ export class StartupComponent implements OnInit {
 
 
   ngOnInit() {
-    this.Initialize()
+    this.Initialize() 
     
   }
+  
 
   suitestatusopen(x){
     localStorage.setItem('suite'+x,x)
@@ -136,13 +119,11 @@ export class StartupComponent implements OnInit {
     if(x == localStorage.getItem('suite'+x)){
       return 'true'
     }
-
   }
 
   starttimer(){
     clearInterval(this.times)
  this.times=setInterval(()=>{this.Initialize();},39000)
-
   }
 
   Initialize(){
@@ -152,7 +133,7 @@ export class StartupComponent implements OnInit {
         this.stilload=false;    
       this.all_test_suite=data.suites.user
       // this.all_test_suite.expandCol = localStorage.getItem("col");
-      console.log(this.all_test_suite)
+      // console.log(this.all_test_suite)
        this.arr1=[]
       for (var i=0;i<this.all_test_suite.length;i++)
       {
@@ -160,7 +141,6 @@ export class StartupComponent implements OnInit {
         this.playButtons[i]=true;
         this.show[i]=true;
       }
-   
       this.playButtons2 = new Array();
       this.show2=[]
       for(var i=0;i<this.arr1.length;i++)
@@ -169,14 +149,18 @@ export class StartupComponent implements OnInit {
         this.show2.push(true)
         for(var j=0;j<this.arr1[i].length;j++)
         {
-          this.temparr.push(true)
-          
+          this.temparr.push(true) 
         }
         this.playButtons2.push(this.temparr)
-      }
+      }}
+   },err=>{
+    // console.log(err.error.message)
 
-      }
    });
+  }
+  logout(){
+    this.fileUploadService.logout();
+    this.router.navigate(['/login']);
   }
   ToHome(){
     this.router.navigate(['home'])
@@ -199,7 +183,7 @@ export class StartupComponent implements OnInit {
         this.playButtons[x]=!this.playButtons[x]
       this.show2[x]=true;
 
-        Swal("Success","Test Done Succesfully","success")
+        Swal("Success","Job Submitted Succesfully","success")
   
       }
       else{
@@ -222,7 +206,7 @@ export class StartupComponent implements OnInit {
         this.playButtons2[x][z]=true
         this.Initialize();
         this.starttimer();
-        Swal("Success","Test Done Succesfully","success")
+        Swal("Success","Job Submitted Succesfully","success")
   
       }else{
         this.Initialize();
@@ -230,18 +214,25 @@ export class StartupComponent implements OnInit {
       }
     },err=>{
       Swal("error",err.error.msg,"error")
-      this.Initialize();
-        this.starttimer();
+        let temp="Token has expired"
+        if (temp == err.error.msg){
+          // console.log("done")
+          clearInterval(this.times)
 
+          this.logout()
+        }else{
+          // console.log("other reason")
+          this.Initialize();
+        this.starttimer();
+        }
     })
   }
+
 getcasedetails(case_id,case_name){
-//   this.src_db_name="",this.des_db_name="",this.src_table="",this.target_table="",
-// this.src_db_type="",this.des_db_type="";
   event.stopPropagation();
-  console.log(case_name)
+  // console.log(case_name)
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
-console.log(data.res)
+// console.log(data.res)
 this.src_db_name=data.res.src_db_name;
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
@@ -304,8 +295,7 @@ topFunction() {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
  isNull(val){
-   return val == null
-      
+   return val == null 
 }
 
 show_logdialog(test_name){
@@ -337,7 +327,7 @@ getlog(test_name,src_table,target_table,case_log_id){
   // case_name , case_src_log and case_des_log.
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
 
-    console.log(data.test_case_log.data)
+    // console.log(data.test_case_log.data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
     // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
@@ -346,7 +336,7 @@ getlog(test_name,src_table,target_table,case_log_id){
 }
 
 showlog(test_name,src_table,target_table,case_log){
-  console.log(case_log.test_case_log_id)
+  // console.log(case_log.test_case_log_id)
   if (test_name =='CountCheck'){
     this.show_logdialog(test_name)
   }
@@ -355,7 +345,7 @@ showlog(test_name,src_table,target_table,case_log){
     this.show_logdialog(test_name)
     
     if(case_log.destination_log==null){
-      console.log("in null")
+      // console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
@@ -378,7 +368,7 @@ showlog(test_name,src_table,target_table,case_log){
     if(case_log.destination_log==null 
       || case_log.destination_log == "No Duplicate Records Available"
     ){
-      console.log("in null")
+      // console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
