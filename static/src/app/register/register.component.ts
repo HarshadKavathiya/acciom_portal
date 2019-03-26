@@ -33,6 +33,7 @@ export class RegisterComponent implements OnInit {
     if(!this.createForm.valid || (this.createForm.controls.password.value != this.createForm.controls.cpassword.value))
     { alert("please enter correct passwords")
   }
+  console.log(this.createForm.controls.email.value)
     this.fileUploadService.register(this.createForm.value).subscribe(data=>{
       if (data.success){
         Swal("Success",data.message,"success")

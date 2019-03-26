@@ -1,0 +1,26 @@
+.card{
+    display: flex;
+flex-direction: row;
+justify-content:center;
+width:100%;
+min-height:90vh;
+overflow:auto;
+color:whitesmoke;
+background-color: #ffffff;
+padding: 0;
+}
+.list-db{
+    background-color:whitesmoke;
+    border-radius:10px;
+        box-shadow: #ffffff;
+}
+.add-btn{
+    display:flex;
+    justify-content: flex-end;
+}
+.btn-add{
+border-radius: 10px;
+background-color: #10A881;
+color:white;
+height: 3rem;
+}

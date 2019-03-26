@@ -11,7 +11,7 @@ import Swal from 'sweetalert2'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  createForm:FormGroup;
+  createForm:FormGroup; 
 
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
     private router:Router) {
@@ -37,12 +37,21 @@ export class LoginComponent implements OnInit {
     }
  },err=>{
    console.log(err.success)
+   if(err.error.message == 'Verify User'){
+     console.log("go to some page")
+     
+     this.router.navigate(['Verifyuser'])
+   }
+   else{
    Swal("error",err.error.message,"error")
+   }
   });
 
 
 }
-
+forgot_password(){
+  this.router.navigate(['forgot-password']);
+}
 signup(){
   this.router.navigate(['register'])
 }

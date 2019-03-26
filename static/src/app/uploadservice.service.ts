@@ -83,8 +83,40 @@ export class UploadserviceService {
   }
 
   StoreDB(createForm){
-    let headers= new HttpHeaders().set('Content-Type','application/json')
-    return this.http.post<any>(`${this.url}/add`,createForm,{headers:headers})
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    console.log(this.newtoken)
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+    return this.http.post<any>(`${this.url}/db-detail`,createForm,{headers:headers})
+  }
+  get_db_connect(){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+    return this.http.get<any>(`${this.url}/db-detail`,{headers:headers})
+
+  }
+  get_db_connect_byid(db_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+    return this.http.get<any>(`${this.url}/db-detail/${db_id}`,{headers:headers})
+
+  }
+  update_db_details(db_id,createForm){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+    return this.http.put<any>(`${this.url}/db-detail-update/${db_id}`,createForm,{headers:headers})
+
   }
   getSuiteById(id){
     let headers=new HttpHeaders().set('Content-Type','application/json')
@@ -145,5 +177,50 @@ export class UploadserviceService {
       'Authorization':this.newtoken,
     })
     return this.http.get<any>(`${this.url}/edit-test-case/${case_id}`,{headers:headers})
+  }
+  mail_for_reset_password(form){
+    console.log(form)
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    return this.http.post<any>(`${this.url}/reset-password-email`,form,{headers: headers})
+  }
+  reset_password(password,confirm_password,token){
+    const Reset=new FormData()
+    console.log(password,confirm_password,token)
+    Reset.append('password',password)
+    Reset.append('confirm_password',confirm_password)
+    Reset.append('token',token)
+    console.log(Reset)
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+
+    return this.http.post<any>(`${this.url}/reset-password`,{"password":password,"confirm_password":confirm_password,"token":token},{headers: headers})
+  }
+  check_reset_password_token(token){
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    return this.http.get<any>(`${this.url}/reset-password-link/${token}`,{headers: headers})
+  }
+  change_password(old_password,password){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    })    
+    return this.http.post<any>(`${this.url}/change-password/`,{"old_password":old_password,"new_password":password},{headers: headers})
+
+
+  }
+  verify_user(){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/verify-user`,{headers: headers})
+
+  }
+  check_verify_account_token(token){
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    return this.http.get<any>(`${this.url}/verify-account/${token}`,{headers: headers})
   }
 }

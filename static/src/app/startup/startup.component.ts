@@ -104,6 +104,14 @@ export class StartupComponent implements OnInit {
 
 
   ngOnInit() {
+    if(!(this.fileUploadService.verify_user().subscribe(data=>{
+      if(data.success){
+        console.log("user is verified")
+      }else{
+        console.log("user not verified")
+      }
+    }))){
+    }
     this.Initialize() 
     
   }

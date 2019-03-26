@@ -1,7 +1,7 @@
 <app-navbarlogout></app-navbarlogout>
 <mat-card class="card">
   <div class="droppanel">
-    <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
+    <mat-accordion *ngFor="let i of all_test_suite  ;let x = index">
       <mat-expansion-panel class="dropdown" 
         (opened)="suitestatusopen(x)"
         (closed)="suitestatusclose(x)"

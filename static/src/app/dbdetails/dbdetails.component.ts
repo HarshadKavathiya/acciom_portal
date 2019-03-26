@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 })
 export class DbdetailsComponent implements OnInit {
   createForm:FormGroup;
+  db_connection=[];
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
     private router:Router) {
       this.createForm=fb.group({
@@ -23,19 +24,23 @@ export class DbdetailsComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.fileUploadService.get_db_connect().subscribe(data=>{
+        console.log(data)
+    })
   }
   Update(){
     console.log(this.createForm.invalid)
     this.fileUploadService.StoreDB(this.createForm.value).subscribe(data => {
       console.log(data)
-      if(data.Success){
-      console.log(data)
-      Swal("Success","Succesfully Updated Details","success")
-      }else{
-      console.log("error")
+      if(data.success){
+      Swal("success","Succesfully Updated Details","success")
+      }  
+   },err=>{
       Swal("error","Something went wrong","error")
-     }
    });
+  }
+  viewconnection(){
+    this.router.navigate(['Viewdb'])
   }
 
 }

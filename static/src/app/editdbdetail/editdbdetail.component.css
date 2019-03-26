@@ -1,0 +1,24 @@
+.body{
+    display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .button-connect{
+      margin-top: 5px;
+      background-color:#FF8C00;
+      color:whitesmoke;
+      border-radius: 20px;
+    }
+    .heading{
+      
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 300;
+    }
+    .form{
+      min-width:400px;
+      
+      display:flex;
+      flex-direction:column;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
