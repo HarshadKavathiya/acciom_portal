@@ -104,14 +104,14 @@ export class StartupComponent implements OnInit {
 
 
   ngOnInit() {
-    if(!(this.fileUploadService.verify_user().subscribe(data=>{
-      if(data.success){
-        console.log("user is verified")
-      }else{
-        console.log("user not verified")
-      }
-    }))){
-    }
+    // if(!(this.fileUploadService.verify_user().subscribe(data=>{
+    //   if(data.success){
+    //     console.log("user is verified")
+    //   }else{
+    //     console.log("user not verified")
+    //   }
+    // }))){
+    // }
     this.Initialize() 
     
   }
@@ -141,7 +141,7 @@ export class StartupComponent implements OnInit {
         this.stilload=false;    
       this.all_test_suite=data.suites.user
       // this.all_test_suite.expandCol = localStorage.getItem("col");
-      // console.log(this.all_test_suite)
+      console.log(this.all_test_suite)
        this.arr1=[]
       for (var i=0;i<this.all_test_suite.length;i++)
       {

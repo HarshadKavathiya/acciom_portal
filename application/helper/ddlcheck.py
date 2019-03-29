@@ -58,13 +58,11 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
             result2 = (str([x for x in l2]))
             result_diff2.append(result1)
             result_diff3.append(result2)
-            print("result_diff2=", result_diff2)
             res2 = str(result_diff2)
             res3 = str(result_diff3)
             lr.append("failbycolumntype")
 
         if "Failbycolumname" in lr and not "failbycolumntype" in lr:
-            # print("Fail")
             return {"res": 0, "src_value": res,
                     "des_value": res4}
         elif "failbycolumntype" in lr and not "Failbycolumname" in lr:
@@ -74,12 +72,10 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
             return {"res": 0, "src_value": res,
                     "des_value": res4}
         elif "pass":
-            # print("Pass")
             return {"res": 1, "src_value": "none1",
                     "des_value": "none1"}
 
         else:
             pass
     except Exception as e:
-        print(e)
         return {"res": 2, "src_value": None, "des_value": None}

@@ -65,7 +65,6 @@ class Register(Resource):
 
         except SQLAlchemyError as e:
             db.session.rollback()
-            print("errors", e)
             return error({"success": False, 'message': str(e)})
 
         except InvalidInput as e:
@@ -136,14 +135,11 @@ class ResetPasswordEmail(Resource):
                             help='This field cannot be blank',
                             required=True)
         data = parser.parse_args()
-        print("email", data['email'])
         user = User.query.filter_by(email=data['email']).first()
         if user is None:
-            print("user not present")
             return error({"success": False, "message": "Your e-mail Id is not correct"})
 
         else:
-            print("email is ok")
             send_reset_email(user)
             payload = {"success": True, "message": "mail sent to your email"}
         return success(payload)
@@ -168,7 +164,6 @@ class ResetPasswordInput(Resource):
         parser.add_argument('confirm_password', help='field is required', required=True)
         parser.add_argument('token', help='filed is required', required=True)
         data = parser.parse_args()
-        print(data['password'], data['confirm_password'], data['token'])
         user = User.verify_reset_token(data['token'])
         if user is None:
             return error({"success": False, "message": "Invalid token"})
@@ -231,8 +226,6 @@ class VerifyAccount(Resource):
         if user is None:
             return error({"success": False, "message": "Invalid token"})
         else:
-            print(user.verified)
-            print(user.email)
             user.verified = True
             db.session.commit()
             return success({"message": "User is Verified", "success": True,

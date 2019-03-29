@@ -3,7 +3,7 @@ import datetime
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import pbkdf2_sha256 as sha256
-from sqlalchemy.dialects.mysql import LONGTEXT
+from sqlalchemy.dialects.mysql import LONGTEXT, INTEGER
 
 from index import db
 
@@ -11,7 +11,7 @@ from index import db
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(80), unique=True, nullable=False, index=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(280), nullable=False)
@@ -104,16 +104,17 @@ class RevokedTokenModel(db.Model):
 
 class DbDetail(db.Model):
     __tablename__ = "dbdetail"
-    db_id = db.Column(db.Integer, primary_key=True)
+    db_id = db.Column(INTEGER(unsigned=True), autoincrement=True, nullable=False, unique=True, index=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('user.user_id'),
-                        nullable=False)
-    db_type = db.Column(db.String(80), nullable=False)
-    db_name = db.Column(db.String(80), nullable=False)
-    db_hostname = db.Column(db.String(80), nullable=False)
-    db_username = db.Column(db.String(80), nullable=False)
+                        nullable=False, primary_key=True)
+    db_type = db.Column(db.String(80), nullable=False, primary_key=True)
+    db_name = db.Column(db.String(80), nullable=False, primary_key=True)
+    db_hostname = db.Column(db.String(80), nullable=False, primary_key=True)
+    db_username = db.Column(db.String(80), nullable=False, primary_key=True)
     db_password = db.Column(db.String(80), nullable=False)
     users = db.relationship('User', back_populates='dbdetail', lazy=True)
+    # testcase = db.relationship('TestCase', back_populates='dbdetail', lazy=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def __init__(self, db_type, db_name, db_hostname,
@@ -160,6 +161,12 @@ class TestSuite(db.Model):
                 'executed_at': str(x.executed_at)[0:19]
             }
 
+        def db_id_to_json(x):
+            return {
+                'db_id': x.db_id,
+                'db_type': x.db_type
+            }
+
         def test_case_to_json(x):
             tables = []
             tables = x.table_src_target.strip(';').split(':')
@@ -167,6 +174,10 @@ class TestSuite(db.Model):
                 'test_case_id': x.test_case_id,
                 'test_name': x.test_name,
                 'test_id': x.test_id,
+                'src_db_id': list(map(lambda x: db_id_to_json(x),
+                                      DbDetail.query.filter_by(db_id=x.src_db_id))),
+                'target_db_id': x.target_db_id,
+                'target_db_idd': x.src_db_id,
                 'test_status': x.test_status,
                 'table_src': str(tables[0]),
                 'table_target': str(tables[1]),
@@ -209,11 +220,17 @@ class TestCase(db.Model):
     test_created_by = db.Column(db.String(80), nullable=True)
     test_executed_by = db.Column(db.String(80), nullable=True)
     test_comment = db.Column(db.Text, nullable=True)
+    src_db_id = db.Column(db.Integer, db.ForeignKey('dbdetail.db_id'))
+    target_db_id = db.Column(db.Integer, db.ForeignKey('dbdetail.db_id'))
     created = db.Column(db.DateTime, default=datetime.datetime.now)
+
     test_suite = db.relationship(TestSuite,
                                  back_populates='test_case', lazy=True)
     test_case_log = db.relationship("TestCaseLog",
                                     back_populates='test_cases', lazy=True)
+    # dbdetail = db.relationship(DbDetail, back_populates='testcase', lazy=True)
+    src_db = db.relationship("DbDetail", foreign_keys=[src_db_id])
+    target_db = db.relationship("DbDetail", foreign_keys=[target_db_id])
 
     def save_to_db(self):
         db.session.add(self)

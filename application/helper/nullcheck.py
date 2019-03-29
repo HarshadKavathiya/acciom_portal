@@ -18,7 +18,6 @@ def null_check(target_cursor, target_table, column, test_queries):
     try:
         col_list = []
         columns = column.split(':')
-        print(columns)
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
             "INFORMATION_SCHEMA.COLUMNS"
@@ -26,9 +25,7 @@ def null_check(target_cursor, target_table, column, test_queries):
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        print(col_list)
         query = test_queries.split(':')
-        print(query)
         if test_queries == 'None':
             if column == 'None':
                 sub_query = qry_generator(col_list, target_table)
@@ -54,5 +51,4 @@ def null_check(target_cursor, target_table, column, test_queries):
                     "des_value": None}
 
     except Exception as e:
-        print(e)
         return {"res": 2, "src_value": None, "des_value": None}

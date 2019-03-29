@@ -35,21 +35,16 @@ def duplication(target_cursor, target_table, column_name, test_queries):
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        print("All coumns in schema", col_list)
         column = column_name.split(':')
-        print(column)
         if test_queries == 'None':
             if column_name == 'None':
 
                 custom_query = qry_generator(col_list, target_table)
-                print(custom_query)
 
             else:
                 custom_query = qry_generator(column, target_table)
-                print(custom_query)
         else:
             custom_query = test_queries.split(':')[1]
-            print("custom query", custom_query)
 
         target_cursor.execute(custom_query)
 

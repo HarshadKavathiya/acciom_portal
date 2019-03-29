@@ -26,9 +26,10 @@
             <input type="password" autocomplete="off" matInput placeholder=" Password*" formControlName="password">
             <mat-error>Enter Password </mat-error>
         </mat-form-field>
-
-        <button mat-raised-button [disabled]="createForm.invalid" (click)="update_db_detail()" color="primary" >Update</button>
-        
+        <div  class="btn-class">
+        <button class="btn1" mat-raised-button mat-raised-button (click)="check_connection()" color="warn">Check Connection </button>
+        <button class="btn2" mat-raised-button [disabled]="createForm.invalid" (click)="update_db_detail()" color="primary" >Update</button>
+        </div>
     </form>
 </mat-card>
 

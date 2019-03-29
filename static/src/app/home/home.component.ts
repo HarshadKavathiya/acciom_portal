@@ -95,10 +95,7 @@ link.click();
 link.remove();
   }
 OnClick(v) {
-  // console.log("the test cases are")
-  // console.log(this.selectedValue)
-  // console.log(this.selectedradio)
-    // console.log(v)
+ 
     this.MyModel=null;
   this.show=false;
    this.show1=false;
@@ -111,7 +108,6 @@ OnClick(v) {
    this.changessaved=true;
      this.fileUploadService.postFile(this.file,this.selectedradio,this.selectedValue,this.suitename,this.executevalue).subscribe(data => {
     this.name=data['message']
-    // console.log(data)
     this.filevalue=null;
     this.disable=true;
     this.disable2=true;
@@ -170,7 +166,6 @@ OnClick(v) {
                 this.Pages.push(this.workbook.SheetNames[x]) //arr1 contains all the sheetnames
           }
         }
-        // console.log(this.Pages)
     }
     fileReader.readAsArrayBuffer(this.file);
   }
@@ -183,7 +178,6 @@ selectBadge (e, x) {
     this.selectedValue.splice(this.selectedValue.indexOf(x), 1);
   }
   this.selectedtestcases=this.selectedValue
-  // console.log(this.selectedValue)
 
   var totalSelected =  0;
   for (let i = 0; i < this.all_cases.length; i++) {
@@ -217,14 +211,12 @@ return true;
 if (this.selectedAll){
   for (var i = 0; i < this.all_cases.length; i++) {
       this.all_cases[i].selected = this.selectedAll;
-      // console.log("runit in if")
      this.selectedValue.push(this.all_cases[i].name);
   } 
 }
   else if (!this.selectedAll){
     for (let i = 0; i < this.all_cases.length; i++) {
       this.all_cases[i].selected = this.selectedAll;
-      // console.log("runit in elif ")
 
   }    
   this.selectedValue = []
@@ -309,13 +301,14 @@ if (this.selectedAll){
  {  
       var valid_dbtypes=['mysql','sqlserver','postgres']
       var valid_keys=['sourcedbtype', 'sourceserver',
-      'sourcedb','targetdbtype','targetdb','targetserver']
+      'sourcedb','sourceuser','targetdbtype','targetdb','targetserver','targetuser']
       let status=true;
       let temp_Arr:String;
       for(let i=0;i<db_Detail.length;i++)
       {   
           var dict1= new Map();
           temp_Arr= db_Detail[i].replace(/(\r\n|\n|\r)/gm, "");
+          console.log(temp_Arr)
           if (temp_Arr[temp_Arr.length-1] == ";")
           {
             temp_Arr=temp_Arr.slice(0,-1)
@@ -327,7 +320,6 @@ if (this.selectedAll){
               let val = this.arr_db_each_detail[i].split(":",2)[1]
               dict1.set(key1.toLowerCase(),val.toLowerCase())   
           }
-
           for(let i=0;i<valid_keys.length;i++){
             if(!(dict1.has(valid_keys[i]))){
               status=false;
@@ -401,6 +393,7 @@ if (this.selectedAll){
         return {name:x.name, selected:false,alias_name:case_name};
     }
 }
+
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'dialog-overview-example-dialog.html',

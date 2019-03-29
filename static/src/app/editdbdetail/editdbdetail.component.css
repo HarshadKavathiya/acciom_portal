@@ -5,7 +5,7 @@
     }
     .button-connect{
       margin-top: 5px;
-      background-color:#FF8C00;
+      background-color:blue;
       color:whitesmoke;
       border-radius: 20px;
     }
@@ -21,4 +21,14 @@
       flex-direction:column;
       flex-wrap:wrap;
       justify-content:center;
+    }
+    .btn-class{
+      display: flex;
+      justify-content: space-evenly;
+    }
+    .btn-class button{
+      min-width:150px;
+    }
+    .btn1{
+      background-color: green
     }

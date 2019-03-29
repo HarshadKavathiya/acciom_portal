@@ -31,7 +31,6 @@ export class UploadserviceService {
     upload.append('exvalue',executevalue)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    // console.log(this.newtoken)
     let headers = new HttpHeaders().set('Authorization',this.newtoken)
 
     
@@ -61,11 +60,8 @@ export class UploadserviceService {
   }
 
   loggedIn(){
-  // const helper = new JwtHelperService();
-  //   const isExpired = helper.isTokenExpired('id_token');
     return !!localStorage.getItem('id_token'); 
 
-    //  return isExpired ;debugger
   }
 
 
@@ -222,5 +218,9 @@ export class UploadserviceService {
   check_verify_account_token(token){
     let headers = new HttpHeaders().set('Content-Type','application/json')
     return this.http.get<any>(`${this.url}/verify-account/${token}`,{headers: headers})
+  }
+  check_connection(form){
+    return this.http.post<any>(`${this.url}/check-connection`,form)
+    
   }
 }

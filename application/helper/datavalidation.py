@@ -12,7 +12,6 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     api_end_point = current_app.config.get('API_END_POINT') + "/api/spark-job-status/{0}".format(spark_job_id)
     driver_mem = current_app.config.get('DRIVER_MEMORY')
     executor_mem = current_app.config.get('EXECUTOR_MEMORY')
-    print(source_db, des_db)
 
     sqljdbc = basedir + "/spark/sqljdbc42.jar"
     mysql_connector = basedir + "/spark/mysql-connector-java.jar"
@@ -47,4 +46,3 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
                                                                                                         executor_mem),
                      shell=True,
                      universal_newlines=False)
-

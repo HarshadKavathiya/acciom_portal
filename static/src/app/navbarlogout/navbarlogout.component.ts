@@ -35,6 +35,8 @@ export class NavbarlogoutComponent implements OnInit {
   changepassword(){
     this.router.navigate(['changepassword'])
   }
-  
+  view_connection(){
+    this.router.navigate(['Viewdb'])
+  }
 
 }

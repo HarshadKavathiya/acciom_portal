@@ -617,10 +617,6 @@ THE SOFTWARE.
 
 @angular/material/expansion
 
-@angular/material/core
-
-@angular/material/list
-
 @angular/material/dialog
 
 @angular/material/tooltip

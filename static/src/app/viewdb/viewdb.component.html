@@ -3,9 +3,15 @@
 </div></div>
 <mat-card class="card">
   
-    <mat-list>
-        <mat-list-item class="list-db"  *ngFor=" let i of db_connection;let x = index">
-          <div>Connection{{x+1}}</div> <button (click)="edit_detail(i.db_id)" mat-button color="warn">Edit</button></mat-list-item> 
-    </mat-list> 
+<div class="list">
+        
+        <div class="list-db" *ngFor=" let i of db_connection;let x = index">
+        <div class="bold">Connection{{x+1}}</div> 
+        <div > {{ i.db_hostname}}</div>
+        <div> {{ i.db_name}}</div>
+        <div > {{ i.db_type}}</div>
+        <div><button (click)="edit_detail(i.db_id)" mat-button color="warn">Edit</button></div>
+        </div> 
+</div> 
 
 </mat-card>

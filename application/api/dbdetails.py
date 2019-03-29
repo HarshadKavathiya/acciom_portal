@@ -55,7 +55,8 @@ class DbDetails(Resource):
     @jwt_required
     def put(self, db_id):
         try:
-            db_obj = DbDetail.query.filter_by(db_id=db_id).first()
+            current_user = get_jwt_identity()
+            db_obj = DbDetail.query.filter_by(user_id=current_user, db_id=db_id).first()
             data = parser.parse_args()
             db_obj.db_type = data['type']
             db_obj.db_name = data['name']
@@ -69,3 +70,22 @@ class DbDetails(Resource):
                     'db_username': db_obj.db_username, 'db_password': db_obj.db_password}
         except Exception as e:
             return error({"message": str(e), "success": False})
+
+
+def create_dbconnection(current_user, db_type, db, hostname, username):
+    temp = DbDetail.query.filter_by(user_id=current_user, db_type=db_type, db_name=db,
+                                    db_hostname=hostname,
+                                    db_username=username).first()
+    if (temp):
+        return temp.db_id
+    else:
+        temp = DbDetail(
+            user_id=current_user,
+            db_type=db_type,
+            db_name=db,
+            db_hostname=hostname,
+            db_username=username,
+            db_password='**',
+        )
+        temp.save_to_db()
+        return temp.db_id

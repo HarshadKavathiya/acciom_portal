@@ -53,6 +53,16 @@ export class EditdbdetailComponent implements OnInit {
       Swal("error","Something went wrong","error")
    });
   }
-
+  check_connection(){
+    console.log(this.createForm.value)
+    Swal("success","connection can be created for this")
+    this.fileUploadService.check_connection(this.createForm.value).subscribe(data=>{
+      console.log(data)
+    },err=>{
+      console.log("came here")
+      console.log(err.error.message)
+      Swal("error","Connection could not be Created for this details")
+    })
+  }
 
 }
