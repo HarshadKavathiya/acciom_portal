@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 047e0027435a
+Revision ID: c61fcb938b23
 Revises: 
-Create Date: 2019-03-04 18:22:24.167213
+Create Date: 2019-04-04 11:45:50.161618
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '047e0027435a'
+revision = 'c61fcb938b23'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,18 +29,20 @@ def upgrade():
     sa.Column('first_name', sa.String(length=100), nullable=False),
     sa.Column('last_name', sa.String(length=100), nullable=False),
     sa.Column('password', sa.String(length=280), nullable=False),
+    sa.Column('verified', sa.Boolean(), nullable=False),
     sa.Column('created', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('user_id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('user_id')
     )
+    op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_table('dbdetail',
-    sa.Column('db_id', sa.Integer(), nullable=False),
+    sa.Column('db_id', mysql.INTEGER(unsigned=True), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('connection_name', sa.String(length=80), nullable=True),
     sa.Column('db_type', sa.String(length=80), nullable=False),
     sa.Column('db_name', sa.String(length=80), nullable=False),
     sa.Column('db_hostname', sa.String(length=80), nullable=False),
     sa.Column('db_username', sa.String(length=80), nullable=False),
-    sa.Column('db_password', sa.String(length=80), nullable=False),
+    sa.Column('db_password', sa.String(length=80), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('db_id')
@@ -70,7 +72,11 @@ def upgrade():
     sa.Column('test_created_by', sa.String(length=80), nullable=True),
     sa.Column('test_executed_by', sa.String(length=80), nullable=True),
     sa.Column('test_comment', sa.Text(), nullable=True),
+    sa.Column('src_db_id', mysql.INTEGER(unsigned=True), nullable=True),
+    sa.Column('target_db_id', mysql.INTEGER(unsigned=True), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['src_db_id'], ['dbdetail.db_id'], ),
+    sa.ForeignKeyConstraint(['target_db_id'], ['dbdetail.db_id'], ),
     sa.ForeignKeyConstraint(['test_suite_id'], ['test_suite.test_suite_id'], ),
     sa.PrimaryKeyConstraint('test_case_id')
     )
@@ -105,6 +111,7 @@ def downgrade():
     op.drop_table('test_case')
     op.drop_table('test_suite')
     op.drop_table('dbdetail')
+    op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
     op.drop_table('revoked_tokens')
     # ### end Alembic commands ###

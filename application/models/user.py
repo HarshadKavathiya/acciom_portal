@@ -40,7 +40,7 @@ class User(db.Model):
         s = Serializer(current_app.config.get('SECRET_KEY'))
         try:
             user_id = s.loads(token)['user_id']
-        except:
+        except Exception as e:
             return None
         return User.query.get(user_id)
 
@@ -104,21 +104,24 @@ class RevokedTokenModel(db.Model):
 
 class DbDetail(db.Model):
     __tablename__ = "dbdetail"
-    db_id = db.Column(INTEGER(unsigned=True), autoincrement=True, nullable=False, unique=True, index=True)
+    db_id = db.Column(INTEGER(unsigned=True),
+                      autoincrement=True,
+                      primary_key=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('user.user_id'),
-                        nullable=False, primary_key=True)
-    db_type = db.Column(db.String(80), nullable=False, primary_key=True)
-    db_name = db.Column(db.String(80), nullable=False, primary_key=True)
-    db_hostname = db.Column(db.String(80), nullable=False, primary_key=True)
-    db_username = db.Column(db.String(80), nullable=False, primary_key=True)
-    db_password = db.Column(db.String(80), nullable=False)
+                        nullable=False)
+    connection_name = db.Column(db.String(80))
+    db_type = db.Column(db.String(80), nullable=False)
+    db_name = db.Column(db.String(80), nullable=False)
+    db_hostname = db.Column(db.String(80), nullable=False)
+    db_username = db.Column(db.String(80), nullable=False)
+    db_password = db.Column(db.String(80))
     users = db.relationship('User', back_populates='dbdetail', lazy=True)
-    # testcase = db.relationship('TestCase', back_populates='dbdetail', lazy=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
-    def __init__(self, db_type, db_name, db_hostname,
+    def __init__(self, connection_name, db_type, db_name, db_hostname,
                  db_username, db_password, user_id):
+        self.connection_name = connection_name
         self.db_type = db_type
         self.db_name = db_name
         self.db_hostname = db_hostname
@@ -175,7 +178,8 @@ class TestSuite(db.Model):
                 'test_name': x.test_name,
                 'test_id': x.test_id,
                 'src_db_id': list(map(lambda x: db_id_to_json(x),
-                                      DbDetail.query.filter_by(db_id=x.src_db_id))),
+                                      DbDetail.query.
+                                      filter_by(db_id=x.src_db_id))),
                 'target_db_id': x.target_db_id,
                 'target_db_idd': x.src_db_id,
                 'test_status': x.test_status,
@@ -220,15 +224,14 @@ class TestCase(db.Model):
     test_created_by = db.Column(db.String(80), nullable=True)
     test_executed_by = db.Column(db.String(80), nullable=True)
     test_comment = db.Column(db.Text, nullable=True)
-    src_db_id = db.Column(db.Integer, db.ForeignKey('dbdetail.db_id'))
-    target_db_id = db.Column(db.Integer, db.ForeignKey('dbdetail.db_id'))
+    src_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
+    target_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
     test_suite = db.relationship(TestSuite,
                                  back_populates='test_case', lazy=True)
     test_case_log = db.relationship("TestCaseLog",
                                     back_populates='test_cases', lazy=True)
-    # dbdetail = db.relationship(DbDetail, back_populates='testcase', lazy=True)
     src_db = db.relationship("DbDetail", foreign_keys=[src_db_id])
     target_db = db.relationship("DbDetail", foreign_keys=[target_db_id])
 

@@ -15,6 +15,7 @@ export class DbdetailsComponent implements OnInit {
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
     private router:Router) {
       this.createForm=fb.group({
+        connection_name:['', Validators.required],
         type:['',[Validators.required]],
         name:['',[Validators.required]],
         hostname:['',Validators.required],

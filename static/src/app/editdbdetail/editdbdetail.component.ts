@@ -16,6 +16,7 @@ export class EditdbdetailComponent implements OnInit {
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
     private router:Router,private route: ActivatedRoute) {
       this.createForm=fb.group({
+        connection_name:['', Validators.required],
         type:['',[Validators.required]],
         name:['',[Validators.required]],
         hostname:['',Validators.required],
@@ -29,13 +30,13 @@ export class EditdbdetailComponent implements OnInit {
       this.db_id = params.db_id
       this.fileUploadService.get_db_connect_byid(this.db_id).subscribe(data=>{
         this.db_detail=data
+        this.createForm.get('connection_name').setValue(this.db_detail.connection_name)
         this.createForm.get('type').setValue(this.db_detail.db_type);
         this.createForm.get('name').setValue(this.db_detail.db_name);
         this.createForm.get('hostname').setValue(this.db_detail.db_hostname);
         this.createForm.get('username').setValue(this.db_detail.db_username);
         this.createForm.get('password').setValue(this.db_detail.db_password);
       })
-
     })
   }
   viewconnection(){

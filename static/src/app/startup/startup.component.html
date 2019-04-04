@@ -17,9 +17,14 @@
             class="panel_title-outer"> 
               Quality Suite{{x+1}}
           </mat-panel-title>
+
           <mat-panel-description 
             class="panel-desc-outer"
           >
+          <div>
+
+            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections</button>
+          </div>
             <div class="paneldesc"> 
               {{i.excel_name}},<div class="bold">Uploaded At:</div> {{ i.created | date:'medium'}}
             </div>
@@ -138,6 +143,10 @@
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 4">Error
+                      </td>
+                      <td class="tableheader-test-execution"
+                      [ngStyle]="{'background-color':getcolor(4)}"
+                      *ngIf="case_log.test_execution_status == null">Error
                       </td>
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"

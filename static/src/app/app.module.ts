@@ -15,6 +15,7 @@ import { DbdetailsComponent } from './dbdetails/dbdetails.component';
 
 import { StartupComponent } from './startup/startup.component';
 import{DialogOverviewExampleDialogCaseDetail} from './startup/startup.component'
+import {DialogManageConnection} from './startup/startup.component';
 import {DialogOverviewExampleDialog} from './home/home.component';
 import{DialogOverviewExampleDialogstartup} from './startup/startup.component';
 import {UploadserviceService} from './uploadservice.service';
@@ -38,6 +39,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTabsModule} from '@angular/material/tabs';
 
 import {ColorDirective} from './directive/color1.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -70,6 +72,7 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     DialogOverviewExampleDialog,
     DialogOverviewExampleDialogstartup,
     DialogOverviewExampleDialogCaseDetail,
+    DialogManageConnection,
     ColorDirective,
     UserdetailComponent,
     DashboardComponent,
@@ -100,6 +103,7 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     MatSelectModule,
     MatIconModule,
     MatDialogModule,
+    MatTabsModule,
     MatRadioModule,
     MatProgressBarModule,
     MatExpansionModule,
@@ -114,7 +118,7 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
   providers: [UploadserviceService,CanDeactivateGuard,ExcelService],
   bootstrap: [AppComponent],
   entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup,
-    DialogOverviewExampleDialogCaseDetail]
+    DialogOverviewExampleDialogCaseDetail,DialogManageConnection]
 
 
 })

@@ -101,7 +101,8 @@ class Login(Resource):
                         identity=current_user.user_id,
                         expires_delta=expires)
                     payload = {
-                        'message': 'logged in as {} '.format(current_user.email),
+                        'message':
+                            'logged in as {} '.format(current_user.email),
                         'uid': current_user.user_id,
                         'access_token': access_token,
                         'success': True,
@@ -137,7 +138,8 @@ class ResetPasswordEmail(Resource):
         data = parser.parse_args()
         user = User.query.filter_by(email=data['email']).first()
         if user is None:
-            return error({"success": False, "message": "Your e-mail Id is not correct"})
+            return error({"success": False,
+                          "message": "Your e-mail Id is not correct"})
 
         else:
             send_reset_email(user)
@@ -151,7 +153,8 @@ class ResetPassword(Resource):  # /api/resetpassword/token
         if user is None:
             return error({"success": False, "message": "Invalid token"})
         else:
-            return success({"message": "page for passwordreset", "success": True,
+            return success({"message": "page for passwordreset",
+                            "success": True,
                             "token": token})
 
 
@@ -161,7 +164,9 @@ class ResetPasswordInput(Resource):
         parser.add_argument('password',
                             help='This field cannot be blank',
                             required=True)
-        parser.add_argument('confirm_password', help='field is required', required=True)
+        parser.add_argument('confirm_password',
+                            help='field is required',
+                            required=True)
         parser.add_argument('token', help='filed is required', required=True)
         data = parser.parse_args()
         user = User.verify_reset_token(data['token'])
@@ -175,9 +180,10 @@ class ResetPasswordInput(Resource):
 
 
 def send_reset_email(user):
+    sender_email = app.config.get('MAIL_USERNAME')
     token = user.get_reset_token()
-    msg = Message('Password Reset Request', sender="bhardwaj.akhil96@gmail.com", recipients=[user.email])
-    msg.body = 'http://0.0.0.0:5000' + app.config.get('UI_RESET_PASSWORD_PATH') + token
+    msg = Message('Password Reset Request', sender=app.config.get('MAIL_USERNAME'), recipients=[user.email])
+    msg.body = app.config.get('API_END_POINT') + app.config.get('UI_RESET_PASSWORD_PATH') + token
     # api.url_for(ResetPassword, token=token, _external=True)
     mail.send(msg)
 
@@ -215,8 +221,11 @@ def verify_user(email):
 
 def send_mail_to_verify(user):
     token = user.get_reset_token()
-    msg = Message('verify User Request', sender="bhardwaj.akhil96@gmail.com", recipients=[user.email])
-    msg.body = 'http://0.0.0.0:5000' + app.config.get('UI_AFTER_VERIFY') + token
+    msg = Message('verify User Request',
+                  sender="bhardwaj.akhil96@gmail.com",
+                  recipients=[user.email])
+    msg.body = app.config.get('API_END_POINT') \
+               + app.config.get('UI_AFTER_VERIFY') + token
     mail.send(msg)
 
 

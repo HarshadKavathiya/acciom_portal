@@ -8,7 +8,7 @@ from application.api.login import (Register,
                                    Login, Logout, ResetPasswordEmail, ResetPassword, ResetPasswordInput,
                                    SettingNewPaswword, VerifyAccount)
 from application.api.testcase import TestCaseJob, TestCaseSparkJob, EditTestCase
-from application.api.testsuite import TestSuites, ExportTestLog, TestCaseLogDetail
+from application.api.testsuite import TestSuites, ExportTestLog, TestCaseLogDetail, ConnectionDetails, SelectConnection
 from application.models.user import RevokedTokenModel
 from index import jwt, app, api, static_folder
 
@@ -50,3 +50,5 @@ api.add_resource(ResetPasswordInput, '/api/reset-password')
 api.add_resource(SettingNewPaswword, '/api/change-password')
 api.add_resource(VerifyAccount, '/api/verify-account/<string:token>')
 api.add_resource(CheckConnection, '/api/check-connection')
+api.add_resource(ConnectionDetails, '/api/connection-detail/<int:suite_id>')
+api.add_resource(SelectConnection, '/api/select-connection')

@@ -2,6 +2,8 @@
 # logger = set_up_logging()
 import json
 
+from flask import current_app as app
+
 
 def qry_generator(columns, target_table):
     sub_query = ""
@@ -17,7 +19,7 @@ def qry_generator(columns, target_table):
 def null_check(target_cursor, target_table, column, test_queries):
     try:
         col_list = []
-        columns = column.split(':')
+        columns = column.split(';')
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
             "INFORMATION_SCHEMA.COLUMNS"
@@ -30,10 +32,13 @@ def null_check(target_cursor, target_table, column, test_queries):
             if column == 'None':
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)
+                app.logger.debug(sub_query)
 
             else:
                 sub_query = qry_generator(columns, target_table)
+
                 target_cursor.execute(sub_query)
+                app.logger.debug(sub_query)
         else:
             target_cursor.execute(query[1])
 
@@ -51,4 +56,5 @@ def null_check(target_cursor, target_table, column, test_queries):
                     "des_value": None}
 
     except Exception as e:
+        app.logger.debug(e)
         return {"res": 2, "src_value": None, "des_value": None}

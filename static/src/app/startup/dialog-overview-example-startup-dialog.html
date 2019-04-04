@@ -315,7 +315,7 @@ opacity: 0.9;
 </div>
 <div mat-dialog-actions class="close">
         <a mat-flat-button  
-        class="export-btn" [disabled]="data.execution_status === 1"
+        class="export-btn" *ngIf="data.execution_status !== 1"
         href="{{onexport(data.case_log_id)}}" >Export </a>
 
     </div>

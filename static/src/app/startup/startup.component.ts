@@ -7,7 +7,6 @@ import {ExcelService} from '../services/excel.service';
 
 
 export interface DialogData {
-  
   source_log: string;
   destination_countcheck:boolean;
   countcheck:boolean;
@@ -24,7 +23,6 @@ export interface DialogData {
   src_value_dataduplication:Array<any>;
   src_table:string;
   target_table:string;
-  
   value_src_nullcheck:Array<any>;
 }
 export interface DialogDataCaseDetail {
@@ -42,9 +40,12 @@ export interface DialogDataCaseDetail {
  casename:string;
 }
 
+export interface DialogManageConnection{
+  connections:Array<any>;
+  test_case:Array<any>;
+}
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { $ } from 'protractor';
-
 @Component({
   selector: 'app-startup',
   templateUrl: './startup.component.html',
@@ -52,8 +53,6 @@ import { $ } from 'protractor';
   changeDetection: ChangeDetectionStrategy.Default,
   
 })
-
-
 export class StartupComponent implements OnInit {
   panelOpenState = false;
   id:any;
@@ -97,6 +96,8 @@ export class StartupComponent implements OnInit {
   des_qry:String;
   len:number;
   case_name:String;
+  all_connection=[];
+  all_cases=[];
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -104,19 +105,10 @@ export class StartupComponent implements OnInit {
 
 
   ngOnInit() {
-    // if(!(this.fileUploadService.verify_user().subscribe(data=>{
-    //   if(data.success){
-    //     console.log("user is verified")
-    //   }else{
-    //     console.log("user not verified")
-    //   }
-    // }))){
-    // }
-    this.Initialize() 
-    
+    this.Initialize()
+  
   }
   
-
   suitestatusopen(x){
     localStorage.setItem('suite'+x,x)
   }  
@@ -140,8 +132,6 @@ export class StartupComponent implements OnInit {
       if(data.success){
         this.stilload=false;    
       this.all_test_suite=data.suites.user
-      // this.all_test_suite.expandCol = localStorage.getItem("col");
-      console.log(this.all_test_suite)
        this.arr1=[]
       for (var i=0;i<this.all_test_suite.length;i++)
       {
@@ -162,7 +152,6 @@ export class StartupComponent implements OnInit {
         this.playButtons2.push(this.temparr)
       }}
    },err=>{
-    // console.log(err.error.message)
 
    });
   }
@@ -175,6 +164,34 @@ export class StartupComponent implements OnInit {
   }
   ToDB(){
     this.router.navigate(['db'])
+  }
+  manage_connection(suite_id){
+    this.all_cases=[]
+    this.all_connection=[]
+    event.stopPropagation();
+    this.fileUploadService.get_all_connections(suite_id).subscribe(data=>{
+      for(let i=0;i<data.all_cases.length;i++){
+        this.all_cases.push({'case_id':data.all_cases[i][0], 'case_name':data.all_cases[i][1],'checked':false})
+      }
+      this.all_connection=data.all_connections
+
+      this.show_connection(this.all_connection, this.all_cases)
+      
+    },err=>{
+    })
+  }
+  show_connection(connections, cases){
+    const dialogRef = this.dialog.open(DialogManageConnection, {    //break
+      panelClass: 'my-class',
+      width: '40%',
+      height:'auto',
+      data:{
+        connections:connections, test_case:cases
+      }
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+     });
   }
   executeTestCase(test_Suite_id,event:Event,x){
     event.stopPropagation();
@@ -224,12 +241,10 @@ export class StartupComponent implements OnInit {
       Swal("error",err.error.msg,"error")
         let temp="Token has expired"
         if (temp == err.error.msg){
-          // console.log("done")
           clearInterval(this.times)
 
           this.logout()
         }else{
-          // console.log("other reason")
           this.Initialize();
         this.starttimer();
         }
@@ -238,9 +253,7 @@ export class StartupComponent implements OnInit {
 
 getcasedetails(case_id,case_name){
   event.stopPropagation();
-  // console.log(case_name)
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
-// console.log(data.res)
 this.src_db_name=data.res.src_db_name;
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
@@ -335,7 +348,6 @@ getlog(test_name,src_table,target_table,case_log_id){
   // case_name , case_src_log and case_des_log.
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
 
-    // console.log(data.test_case_log.data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
     // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
@@ -344,7 +356,6 @@ getlog(test_name,src_table,target_table,case_log_id){
 }
 
 showlog(test_name,src_table,target_table,case_log){
-  // console.log(case_log.test_case_log_id)
   if (test_name =='CountCheck'){
     this.show_logdialog(test_name)
   }
@@ -353,7 +364,6 @@ showlog(test_name,src_table,target_table,case_log){
     this.show_logdialog(test_name)
     
     if(case_log.destination_log==null){
-      // console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
@@ -376,7 +386,6 @@ showlog(test_name,src_table,target_table,case_log){
     if(case_log.destination_log==null 
       || case_log.destination_log == "No Duplicate Records Available"
     ){
-      // console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
@@ -443,8 +452,8 @@ showlog(test_name,src_table,target_table,case_log){
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     panelClass: 'my-class',
-    width: '48%',
-    height:'55%',
+    width: 'auto',
+    height:'auto',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
     key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
@@ -481,4 +490,49 @@ export class DialogOverviewExampleDialogCaseDetail {
     this.dialogRef.close();
   }
 
+}
+@Component({
+  selector: 'dialog-manage-connection',
+  templateUrl: 'dialog-manage-connection.html',
+})
+export class DialogManageConnection {
+connection:number;
+selectedValue=[]
+show:boolean=false;
+show1:boolean=false;
+disable2=true;
+  constructor(private fileUploadService:UploadserviceService,
+    public dialogRef: MatDialogRef<DialogManageConnection>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogManageConnection) {}
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  changeselect(selectval){
+    this.connection=selectval
+    this.show=true;
+    this.show1=true;
+
+    
+  }
+  submit_connection(type){
+    this.fileUploadService.select_connections(type,JSON.stringify(this.selectedValue),this.connection).subscribe(data=>{
+      if(data.success){
+        Swal("success",data.message,"success")
+        this.selectedValue=[]
+        this.connection;
+    this.dialogRef.close();
+
+      }
+    },err=>{
+      Swal("error",err.error.message,"error")
+    })
+
+  }
+  selectBadge(e,x){
+    if (e.target.checked) {  
+      this.selectedValue.push(x);
+    }  else { 
+      this.selectedValue.splice(this.selectedValue.indexOf(x), 1);
+    }
+  }
 }

@@ -15,11 +15,12 @@ export class ViewdbComponent implements OnInit {
   ngOnInit() {
     this.fileUploadService.get_db_connect().subscribe(data=>{
       this.db_connection=(data.connection)
-      console.log(data)
+      
 
   })
   console.log(this.db_connection.length)
   }
+  
   add_db(){
     this.router.navigate(['add-db'])
   }

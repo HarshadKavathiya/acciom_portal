@@ -1,0 +1,119 @@
+<head>
+        <style type="text/css">
+.main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.source{
+    flex:1 1 50%;
+}
+.target{
+    flex:1 1 50%;
+}
+.case-name-font{
+    text-align: center;
+  font-family: 'OpenSans-Light',sans-serif;
+  font-size: 14;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #2f2f2f;
+}
+.close-btn{
+    background-color: #fff;
+    opacity: 1.6;
+  transition: 0.3s;
+}
+
+
+        </style>
+</head>
+<div mat-dialog-content align="end" >
+        <button mat-button class="close-btn" (click)="onNoClick()"> <i class="material-icons">close</i></button>
+        </div>
+<div mat-dialog-content>
+<div >
+        <mat-tab-group mat-align-tabs="center">
+
+    <mat-tab label="Source">
+    <div class="source">
+        <!-- content for source-->
+        <h2>Source Connection</h2>
+        <mat-form-field>
+        <mat-label> Source</mat-label>
+        <mat-select  (selectionChange)="changeselect($event.value)">
+        <mat-option *ngFor="let x of data.connections; let i=index"
+        [value]="x">
+        Connection{{i+1}}
+        </mat-option>
+        </mat-select>
+        </mat-form-field>
+        <div *ngIf="show">
+        <div 
+            
+        *ngFor="let case of data.test_case">
+            <div class="pretty p-default p-round p-thick">     
+            <input value="{{ case.case_id }}" type="checkbox" 
+            [(ngModel)]="case.selected"
+            (change)="selectBadge($event, case.case_id)"/>
+            <div class="state p-primary-o">
+            <label style="
+  font-family: 'OpenSans-Light',sans-serif;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #2f2f2f;">{{case.case_name}}</label>
+            </div> 
+        </div> 
+
+        </div>
+        </div>
+        <button mat-raised-button (click)="submit_connection('source')">Submit</button>
+    </div>
+</mat-tab>
+<mat-tab label="Target">
+    <div class="target">
+        <!-- content for target-->
+        <h2>Target Connection</h2>
+        <mat-form-field>
+        <mat-label>Target Connections</mat-label>
+        <mat-select (selectionChange)="changeselect($event.value)">
+                <mat-option *ngFor="let x of data.connections;let i=index"
+        [value]="x">
+        Connection{{i+1}}
+    </mat-option>
+    
+        </mat-select>
+        </mat-form-field>
+        <div *ngIf="show1">
+                <div 
+                    
+                *ngFor="let case of data.test_case">
+                    <div class="pretty p-default p-round p-thick">     
+                    <input value="{{ case.case_id }}" type="checkbox" 
+                    [(ngModel)]="case.selected"
+                    (change)="selectBadge($event, case.case_id)"/>
+                    <div class="state p-primary-o">
+                    <label style="
+          font-family: 'OpenSans-Light',sans-serif;
+          font-stretch: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #2f2f2f;">{{case.case_name}}</label>
+                    </div> 
+                </div> 
+        
+                </div>
+                </div>
+        <button mat-raised-button  (click)="submit_connection('dest')">Submit</button>
+
+    </div>
+</mat-tab>
+</mat-tab-group>    
+
+</div>
+
+</div>   

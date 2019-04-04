@@ -21,9 +21,6 @@ export class UploadserviceService {
 
   postFile(fileToUpload: File,selectedsheet:any,selectedCase:any,suitename:any,executevalue:any):Observable<any>{
     const upload=new FormData()
-    console.log(selectedCase)
-    console.log(suitename)
-    console.log(selectedCase)
     upload.append('inputFile',fileToUpload)
     upload.append('sheet',selectedsheet)
     upload.append('selectedcase',selectedCase)
@@ -221,6 +218,25 @@ export class UploadserviceService {
   }
   check_connection(form){
     return this.http.post<any>(`${this.url}/check-connection`,form)
-    
+  }
+  get_all_connections(suite_id){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/connection-detail/${suite_id}`,{headers: headers})
+  }
+  select_connections(type, cases, connection_id){  
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.post<any>(`${this.url}/select-connection`,{
+      "connection_type":type,
+      "case_id":cases,
+      "db_id":connection_id
+    },{headers: headers})
   }
 }

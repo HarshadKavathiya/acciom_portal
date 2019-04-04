@@ -24,11 +24,13 @@ class CheckConnection(Resource):
                             required=True)
 
         data = parser.parse_args()
-        result = connection_check(data['type'], data['hostname'], data['username'], data['password'],
+        result = connection_check(data['type'], data['hostname'],
+                                  data['username'], data['password'],
                                   data['name'])
         if result == success:
             return success(
                 {'message': 'connection created',
                  'success': True})
         else:
-            return {"message": "connection could not be created", "success": False}
+            return {"message": "connection could not be created",
+                    "success": False}

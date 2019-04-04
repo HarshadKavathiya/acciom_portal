@@ -106,6 +106,8 @@ OnClick(v) {
      this.executevalue = 1
    }
    this.changessaved=true;
+   console.log(this.selectedValue)
+  //  for (let i=0;i<this.selectedValue.length;i++)
      this.fileUploadService.postFile(this.file,this.selectedradio,this.selectedValue,this.suitename,this.executevalue).subscribe(data => {
     this.name=data['message']
     this.filevalue=null;
@@ -173,12 +175,12 @@ selectBadge (e, x) {
   if (e.target.checked) {
     this.disable2=false;
 
-    this.selectedValue.push(x);
+    this.selectedValue.push(x.toString());
   }  else { 
     this.selectedValue.splice(this.selectedValue.indexOf(x), 1);
   }
   this.selectedtestcases=this.selectedValue
-
+console.log(this.selectedValue)
   var totalSelected =  0;
   for (let i = 0; i < this.all_cases.length; i++) {
         if(this.all_cases[i].selected) totalSelected++;
@@ -189,7 +191,6 @@ return true;
  selectradio(x){
     this.disable=false;
      this.selectedradio=x
-    //  console.log(this.selectedradio)
  }
 
  closed(){
@@ -198,7 +199,6 @@ return true;
 }
  testselect(){
    this.dis=true
-  //  console.log(this.selectedValue)
    this.afterupload=false;
  }
 
@@ -211,7 +211,9 @@ return true;
 if (this.selectedAll){
   for (var i = 0; i < this.all_cases.length; i++) {
       this.all_cases[i].selected = this.selectedAll;
-     this.selectedValue.push(this.all_cases[i].name);
+     this.selectedValue.push(this.all_cases[i].id.toString());
+    //  this.selectedValue.push(this.all_cases[i].name);
+
   } 
 }
   else if (!this.selectedAll){
@@ -221,7 +223,6 @@ if (this.selectedAll){
   }    
   this.selectedValue = []
 }
-  // console.log(this.selectedValue)
 }
 
  Next(s){
@@ -238,7 +239,6 @@ if (this.selectedAll){
       this.temp_table_detail.push(this.resfinal[i]['Source Table:Target Table'])
       this.temp_column_detail.push(this.resfinal[i]['Columns'])
     }
-
    // below func validate the 1st column all row
   if(!this.validate_case_name(this.all_cases)){
     this.clearAll("Filecannot be Uploaded, Case name is not Valid")
@@ -254,11 +254,10 @@ if (this.selectedAll){
       this.clearAll("filecannot be uploaded, Table Names are not valid")
       return;
  }
- if(!this.validate_column_name(this.temp_column_detail)){
-      this.clearAll("filecannot be uploaded, Column names are not valid are not valid")
-      return;
- }
-    //allcases get copy  //of all_cases
+//  if(!this.validate_column_name(this.temp_column_detail)){
+//       this.clearAll("filecannot be uploaded, Column names are not valid are not valid")
+//       return;
+//  }
     this.allcases=this.all_cases.map(x=>this.name_map(x)) 
     this.prog=75;                                        
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {   
@@ -308,7 +307,6 @@ if (this.selectedAll){
       {   
           var dict1= new Map();
           temp_Arr= db_Detail[i].replace(/(\r\n|\n|\r)/gm, "");
-          console.log(temp_Arr)
           if (temp_Arr[temp_Arr.length-1] == ";")
           {
             temp_Arr=temp_Arr.slice(0,-1)
@@ -354,7 +352,6 @@ if (this.selectedAll){
   validate_column_name(temp_column_detail){
       let status=true;
         let temp_Arr=[]
-
         for(let i=0;i<temp_column_detail.length;i++){
           let each_col_row=temp_column_detail[i]
           if (each_col_row!=undefined){

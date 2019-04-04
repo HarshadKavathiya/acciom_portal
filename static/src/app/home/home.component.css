@@ -66,6 +66,7 @@
   margin:4px;
 }
 .Upload-File-Box{
+  /* d8d8d8 */
   cursor: pointer;
   height:150px;
   display:flex;
@@ -73,7 +74,7 @@ flex-direction: column;
 justify-content: center;
 border-radius: 24px;
 border: solid 1px #979797;
-background-color: #d8d8d8;
+background-color: #ffffff;
 }
 .Upload-File-Box-content{
   text-align: center;

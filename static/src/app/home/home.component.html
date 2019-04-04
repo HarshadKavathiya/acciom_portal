@@ -60,9 +60,11 @@
                     <tr *ngFor=" let case of all_cases" class="cright">
 
                         <td >{{ case.name }}</td>
-                        <td>   <input class="form-check-input" 
-                            value="{{ case.name }}" 
-                            [(ngModel)]="case.selected"  type="checkbox" (change)="selectBadge($event, case.name)" >
+                        <td>  
+                            <input  
+                            value="{{ case.id }}" 
+                            [(ngModel)]="case.selected"  type="checkbox" (change)="selectBadge($event, case.id)">
+                        
                         </td>
                     </tr>
                 </div>

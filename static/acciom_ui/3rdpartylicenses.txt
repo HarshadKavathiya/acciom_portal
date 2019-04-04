@@ -590,6 +590,12 @@ MIT
 
 @angular/material/form-field
 
+@angular/material/core
+
+@angular/material/tabs
+
+@angular/material/select
+
 @angular/flex-layout
 MIT
 The MIT License

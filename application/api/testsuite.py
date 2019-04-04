@@ -2,16 +2,18 @@ import ast
 import json
 from io import BytesIO
 
+from flask import current_app as app
 from flask import request, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, reqparse
 from openpyxl import load_workbook
 
 from application.api.dbdetails import create_dbconnection
+from application.common.Response import success, error
 # from celery_task import my_background_task
 from application.helper.runner_class import run_by_case_id
 from application.helper.runner_class import split_db
-from application.models.user import TestSuite, TestCase, TestCaseLog
+from application.models.user import TestSuite, TestCase, TestCaseLog, DbDetail
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet',
@@ -26,6 +28,13 @@ parser.add_argument('suitename',
 parser.add_argument('exvalue',
                     help='this field is required',
                     required=True)
+
+
+def args_as_list(s):
+    v = ast.literal_eval(s)
+    if type(v) is not list:
+        print("not a list")
+    return v
 
 
 class TestSuites(Resource):
@@ -45,25 +54,22 @@ class TestSuites(Resource):
         wb = load_workbook(filename=BytesIO(file.read()))
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
-        temp_test = [[str(ws[x][0].value)
-                      for x in range(2, ws.max_row + 1)]]
+        # temp_test = [[str(ws[x][0].value)
+        #               for x in range(2, ws.max_row + 1)]]
+        temp_test1 = [str(i - 2) for i in range(2, ws.max_row + 1)]
+
         # from column 2nd
-        for i in range(1, ws.max_column):
+        temp_test = []
+        for i in range(0, ws.max_column):
             temp_test.append([str(ws[x][i].value)
                               for x in range(2, ws.max_row + 1)])
             data = parser.parse_args()
         test_case_list = str(data['selectedcase']).split(",")
-        k = 0
-        temp_test1 = []
-        for j in range(ws.max_row - 1):
-            temp_test1.append(temp_test[k][j])
-        for i in range(len(test_case_list)):
-            if test_case_list[i] in temp_test1:
-                pass
         i = 0
         for j in range(ws.max_row - 1):
-            if temp_test[i][j] in test_case_list:
-                test_case_list.remove(temp_test[i][j])
+            if temp_test1[j] in test_case_list:
+                app.logger.debug(temp_test[i][j])
+                test_case_list.remove(temp_test1[j])
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],
                                 test_status=0,
@@ -79,12 +85,17 @@ class TestSuites(Resource):
                                 test_executed_by=None,
                                 test_comment=None)
                 temp.save_to_db()
-                print(temp.test_detail)
                 db_list = split_db(temp.test_detail)
-                src_db_id = create_dbconnection(current_user, db_list[2].lower(), db_list[0].lower(),
-                                                db_list[4].lower(), db_list[6])
-                target_db_id = create_dbconnection(current_user, db_list[3].lower(), db_list[1],
-                                                   db_list[5], db_list[7])
+                src_db_id = create_dbconnection(current_user,
+                                                db_list[2].lower(),
+                                                db_list[0],
+                                                db_list[4].lower(),
+                                                db_list[6])
+                target_db_id = create_dbconnection(current_user,
+                                                   db_list[3].lower(),
+                                                   db_list[1],
+                                                   db_list[5].lower(),
+                                                   db_list[7])
                 temp.src_db_id = src_db_id
                 temp.target_db_id = target_db_id
                 temp.save_to_db()
@@ -154,6 +165,66 @@ class ExportTestLog(Resource):
             stream = tmp.read()
         return Response(
             stream,
-            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-disposition":
-                         "attachment; filename=export123.xlsx"})
+            mimetype="application/vnd.openxmlformats-officedocument."
+                     "spreadsheetml.sheet",
+            headers={"Content-disposition": "attachment; "
+                                            "filename=export123.xlsx"})
+
+
+class ConnectionDetails(Resource):
+    '''
+    accepts suite_id of user and returns
+     corresponding case_ids and connection_ids of user
+    '''
+
+    @jwt_required
+    def get(self, suite_id):
+        try:
+            all_connection = []
+            all_case = []
+            current_user = get_jwt_identity()
+            db_obj = DbDetail.query.filter_by(user_id=current_user).all()
+            suite_obj = TestSuite. \
+                query.filter_by(test_suite_id=suite_id).first()
+            for i in suite_obj.test_case:
+                pass
+            all_case = [(i.test_case_id, i.test_name)
+                        for i in suite_obj.test_case]
+            all_connection = [i.db_id for i in db_obj]
+            return {"all_connections": all_connection, "all_cases": all_case}
+        except Exception as e:
+            return {"success": False, "message": str(e)}
+
+
+class SelectConnection(Resource):
+    @jwt_required
+    def post(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('connection_type',
+                                help='This field cannot be blank',
+                                required=True)
+            parser.add_argument('case_id',
+                                help='This field cannot be blank',
+                                required=True,
+                                type=args_as_list, default=[])
+            parser.add_argument('db_id',
+                                help='This field cannot be blank',
+                                required=True)
+            data = parser.parse_args()
+
+            if data['connection_type'] == "source":
+                for i in data['case_id']:
+                    testcase = TestCase.query.filter_by(test_case_id=i).first()
+                    testcase.src_db_id = data["db_id"]
+                    testcase.save_to_db()
+
+            elif data['connection_type'] == "dest":
+                for i in data['case_id']:
+                    testcase = TestCase.query.filter_by(test_case_id=i).first()
+                    testcase.target_db_id = data["db_id"]
+                    testcase.save_to_db()
+            return success({"success": True, "message": "Updated Details"})
+        except Exception as e:
+            print(e)
+            return error({"success": False, "message": str(e)})

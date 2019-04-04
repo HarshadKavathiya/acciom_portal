@@ -1,5 +1,7 @@
 from flask import current_app as app
 
+# from application.helper.runner_class import split_query
+
 arr = []
 
 
@@ -8,9 +10,10 @@ def count_check(source_cursor, target_cursor, source_table,
     payload = {"res": None, "src_value": None,
                "des_value": None}
     try:
-        temp = test_query.strip('@')
-        lst = temp.split(';')
+        lst = test_query.split(';')
         newlst = [i.split(':') for i in lst]
+        app.logger.debug(newlst)
+        # newlst = split_query(test_query)
         if test_query == 'None':
             source_cursor.execute(
                 'SELECT COUNT(1) FROM {}'.format(source_table))
