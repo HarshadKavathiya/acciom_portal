@@ -81,7 +81,7 @@ class EditTestCase(Resource):
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
         Source_Detail = db_details(src_db_id.db_id)
         Target_Detail = db_details(des_db_id.db_id)
-        if obj.test_column != 'None':
+        if obj.test_column is not 'None':
             column = obj.test_column
         if obj.test_queries == 'None':
             src_qry = 'None'

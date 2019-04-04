@@ -212,18 +212,10 @@ class TestCase(db.Model):
     test_id = db.Column(db.String(80), nullable=True)
     test_status = db.Column(db.Integer, nullable=True)
 
-    test_priority = db.Column(db.String(80), nullable=True)
-    test_detail = db.Column(db.Text, nullable=True)
     test_column = db.Column(db.Text, nullable=True)
     table_src_target = db.Column(db.Text, nullable=True)
     test_name = db.Column(db.String(80), nullable=True)
-
     test_queries = db.Column(db.Text, nullable=True)
-    test_expected = db.Column(db.Text, nullable=True)
-    test_actual = db.Column(db.Text, nullable=True)
-    test_created_by = db.Column(db.String(80), nullable=True)
-    test_executed_by = db.Column(db.String(80), nullable=True)
-    test_comment = db.Column(db.Text, nullable=True)
     src_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     target_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     created = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -240,26 +232,19 @@ class TestCase(db.Model):
         db.session.commit()
 
     def __init__(self, test_suite_id, test_id, test_status,
-                 test_priority, test_detail, test_column,
+                 test_column,
                  table_src_target, test_name,
                  test_queries,
-                 test_expected, test_actual,
-                 test_created_by, test_executed_by,
-                 test_comment):
+                 src_db_id, target_db_id):
         self.test_suite_id = test_suite_id
         self.test_id = test_id
         self.test_status = test_status
-        self.test_priority = test_priority
-        self.test_detail = test_detail
         self.test_column = test_column
         self.table_src_target = table_src_target
         self.test_name = test_name
         self.test_queries = test_queries
-        self.test_expected = test_expected
-        self.test_actual = test_actual
-        self.test_created_by = test_created_by
-        self.test_executed_by = test_executed_by
-        self.test_comment = test_comment
+        self.src_db_id = src_db_id
+        self.target_db_id = target_db_id
 
 
 class TestCaseLog(db.Model):

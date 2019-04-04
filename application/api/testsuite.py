@@ -70,22 +70,8 @@ class TestSuites(Resource):
             if temp_test1[j] in test_case_list:
                 app.logger.debug(temp_test[i][j])
                 test_case_list.remove(temp_test1[j])
-                temp = TestCase(test_suite_id=temp_file.test_suite_id,
-                                test_id=temp_test[i + 1][j],
-                                test_status=0,
-                                test_priority=None,
-                                test_detail=temp_test[i + 2][j],
-                                test_column=temp_test[i + 4][j],
-                                table_src_target=temp_test[i + 3][j],
-                                test_name=temp_test[i][j],
-                                test_queries=temp_test[i + 5][j],
-                                test_expected=None,
-                                test_actual=None,
-                                test_created_by=None,
-                                test_executed_by=None,
-                                test_comment=None)
-                temp.save_to_db()
-                db_list = split_db(temp.test_detail)
+
+                db_list = split_db(temp_test[i + 2][j])
                 src_db_id = create_dbconnection(current_user,
                                                 db_list[2].lower(),
                                                 db_list[0],
@@ -96,8 +82,16 @@ class TestSuites(Resource):
                                                    db_list[1],
                                                    db_list[5].lower(),
                                                    db_list[7])
-                temp.src_db_id = src_db_id
-                temp.target_db_id = target_db_id
+
+                temp = TestCase(test_suite_id=temp_file.test_suite_id,
+                                test_id=temp_test[i + 1][j],
+                                test_status=0,
+                                test_column=temp_test[i + 4][j],
+                                table_src_target=temp_test[i + 3][j],
+                                test_name=temp_test[i][j],
+                                test_queries=temp_test[i + 5][j],
+                                src_db_id=src_db_id,
+                                target_db_id=target_db_id)
                 temp.save_to_db()
         if int(data['exvalue']) == 1:
             test_suite = TestSuite.query.filter_by(
