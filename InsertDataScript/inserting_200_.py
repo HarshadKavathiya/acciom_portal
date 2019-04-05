@@ -7,9 +7,9 @@ db_name = "dest_db";
 table_name = "dest_inventory";
 
 user_name = "acciom_user";
-password = "acciomuser";
+password = "acciom_password";
 host = "localhost"
-ranges = 1000  # changes as per required rows to be inserted
+ranges = 400  # changes as per required rows to be inserted
 
 connection = pymysql.connect(host=host, user=user_name, password=password,
                              db=db_name)

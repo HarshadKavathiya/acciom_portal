@@ -32,6 +32,7 @@ def null_check(target_cursor, target_table, column, test_queries):
             if column == 'None':
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)
+                app.logger.debug(target_cursor)
                 app.logger.debug(sub_query)
 
             else:
