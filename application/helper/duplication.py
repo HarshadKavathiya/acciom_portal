@@ -47,12 +47,13 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             custom_query = test_queries.split(':')[1]
         app.logger.debug(custom_query)
         target_cursor.execute(custom_query)
-
+        all_results = []
         for row in target_cursor:
-            my_list.append(row)
+            all_results.append(list(map(str, row)))
         import json
-        res1 = json.dumps(my_list)
-        if my_list:
+        if all_results:
+            res1 = json.dumps(all_results)
+
             app.logger.debug("Duplication Test Executed")
             return {"res": 0, "src_value": "src_val_not required",
                     "des_value": res1}

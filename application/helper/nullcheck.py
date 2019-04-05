@@ -38,20 +38,21 @@ def null_check(target_cursor, target_table, column, test_queries):
                 sub_query = qry_generator(columns, target_table)
 
                 target_cursor.execute(sub_query)
-                app.logger.debug(sub_query)
         else:
             target_cursor.execute(query[1])
 
         all_results = []
+
         for row in target_cursor:
-            all_results.append(str(row))
+            all_results.append(list(map(str, row)))
+        print(type(all_results))
 
         if all_results:
             all_results.insert(0, col_list)
-            app.logger.debug(all_results)
-            res1 = json.dumps(all_results)
+            a = json.dumps(all_results)
+
             return ({"res": 0, "src_value": None,
-                     "des_value": res1})
+                     "des_value": a})
         else:
             return {"res": 1, "src_value": None,
                     "des_value": None}

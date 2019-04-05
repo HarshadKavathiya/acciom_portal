@@ -156,7 +156,6 @@ def run_test(case_id):
         if case_id.test_name == 'NullCheck':  # 2nd Test
             app.logger.debug("Null check start")
             target_Detail = db_details(case_id.target_db_id)
-            db_type = split_db(case_id.test_detail)
             target_cursor = dest_db(target_Detail['db_name'],
                                     target_Detail['db_type'].lower(),
                                     target_Detail['db_hostname'].lower(),
@@ -169,7 +168,6 @@ def run_test(case_id):
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
             app.logger.debug("Duplicate check start")
             target_Detail = db_details(case_id.target_db_id)
-            db_type = split_db(case_id.test_detail)
             target_cursor = dest_db(target_Detail['db_name'],
                                     target_Detail['db_type'].lower(),
                                     target_Detail['db_hostname'].lower(),
@@ -215,7 +213,6 @@ def run_test(case_id):
 
         if case_id.test_name == 'DDLCheck':
             app.logger.info("DDL Check start")
-            db_type = split_db(case_id.test_detail)
             table_name = split_table(case_id.table_src_target)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
