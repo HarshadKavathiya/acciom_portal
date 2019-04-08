@@ -277,7 +277,7 @@ class TestCaseLog(db.Model):
     def return_all_log(cls, test_case_log_id):
         def test_case_log_json(x):
             dest = x.des_execution_log
-            src = x.des_execution_log
+            src = x.src_execution_log
             return {
                 'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,

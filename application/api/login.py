@@ -222,7 +222,7 @@ def verify_user(email):
 def send_mail_to_verify(user):
     token = user.get_reset_token()
     msg = Message('verify User Request',
-                  sender="bhardwaj.akhil96@gmail.com",
+                  sender=app.config.get('MAIL_USERNAME'),
                   recipients=[user.email])
     msg.body = app.config.get('API_END_POINT') \
                + app.config.get('UI_AFTER_VERIFY') + token
