@@ -54,11 +54,7 @@ class TestSuites(Resource):
         wb = load_workbook(filename=BytesIO(file.read()))
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
-        # temp_test = [[str(ws[x][0].value)
-        #               for x in range(2, ws.max_row + 1)]]
         temp_test1 = [str(i - 2) for i in range(2, ws.max_row + 1)]
-
-        # from column 2nd
         temp_test = []
         for i in range(0, ws.max_column):
             temp_test.append([str(ws[x][i].value)

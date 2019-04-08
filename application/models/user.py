@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -276,8 +277,18 @@ class TestCaseLog(db.Model):
     @classmethod
     def return_all_log(cls, test_case_log_id):
         def test_case_log_json(x):
-            dest = x.des_execution_log
-            src = x.src_execution_log
+            print(x.test_cases.test_name)
+            if (x.execution_status == 1):
+                dest = x.des_execution_log
+                src = x.src_execution_log
+            else:
+                if (x.test_cases.test_name == 'NullCheck'):
+                    dest = json.loads(x.des_execution_log)
+                    dest = dest[:10]
+                    src = x.src_execution_log
+                else:
+                    dest = x.des_execution_log
+                    src = x.src_execution_log
             return {
                 'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,

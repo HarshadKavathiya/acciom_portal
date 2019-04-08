@@ -99,6 +99,7 @@ OnClick(v) {
     this.MyModel=null;
   this.show=false;
    this.show1=false;
+   // v value specifies to upload or upload+execute
    if (v==0){
      this.executevalue = 0
    }
@@ -107,7 +108,6 @@ OnClick(v) {
    }
    this.changessaved=true;
    console.log(this.selectedValue)
-  //  for (let i=0;i<this.selectedValue.length;i++)
      this.fileUploadService.postFile(this.file,this.selectedradio,this.selectedValue,this.suitename,this.executevalue).subscribe(data => {
     this.name=data['message']
     this.filevalue=null;

@@ -29,8 +29,6 @@ export class UploadserviceService {
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
     let headers = new HttpHeaders().set('Authorization',this.newtoken)
-
-    
     return this.http.post<any>(`${this.url}/test-suite`,upload,{headers: headers}); 
   }
 
