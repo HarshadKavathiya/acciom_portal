@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: c61fcb938b23
+Revision ID: fcce7fc43ace
 Revises: 
-Create Date: 2019-04-04 11:45:50.161618
+Create Date: 2019-04-08 11:49:28.219742
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = 'c61fcb938b23'
+revision = 'fcce7fc43ace'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -61,17 +61,10 @@ def upgrade():
     sa.Column('test_suite_id', sa.Integer(), nullable=True),
     sa.Column('test_id', sa.String(length=80), nullable=True),
     sa.Column('test_status', sa.Integer(), nullable=True),
-    sa.Column('test_priority', sa.String(length=80), nullable=True),
-    sa.Column('test_detail', sa.Text(), nullable=True),
     sa.Column('test_column', sa.Text(), nullable=True),
     sa.Column('table_src_target', sa.Text(), nullable=True),
     sa.Column('test_name', sa.String(length=80), nullable=True),
     sa.Column('test_queries', sa.Text(), nullable=True),
-    sa.Column('test_expected', sa.Text(), nullable=True),
-    sa.Column('test_actual', sa.Text(), nullable=True),
-    sa.Column('test_created_by', sa.String(length=80), nullable=True),
-    sa.Column('test_executed_by', sa.String(length=80), nullable=True),
-    sa.Column('test_comment', sa.Text(), nullable=True),
     sa.Column('src_db_id', mysql.INTEGER(unsigned=True), nullable=True),
     sa.Column('target_db_id', mysql.INTEGER(unsigned=True), nullable=True),
     sa.Column('created', sa.DateTime(), nullable=True),
