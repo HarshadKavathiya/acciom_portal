@@ -14,12 +14,13 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url='/api';
+  url= 'http://0.0.0.0:5000/api';
 
   constructor(private http:HttpClient) { }
   inputFile:File
 
   postFile(fileToUpload: File,selectedsheet:any,selectedCase:any,suitename:any,executevalue:any):Observable<any>{
+    console.log("came in service")
     const upload=new FormData()
     upload.append('inputFile',fileToUpload)
     upload.append('sheet',selectedsheet)
@@ -235,6 +236,19 @@ export class UploadserviceService {
       "connection_type":type,
       "case_id":cases,
       "db_id":connection_id
+    },{headers: headers})
+  }
+  update_case_details(case_id, src_table, target_table, src_qry, target_qry){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.put<any>(`${this.url}/edit-test-case/${case_id}`,{
+      "src_table":src_table,
+      "target_table":target_table,
+      "src_query":src_qry,
+      "target_query":target_qry
     },{headers: headers})
   }
 }

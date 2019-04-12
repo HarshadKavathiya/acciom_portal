@@ -1,4 +1,5 @@
 import ast
+import json
 
 from flask import request
 from flask_jwt_extended import jwt_required
@@ -6,7 +7,7 @@ from flask_restful import Resource
 from flask_restful import reqparse
 
 from application.common.Response import error, success
-from application.helper.runner_class import run_by_case_id, db_details, split_table, split_query
+from application.helper.runner_class import run_by_case_id, db_details, split_table
 from application.models.user import TestSuite, SparkJob, \
     TestCaseLog, TestCase, DbDetail
 from index import db
@@ -39,10 +40,10 @@ class TestCaseSparkJob(Resource):
     def post(self, spark_job_id):
         dict1 = request.data.decode('utf-8', 'ignore')
         res = ast.literal_eval(dict1)
-        result = str(res['result'])
+        print("line 43", res)
+        result = json.dumps(res['result']['src_to_dest'])
         result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
-
         case_log = TestCaseLog.query.filter_by \
             (test_case_log_id=spark_job.test_case_log_id).first()
         if result_count == 0:
@@ -75,36 +76,48 @@ class EditTestCase(Resource):
 
     @jwt_required
     def get(self, case_id):
+        src_qry = ''
+        des_qry = ''
+        newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
-        tables = split_table(obj.table_src_target)
+        tabledetail = obj.test_db_table_detail
+        tabledetails = ast.literal_eval(tabledetail)
+        src_target_table = split_table(obj.test_db_table_detail)
+        # tables = split_table(obj.table_src_target)
         src_db_id = DbDetail.query.filter_by(db_id=obj.src_db_id).first()
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
         Source_Detail = db_details(src_db_id.db_id)
         Target_Detail = db_details(des_db_id.db_id)
-        if obj.test_column is not 'None':
-            column = obj.test_column
-        if obj.test_queries == 'None':
-            src_qry = 'None'
-            des_qry = 'None'
+        if tabledetails['column'] is not {}:
+            # column = obj.test_column
+            column = tabledetails['column']
+            keys = []
+            for key in column:
+                keys.append(key)
+        if tabledetails['query'] == {}:
+            src_qry = ''
+            des_qry = ''
         else:
+            queries = tabledetails["query"]
             if obj.test_name == 'CountCheck':
-                lst = split_query(obj.test_queries)
-                print(lst)
-                src_qry = lst['src_qry']
-                des_qry = lst['target_qry']
+                src_query = queries["sourceqry"]
+                target_query = queries["targetqry"]
+                newlst.append(src_query)
+                newlst.append(target_query)
+                src_qry = newlst[0]
+                des_qry = newlst[1]
             else:
-                lst = obj.test_queries.split(':')
                 src_qry = 'None'
-                des_qry = lst[1]
+                des_qry = queries["targetqry"]
 
         payload = {"test_case_id": obj.test_case_id,
                    "test_name": obj.test_name,
                    "test_status": obj.test_status,
-                   "src_table": tables['src_table'],
-                   "target_table": tables['target_table'],
-                   "test_queries": obj.test_queries,
+                   "src_table": src_target_table['src_table'],
+                   "target_table": src_target_table['target_table'],
+                   "test_queries": tabledetails['query'],
                    "src_column": 'None',
-                   "des_column": column,
+                   "des_column": keys,
                    "src_db_name": Source_Detail['db_name'],
                    "des_db_name": Target_Detail['db_name'],
                    "src_db_type": Source_Detail['db_type'],
@@ -113,3 +126,35 @@ class EditTestCase(Resource):
                    "des_qry": des_qry}
 
         return {"success": True, "res": payload}
+
+    @jwt_required
+    def put(self, case_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('src_table')
+        parser.add_argument('target_table')
+        parser.add_argument('src_query')
+        parser.add_argument('target_query')
+        data = parser.parse_args()
+        obj = TestCase.query.filter_by(test_case_id=case_id).one()
+        tabledetail = obj.test_db_table_detail
+        tabledetails = ast.literal_eval(tabledetail)
+        print("tabledetails", tabledetails)
+
+        table = tabledetails["table"]
+
+        for key in table:
+            print(key)
+        print(data['src_table'])
+        table[data['src_table']] = key
+        del table[key]
+        table[data['src_table']] = data['target_table']
+
+        queries = tabledetails["query"]
+        if data['src_query'] == "" and data['target_query'] == "":
+            tabledetails["query"] = {}
+        else:
+            queries['sourceqry'] = data['src_query']
+            queries['targetqry'] = data['target_query']
+        obj.test_db_table_detail = json.dumps(tabledetails)
+        obj.save_to_db()
+        return {"success": True, "message": "Succesfully Changed Values"}

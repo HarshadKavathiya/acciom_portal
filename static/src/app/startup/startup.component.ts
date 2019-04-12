@@ -4,6 +4,7 @@ import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ExcelService} from '../services/excel.service';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms'
 
 
 export interface DialogData {
@@ -38,6 +39,7 @@ export interface DialogDataCaseDetail {
  src_qry:String;
  des_qry:String;
  casename:string;
+ case_id:number;
 }
 
 export interface DialogManageConnection{
@@ -254,6 +256,7 @@ export class StartupComponent implements OnInit {
 getcasedetails(case_id,case_name){
   event.stopPropagation();
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
+
 this.src_db_name=data.res.src_db_name;
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
@@ -265,16 +268,16 @@ this.des_column=data.res.des_column
 this.src_qry=data.res.src_qry
 this.des_qry=data.res.des_qry
 this.case_name=case_name
-  this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
+  this.showcaseresult(case_id,this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
     this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry,this.case_name)
   });
 }
-showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
+showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
     panelClass: 'my-class',
     width: '60%',
-    height:'70%',
-    data : {src_db_name:src_db_name,des_db_name:des_db_name,
+    height:'auto',
+    data : {case_id:case_id,src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
     src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
   src_qry:src_qry, des_qry:des_qry,casename:case_name}
@@ -481,13 +484,39 @@ export class DialogOverviewExampleDialogstartup {
   templateUrl: 'dialog-overview-example-dialog-case-detail.html',
 })
 export class DialogOverviewExampleDialogCaseDetail {
+card:boolean=true;
+form:boolean=false;
+createForm:FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogCaseDetail>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail,
+    private fileUploadService:UploadserviceService,
+    private fb:FormBuilder) {
+      this.createForm=fb.group({
+        src_name:[''],
+        target_table:[''],
+        src_query:[''],
+        target_query:['']
+      });
+    }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+  showform(){
+    this.card=false;
+    this.form=true;
+  }
+  showhome(){
+    this.card=true;
+    this.form=false;
+  }
+  Update(src_table, target_table, src_qry, target_qry, case_id){
+    console.log(src_table.value, target_table.value, src_qry.value, target_qry.value, case_id)
+    this.fileUploadService.update_case_details(case_id,src_table.value, target_table.value, src_qry.value, target_qry.value).subscribe(result=>{
+      Swal("success",result.message,"success")
+    })
   }
 
 }
@@ -501,9 +530,13 @@ selectedValue=[]
 show:boolean=false;
 show1:boolean=false;
 disable2=true;
+
   constructor(private fileUploadService:UploadserviceService,
     public dialogRef: MatDialogRef<DialogManageConnection>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogManageConnection) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogManageConnection,
+   ) {
+     
+    }
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -511,9 +544,8 @@ disable2=true;
     this.connection=selectval
     this.show=true;
     this.show1=true;
-
-    
   }
+
   submit_connection(type){
     this.fileUploadService.select_connections(type,JSON.stringify(this.selectedValue),this.connection).subscribe(data=>{
       if(data.success){

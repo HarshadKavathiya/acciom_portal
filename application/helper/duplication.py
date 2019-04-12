@@ -27,32 +27,41 @@ def qry_generator(columns, target_table):
 def duplication(target_cursor, target_table, column_name, test_queries):
     my_list = []
     col_list = []
+    column = []
+    newlst = []
+    app.logger.debug(column_name)
+    app.logger.debug(test_queries)
     try:
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='{0}'".format(target_table))
-        # split column logic
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        column = column_name.split(';')
 
-        if test_queries == 'None':
-            if column_name == 'None':
-
+        if (test_queries == {} or test_queries['targetqry'] == ' '):
+            if column_name == []:
+                app.logger.debug("@44")
                 custom_query = qry_generator(col_list, target_table)
 
             else:
-                custom_query = qry_generator(column, target_table)  # if column give in excel
+                app.logger.debug(column_name)
+                custom_query = qry_generator(column_name, target_table)  # if column give in excel
         else:
-            custom_query = test_queries.split(':')[1]
+            target_query = test_queries["targetqry"]
+            newlst.append(target_query)
+            custom_query = newlst[0]
         app.logger.debug(custom_query)
+
         target_cursor.execute(custom_query)
         all_results = []
         for row in target_cursor:
+            app.logger.debug(row)
             all_results.append(list(map(str, row)))
         import json
         if all_results:
+            app.logger.debug(all_results)
             res1 = json.dumps(all_results)
+            app.logger.debug(res1)
 
             app.logger.debug("Duplication Test Executed")
             return {"res": 0, "src_value": "src_val_not required",

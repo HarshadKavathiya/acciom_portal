@@ -1,3 +1,4 @@
+from flask import current_app as app
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource, reqparse
 
@@ -17,8 +18,11 @@ class DbDetails(Resource):
     @jwt_required
     def post(self):
         try:
+            print("came here")
             data = parser.parse_args()
             current_user = get_jwt_identity()
+            db_password = DbDetail.encrypt(data['password'])
+            print(db_password)
             new_db = DbDetail(
                 connection_name=data['connection_name'],
                 user_id=current_user,
@@ -26,7 +30,7 @@ class DbDetails(Resource):
                 db_name=data['name'],
                 db_hostname=data['hostname'],
                 db_username=data['username'],
-                db_password=data['password'],
+                db_password=db_password,
             )
             new_db.save_to_db()
             return success({"message": "success", "success": True})
@@ -69,12 +73,13 @@ class DbDetails(Resource):
             db_obj = DbDetail.query.filter_by(user_id=current_user,
                                               db_id=db_id).first()
             data = parser.parse_args()
+            db_password = DbDetail.encrypt(data['password'])
             db_obj.connection_name = data['connection_name'],
             db_obj.db_type = data['type']
             db_obj.db_name = data['name']
             db_obj.db_hostname = data['hostname']
             db_obj.db_username = data['username']
-            db_obj.db_password = data['password']
+            db_obj.db_password = db_password
             db_obj.save_to_db()
 
             return {"success": True,
@@ -88,6 +93,7 @@ class DbDetails(Resource):
 
 
 def create_dbconnection(current_user, db_type, db, hostname, username):
+    app.logger.debug("inside db details ")
     temp = DbDetail.query.filter_by(user_id=current_user,
                                     db_type=db_type,
                                     db_name=db,

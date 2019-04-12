@@ -95,7 +95,6 @@ link.click();
 link.remove();
   }
 OnClick(v) {
- 
     this.MyModel=null;
   this.show=false;
    this.show1=false;
@@ -108,6 +107,7 @@ OnClick(v) {
    }
    this.changessaved=true;
    console.log(this.selectedValue)
+   console.log("leaving home ")
      this.fileUploadService.postFile(this.file,this.selectedradio,this.selectedValue,this.suitename,this.executevalue).subscribe(data => {
     this.name=data['message']
     this.filevalue=null;
@@ -226,6 +226,7 @@ if (this.selectedAll){
 }
 
  Next(s){
+   console.log("came here")
    this.show=false;
    this.show1=true;
    this.i=this.Pages.findIndex(k=>k==s)
@@ -241,24 +242,23 @@ if (this.selectedAll){
     }
    // below func validate the 1st column all row
   if(!this.validate_case_name(this.all_cases)){
+    console.log("2")
     this.clearAll("Filecannot be Uploaded, Case name is not Valid")
     return;
   }
   //below func validate db details
   if(!this.validate_db_detail(this.temp_db_detailarr)){
+    console.log("3")
       this.clearAll("filecannot be uploaded, db details are not valid")
       return;
   }
   // below func to validate table name
  if(!this.validate_table_names(this.temp_table_detail)){
+  console.log("4")
       this.clearAll("filecannot be uploaded, Table Names are not valid")
       return;
  }
-//  if(!this.validate_column_name(this.temp_column_detail)){
-//       this.clearAll("filecannot be uploaded, Column names are not valid are not valid")
-//       return;
-//  }
-    this.allcases=this.all_cases.map(x=>this.name_map(x)) 
+  console.log('directly came here')
     this.prog=75;                                        
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {   
       width: '250px',
@@ -364,31 +364,7 @@ if (this.selectedAll){
         }
         return status;
   }
- name_map(x){
-      let case_name;
-      this.testname_map=[{'CountCheck':'Count Verification', 'Datavalidation':
-      'Data Validation', 'DuplicateCheck':'Find Duplicates', 'NullCheck':
-      'Null Check', 'DDLCheck':'Schema Compare'
-        }]
-        switch (x.name){
-          case 'CountCheck':
-          case_name="Count Verification"
-          break;
-          case 'Datavalidation':
-          case_name="Data Validation"
-          break;
-          case 'DuplicateCheck':
-          case_name="Find Duplicates"
-          break;
-          case 'NullCheck':
-          case_name="Null Check"
-          break;
-          case 'DDLCheck':
-          case_name="Schema Compare"
-          break;
-        }
-        return {name:x.name, selected:false,alias_name:case_name};
-    }
+ 
 }
 
 @Component({

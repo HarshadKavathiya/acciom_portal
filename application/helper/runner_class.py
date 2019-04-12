@@ -1,3 +1,5 @@
+import ast
+
 from flask import current_app as app
 
 from application.common.dbconnect import source_db, dest_db
@@ -15,10 +17,12 @@ def split_table(table_name):
     :param table_name: gets table_src_target value stored in TestSuite table
     :return: returns a list consist of source and destination db.
     """
+    table_names = ast.literal_eval(table_name)
     lst1 = {}
-    lst = table_name.split(':')
-    lst1['src_table'] = lst[0]
-    lst1['target_table'] = lst[1]
+    tables = table_names["table"]
+    for key in tables:
+        lst1['src_table'] = key
+        lst1['target_table'] = tables[key]
     return lst1
 
 
@@ -52,7 +56,25 @@ def split_query(qry):
     new_list = [i.split(':') for i in split_qry]
     res['src_qry'] = new_list[0][1]
     res['target_qry'] = new_list[1][1]
-    return res
+    return
+
+
+def get_query(quires):
+    lst = []
+    q = ast.literal_eval(quires)
+    query = q["query"]
+    app.logger.debug(query)
+    return query
+
+
+def get_column(columns):
+    c = ast.literal_eval(columns)
+    column = c["column"]
+    app.logger.debug(column)
+    column = list(column.values())
+
+    app.logger.debug(column)
+    return column
 
 
 def db_details(db_id):
@@ -63,12 +85,15 @@ def db_details(db_id):
     db_id (foreign Key)
     """
     db_obj = DbDetail.query.filter_by(db_id=db_id).first()
+    x = db_obj.db_password.encode()
+    decrypted = DbDetail.decrypt(x)
+    newpassword = bytes.decode(decrypted)
     db_list['db_id'] = db_obj.db_id
     db_list['db_type'] = db_obj.db_type
     db_list['db_name'] = db_obj.db_name
     db_list['db_hostname'] = db_obj.db_hostname
     db_list['db_username'] = db_obj.db_username
-    db_list['db_password'] = db_obj.db_password
+    db_list['db_password'] = newpassword
     return db_list
 
 
@@ -99,29 +124,6 @@ def run_by_case_id(test_case_id):
     return True
 
 
-def get_count(src_db, src_tables, src_db_type,
-              src_host, src_user, src_password,
-              target_db,
-              target_table,
-              target_db_type, target_host,
-              target_user, target_password):
-    source_cursor = source_db(src_db, src_db_type,
-                              src_host, src_user,
-                              src_password).cursor()
-    target_cursor = dest_db(target_db, target_db_type,
-                            target_host, target_user,
-                            target_password).cursor()
-    source_cursor.execute('SELECT COUNT(*) FROM {}'.format(src_tables))
-    target_cursor.execute('SELECT COUNT(*) FROM {}'.format(target_table))
-    for row in source_cursor:
-        for x in row:
-            pass
-    for row in target_cursor:
-        for y in row:
-            pass
-    return max(x, y)
-
-
 def run_test(case_id):
     """
     :param case_id: case_id is test_case_id
@@ -145,13 +147,15 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.table_src_target)
+            table_name = split_table(case_id.test_db_table_detail)
+            query = get_query(case_id.test_db_table_detail)
+
             print(table_name)
             result = count_check(source_cursor,
                                  target_cursor,
                                  table_name['src_table'],
                                  table_name['target_table'],
-                                 case_id.test_queries)
+                                 query)
 
         if case_id.test_name == 'NullCheck':  # 2nd Test
             app.logger.debug("Null check start")
@@ -161,9 +165,11 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.table_src_target)
+            table_name = split_table(case_id.test_db_table_detail)
+            query = get_query(case_id.test_db_table_detail)
+            column = get_column(case_id.test_db_table_detail)
             result = null_check(target_cursor, table_name['target_table'],
-                                case_id.test_column, case_id.test_queries)
+                                column, query)
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
             app.logger.debug("Duplicate check start")
@@ -173,34 +179,18 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.table_src_target)
-            result = duplication(target_cursor=target_cursor,
-                                 target_table=table_name['target_table'],
-                                 column_name=case_id.test_column,
-                                 test_queries=case_id.test_queries)
+            table_name = split_table(case_id.test_db_table_detail)
+            query = get_query(case_id.test_db_table_detail)
+            column = get_column(case_id.test_db_table_detail)
+            app.logger.debug(column)
+            result = duplication(target_cursor,
+                                 table_name['target_table'],
+                                 column,
+                                 query)
         if case_id.test_name == 'Datavalidation':
-            table_name = split_table(case_id.table_src_target)
+            table_name = split_table(case_id.test_db_table_detail)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
-            row_count = get_count(src_Detail['db_name'],
-                                  table_name['src_table'],
-                                  src_Detail['db_type'].lower(),
-                                  src_Detail['db_hostname'],
-                                  src_Detail['db_username'],
-                                  src_Detail['db_password'],
-                                  target_Detail['db_name'],
-                                  table_name['target_table'],
-                                  target_Detail['db_type'].lower(),
-                                  target_Detail['db_hostname'],
-                                  target_Detail['db_username'],
-                                  target_Detail['db_password'])
-            if row_count < 10000:
-                limit = 10000
-            elif row_count >= 10000 and row_count < 100000:
-                limit = 50000
-            else:
-                limit = 200000
-
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
@@ -213,7 +203,7 @@ def run_test(case_id):
 
         if case_id.test_name == 'DDLCheck':
             app.logger.info("DDL Check start")
-            table_name = split_table(case_id.table_src_target)
+            table_name = split_table(case_id.test_db_table_detail)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
             source_cursor = source_db(src_Detail['db_name'],
@@ -256,7 +246,7 @@ def run_test(case_id):
                                table_name['target_table'],
                                target_Detail['db_type'].lower(),
                                spark_job.spark_job_id,
-                               row_count, limit, src_Detail['db_username'],
+                               src_Detail['db_username'],
                                src_Detail['db_password'],
                                src_Detail['db_hostname'],
                                target_Detail['db_username'],

@@ -1,13 +1,13 @@
 import pymysql
 
-# db_name = "source_db";
-# table_name = "src_inventory";
+db_name = "source_db";
+table_name = "src_inventory1";
 
-db_name = "dest_db";
-table_name = "dest_inventory";
+# db_name = "dest_db";
+# table_name = "dest_inventory";
 
-user_name = "acciom_user";
-password = "acciom_password";
+user_name = "Acciom_user";
+password = "Acciomuser";
 host = "localhost"
 ranges = 400  # changes as per required rows to be inserted
 

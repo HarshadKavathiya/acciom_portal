@@ -1,12 +1,22 @@
+import ast
+import base64
 import datetime
 import json
 
+from Crypto import Random
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from passlib.hash import pbkdf2_sha256 as sha256
 from sqlalchemy.dialects.mysql import LONGTEXT, INTEGER
 
-from index import db
+from index import db, app
+
+BLOCK_SIZE = 16
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+password1 = 'mypassword'
 
 
 class User(db.Model):
@@ -114,9 +124,9 @@ class DbDetail(db.Model):
     connection_name = db.Column(db.String(80))
     db_type = db.Column(db.String(80), nullable=False)
     db_name = db.Column(db.String(80), nullable=False)
-    db_hostname = db.Column(db.String(80), nullable=False)
+    db_hostname = db.Column(db.String(128), nullable=False)
     db_username = db.Column(db.String(80), nullable=False)
-    db_password = db.Column(db.String(80))
+    db_password = db.Column(db.String(256))  #
     users = db.relationship('User', back_populates='dbdetail', lazy=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now)
 
@@ -133,6 +143,28 @@ class DbDetail(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    def get_private_key(password1):
+        salt = b"this is a salt"
+        kdf = PBKDF2(password1, salt, 64, 1000)
+        key = kdf[:32]
+        return key
+
+    def encrypt(raw):
+        password1 = "mypassword"
+        private_key = DbDetail.get_private_key(app.config.get('DB_ENCRYPTION_KEY'))
+        raw = pad(raw)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(private_key, AES.MODE_CBC, iv)
+        return base64.b64encode(iv + cipher.encrypt(raw))
+
+    def decrypt(enc):
+        password1 = "mypassword"
+        private_key = DbDetail.get_private_key(app.config.get('DB_ENCRYPTION_KEY'))
+        enc = base64.b64decode(enc)
+        iv = enc[:16]
+        cipher = AES.new(private_key, AES.MODE_CBC, iv)
+        return unpad(cipher.decrypt(enc[16:]))
 
 
 class TestSuite(db.Model):
@@ -173,7 +205,11 @@ class TestSuite(db.Model):
 
         def test_case_to_json(x):
             tables = []
-            tables = x.table_src_target.strip(';').split(':')
+            a = ast.literal_eval(x.test_db_table_detail)
+            b = a["table"]
+            for key in b:
+                tables.append(key)
+                tables.append(b[key])
             return {
                 'test_case_id': x.test_case_id,
                 'test_name': x.test_name,
@@ -212,11 +248,8 @@ class TestCase(db.Model):
     test_suite_id = db.Column(db.ForeignKey(TestSuite.test_suite_id))
     test_id = db.Column(db.String(80), nullable=True)
     test_status = db.Column(db.Integer, nullable=True)
-
-    test_column = db.Column(db.Text, nullable=True)
-    table_src_target = db.Column(db.Text, nullable=True)
+    test_db_table_detail = db.Column(LONGTEXT, nullable=True)
     test_name = db.Column(db.String(80), nullable=True)
-    test_queries = db.Column(db.Text, nullable=True)
     src_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     target_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     created = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -233,17 +266,14 @@ class TestCase(db.Model):
         db.session.commit()
 
     def __init__(self, test_suite_id, test_id, test_status,
-                 test_column,
-                 table_src_target, test_name,
-                 test_queries,
+                 test_db_table_detail,
+                 test_name,
                  src_db_id, target_db_id):
         self.test_suite_id = test_suite_id
         self.test_id = test_id
         self.test_status = test_status
-        self.test_column = test_column
-        self.table_src_target = table_src_target
         self.test_name = test_name
-        self.test_queries = test_queries
+        self.test_db_table_detail = test_db_table_detail
         self.src_db_id = src_db_id
         self.target_db_id = target_db_id
 
@@ -278,14 +308,20 @@ class TestCaseLog(db.Model):
     def return_all_log(cls, test_case_log_id):
         def test_case_log_json(x):
             print(x.test_cases.test_name)
+            print(x.test_cases.test_name)
             if (x.execution_status == 1):
                 dest = x.des_execution_log
                 src = x.src_execution_log
+
             else:
                 if (x.test_cases.test_name == 'NullCheck'):
                     dest = json.loads(x.des_execution_log)
                     dest = dest[:10]
                     src = x.src_execution_log
+                elif x.test_cases.test_name == 'Datavalidation':
+                    dest = x.des_execution_log
+                    src = json.loads(x.src_execution_log)
+                    src = src[:10]
                 else:
                     dest = x.des_execution_log
                     src = x.src_execution_log

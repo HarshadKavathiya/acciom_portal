@@ -125,8 +125,6 @@
                     </tr>
                     <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log; let run_id=index ">
                       <td>{{run_id+1}}
-                        <!-- {{case_log.test_case_id}} -->
-
                       </td>
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
@@ -163,7 +161,6 @@
           </div>
           
 
-      <!--  this has the logic to write inside the expansion.-->
     </mat-expansion-panel>
     <!--  first expansion got closed here.-->
   </mat-accordion>

@@ -61,18 +61,34 @@ input{
   width:40%;
 
 }
+.form-edit{
+  min-width:400px;
+  
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 /* .td2{
   width:15%;
 } */
 .td3{
   width:60%;
 }
+.edit-btn{
+justify-self: flex-end;
+color:red;
+font-size: 22px;
+}
 
         </style>
 </head>
-<mat-card>
+<mat-card *ngIf="card">
   <div class="heading-grp">
     <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+    <div class="edit-btn"> <button class="edit-btn" mat-button (click)="showform()"> Edit<i class="material-icons">
+      edit
+      </i></button></div>
   </div>
     <div mat-dialog-content class="display-detail">
   <table style="width:100%">
@@ -115,6 +131,43 @@ input{
   </table>
 
   </div>
+</mat-card>
+<mat-card *ngIf="form">
+  <div class="heading-grp">
+    <div class="heading"> Edit Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+    <div class="edit-btn"> <button class="edit-btn" mat-button (click)="showhome()">  <i class="material-icons">
+      keyboard_backspace
+      </i>View Details</button></div>
+  </div>
+  <form class="form-edit" [formGroup]="createForm">
+    <mat-form-field class="example-full-width">
+            <input type="text" autocomplete="off" matInput
+            value="{{data.src_table_name}}"
+            placeholder="Source Table" formControlName="src_name" #src_table>
+            <mat-error>Enter Correct Table Name</mat-error>
+        </mat-form-field>
+<mat-form-field class="example-full-width">
+    <input type="text" 
+    value="{{data.des_table_name}}"
+    autocomplete="off" matInput placeholder="Target Table" formControlName="target_table" #target_table>
+    <mat-error>Enter Correct Table Name</mat-error>
+</mat-form-field>
+<mat-form-field class="example-full-width">
+    <textarea rows=4 type="text" autocomplete="off"
+    value="{{data.src_qry}}"
+    matInput placeholder=" Source  Query" formControlName="src_query" #src_qry> </textarea>
+    <mat-error>Enter Correct Query</mat-error>
+</mat-form-field>
+
+<mat-form-field class="example-full-width">
+    <textarea rows=4 type="text" autocomplete="off"
+    value="{{data.des_qry}}"
+    matInput placeholder=" Target Query" formControlName="target_query" #target_qry> </textarea>
+    <mat-error>Enter Correct Query</mat-error>
+</mat-form-field>
+<button mat-raised-button [disabled]="createForm.invalid" (click)="Update(src_table, target_table, src_qry, target_qry,data.case_id)" color="primary" >Update</button>
+
+</form>
 </mat-card>
 <div mat-dialog-actions class="close">
         <button mat-flat-button  

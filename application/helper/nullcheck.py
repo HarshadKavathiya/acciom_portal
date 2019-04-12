@@ -19,28 +19,31 @@ def qry_generator(columns, target_table):
 def null_check(target_cursor, target_table, column, test_queries):
     try:
         col_list = []
-        columns = column.split(';')
+        columns = []
+        newlst = []
+        for key in column:
+            columns.append(key)
+            columns.append(column[key])
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
             "INFORMATION_SCHEMA.COLUMNS"
             " WHERE table_name='{0}'".format(target_table))
+
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        query = test_queries.split(':')
-        if test_queries == 'None':
-            if column == 'None':
+        if test_queries == {}:
+            if column == {}:
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)
-                app.logger.debug(target_cursor)
-                app.logger.debug(sub_query)
-
             else:
                 sub_query = qry_generator(columns, target_table)
-
                 target_cursor.execute(sub_query)
         else:
-            target_cursor.execute(query[1])
+            target_query = test_queries["targetqry"]
+            newlst.append(target_query)
+            print(newlst[0])
+            target_cursor.execute(newlst[0])
 
         all_results = []
 
