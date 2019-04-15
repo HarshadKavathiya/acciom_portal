@@ -6,7 +6,8 @@ import Swal from 'sweetalert2'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatPaginatorModule} from '@angular/material';
 import { CanComponentDeactivate } from './can-deactivate-guard.service';
 import {Observable} from "rxjs"
-import { mapChildrenIntoArray } from '@angular/router/src/url_tree';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
 export interface DialogData {
   suitename: string;
 }
@@ -69,6 +70,8 @@ export class HomeComponent implements OnInit  {
   constructor(private fileUploadService:UploadserviceService,
     private route:ActivatedRoute,
     private router:Router,
+    private spinnerService: Ng4LoadingSpinnerService
+,
     public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -95,6 +98,8 @@ link.click();
 link.remove();
   }
 OnClick(v) {
+  this.spinnerService.show();
+
     this.MyModel=null;
   this.show=false;
    this.show1=false;
@@ -119,7 +124,11 @@ OnClick(v) {
     this.response=this.name;
     this.router.navigate(['/startup'])
     this.selectedValue=[]
+    this.spinnerService.hide();
+
     }, error => {
+          this.spinnerService.hide();
+
       Swal("error"," filecannot be uploaded","error")
       this.filevalue=null;
       this.all_cases=[];    
