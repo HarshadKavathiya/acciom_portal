@@ -4,12 +4,12 @@ import pymysql
 # table_name = "src_inventory1";
 
 db_name = "dest_db";
-table_name = "dest_inventory1";
+table_name = "dest_inventory";
 
 user_name = "Acciom_user";
 password = "Acciomuser";
 host = "localhost"
-ranges = 400  # changes as per required rows to be inserted
+ranges = 4  # changes as per required rows to be inserted
 
 connection = pymysql.connect(host=host, user=user_name, password=password,
                              db=db_name)
@@ -48,7 +48,7 @@ Current_Record_Taken = 0
 Company_Numberskxsmk_Of_Accounts = 0
 Company_Fortuneklm_Rank = 0
 
-for i in range(ranges, 402):
+for i in range(ranges):
     print(i)
     Company_key = i
     CTL_ID += 1
