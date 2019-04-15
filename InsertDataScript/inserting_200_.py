@@ -1,10 +1,10 @@
 import pymysql
 
-db_name = "source_db";
-table_name = "src_inventory1";
+# db_name = "source_db";
+# table_name = "src_inventory1";
 
-# db_name = "dest_db";
-# table_name = "dest_inventory";
+db_name = "dest_db";
+table_name = "dest_inventory1";
 
 user_name = "Acciom_user";
 password = "Acciomuser";
@@ -48,7 +48,7 @@ Current_Record_Taken = 0
 Company_Numberskxsmk_Of_Accounts = 0
 Company_Fortuneklm_Rank = 0
 
-for i in range(ranges):
+for i in range(ranges, 402):
     print(i)
     Company_key = i
     CTL_ID += 1
@@ -83,7 +83,7 @@ for i in range(ranges):
     Company_Numberskxsmk_Of_Accounts += 0.1
     Company_Fortuneklm_Rank += 0.1
 
-    var = "insert into {} values({},{},'no',NULL,'yes','xyz','akhil','int','abc','xyz','Bangalore','Mumbai','540qqe','India','500010','11',{},{},'yz','Whitefield','varthur','bangalore','Ka','560014','india','10001','911',{},{},'1','jpnagar','9909001230','50010','1110','www.acciom.com','xyz.com','xyz','accion',{},{},'abc','999023','lmn','A10','india','1000','12','2019-02-09','20','2019-02-09','33','2019-02-09','2019-02-09','2019-02-09','2019-02-09','YES','XYZ','ZBC','CBC','989','SDF','3BV','VBN','2019','UIO','UI8','IO9','PO9','YT6',{},{},'RYRY','AS7','UI','YES',{},{},{},{},{},{},{},{},{},'EIOIIE',{},'ACTIVE','2012A','US',{},'HIGH','2019-02-09','2019-02-09','E','Y','IND2','XBC','N','OOP',{},'yes',{},'default','no','lmo1','u18','australia',{},'xyz100','submit','acciom',{},'iso','regular','asia','suresh','char',{},'all','2019-02-09','all','xyz',{},'all','2019-02-09','OUT','xyz','op98','xyz','yes','india','pass','ues','98a',{},{},'suresh','india','2019-02-09','2019-02-09',{},'2019-02-09','2019-02-09','acciom19','19k','acciom','software','19a','whitefield','banglore','krk','560014','india','911','9112','goa','21street','margoa','goa','811','india','566','911','51strreet','india','asia','911911122','5334','900899','www.acciom.com','211a','accion_lab','xyz','sw','5','india','ruppee','321a','suresh','32a','akhil','123id','2019-02-09','2019-02-09','op','software','322a','nill','1','xyz','vbn',{},{},'1999a','2019-02-09','nill','xyz','software','active','pass','working','2019-02-09','2019-02-09','2019-02-09','2019-02-09','create','2019-02-09','UPDATED','2019-02-09');".format(
+    var = "insert into {} values({},{},'no',NULL,'yes','xyz1','akhil','int','abc','xyz','Bangalore','Mumbai','540qqe','India','500010','11',{},{},'yz','Whitefield','varthur','bangalore','Ka','560014','india','10001','911',{},{},'1','jpnagar','9909001230','50010','1110','www.acciom.com','xyz.com','xyz','accion',{},{},'abc','999023','lmn','A10','india','1000','12','2019-02-09','20','2019-02-09','33','2019-02-09','2019-02-09','2019-02-09','2019-02-09','YES','XYZ','ZBC','CBC','989','SDF','3BV','VBN','2019','UIO','UI8','IO9','PO9','YT6',{},{},'RYRY','AS7','UI','YES',{},{},{},{},{},{},{},{},{},'EIOIIE',{},'ACTIVE','2012A','US',{},'HIGH','2019-02-09','2019-02-09','E','Y','IND2','XBC','N','OOP',{},'yes',{},'default','no','lmo1','u18','australia',{},'xyz100','submit','acciom',{},'iso','regular','asia','suresh','char',{},'all','2019-02-09','all','xyz',{},'all','2019-02-09','OUT','xyz','op98','xyz','yes','india','pass','ues','98a',{},{},'suresh','india','2019-02-09','2019-02-09',{},'2019-02-09','2019-02-09','acciom19','19k','acciom','software','19a','whitefield','banglore','krk','560014','india','911','9112','goa','21street','margoa','goa','811','india','566','911','51strreet','india','asia','911911122','5334','900899','www.acciom.com','211a','accion_lab','xyz','sw','5','india','ruppee','321a','suresh','32a','akhil','123id','2019-02-09','2019-02-09','op','software','322a','nill','1','xyz','vbn',{},{},'1999a','2019-02-09','nill','xyz','software','active','pass','working','2019-02-09','2019-02-09','2019-02-09','2019-02-09','create','2019-02-09','UPDATED','2019-02-09');".format(
         table_name, Company_key, CTL_ID, A_BILLINGLATITUDE, A_BILLINGLONGITUDE,
         LATITUDE, LONGITUDE, REVENUE, NO_EMPLOYEES, ADDED_FROM_DATA_COM,
         DATA_COM_MANAGED, NO_ACCOUNTS, REVIEW_PRIORITY, FORTUNE_RANK,

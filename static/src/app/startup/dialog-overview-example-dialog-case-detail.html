@@ -83,6 +83,9 @@ font-size: 22px;
 
         </style>
 </head>
+<div mat-dialog-content align="end" >
+  <button mat-button class="close-btn" (click)="onNoClick()"> <i class="material-icons">close</i></button>
+  </div>
 <mat-card *ngIf="card">
   <div class="heading-grp">
     <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
@@ -169,8 +172,3 @@ font-size: 22px;
 
 </form>
 </mat-card>
-<div mat-dialog-actions class="close">
-        <button mat-flat-button  
-        class="export-btn" (click)="onNoClick()">Close</button>
-
-    </div>

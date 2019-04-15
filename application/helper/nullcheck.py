@@ -19,11 +19,8 @@ def qry_generator(columns, target_table):
 def null_check(target_cursor, target_table, column, test_queries):
     try:
         col_list = []
-        columns = []
         newlst = []
-        for key in column:
-            columns.append(key)
-            columns.append(column[key])
+        app.logger.debug(column)
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
             "INFORMATION_SCHEMA.COLUMNS"
@@ -32,12 +29,13 @@ def null_check(target_cursor, target_table, column, test_queries):
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        if test_queries == {}:
-            if column == {}:
+        if (test_queries == {} or test_queries['targetqry'].isspace() or test_queries['targetqry'] == ""):
+            if column == []:
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)
             else:
-                sub_query = qry_generator(columns, target_table)
+                app.logger.debug("came here")
+                sub_query = qry_generator(column, target_table)
                 target_cursor.execute(sub_query)
         else:
             target_query = test_queries["targetqry"]

@@ -25,9 +25,7 @@ def qry_generator(columns, target_table):
 
 
 def duplication(target_cursor, target_table, column_name, test_queries):
-    my_list = []
     col_list = []
-    column = []
     newlst = []
     app.logger.debug(column_name)
     app.logger.debug(test_queries)
@@ -38,13 +36,10 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             for each_col in col:
                 col_list.append(each_col)
 
-        if (test_queries == {} or test_queries['targetqry'] == ' '):
+        if (test_queries == {} or test_queries['targetqry'].isspace() or test_queries['targetqry'] == ""):
             if column_name == []:
-                app.logger.debug("@44")
                 custom_query = qry_generator(col_list, target_table)
-
             else:
-                app.logger.debug(column_name)
                 custom_query = qry_generator(column_name, target_table)  # if column give in excel
         else:
             target_query = test_queries["targetqry"]
@@ -59,7 +54,7 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             all_results.append(list(map(str, row)))
         import json
         if all_results:
-            app.logger.debug(all_results)
+            all_results.insert(0, column_name)
             res1 = json.dumps(all_results)
             app.logger.debug(res1)
 

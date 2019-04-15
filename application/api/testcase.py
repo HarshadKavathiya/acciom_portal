@@ -1,16 +1,34 @@
 import ast
 import json
 
+from flask import current_app as app
 from flask import request
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from flask_restful import reqparse
 
 from application.common.Response import error, success
-from application.helper.runner_class import run_by_case_id, db_details, split_table
+from application.helper.runner_class import run_by_case_id, split_table
 from application.models.user import TestSuite, SparkJob, \
     TestCaseLog, TestCase, DbDetail
 from index import db
+
+
+def db_details_without_password(db_id):
+    db_list = {}
+    """
+    :return: returns the db_type,db_name,db_username,
+    db_hostname,db_password based on
+    db_id (foreign Key)
+    """
+    db_obj = DbDetail.query.filter_by(db_id=db_id).first()
+    x = db_obj.db_password.encode()
+    db_list['db_id'] = db_obj.db_id
+    db_list['db_type'] = db_obj.db_type
+    db_list['db_name'] = db_obj.db_name
+    db_list['db_hostname'] = db_obj.db_hostname
+    db_list['db_username'] = db_obj.db_username
+    return db_list
 
 
 class TestCaseJob(Resource):
@@ -33,6 +51,7 @@ class TestCaseJob(Resource):
                 run_by_case_id(data['case_id'])
                 return success({"success": True})
         except Exception as e:
+            app.logger.error(e)
             return error({"success": False, "msg": str(e)})
 
 
@@ -86,8 +105,8 @@ class EditTestCase(Resource):
         # tables = split_table(obj.table_src_target)
         src_db_id = DbDetail.query.filter_by(db_id=obj.src_db_id).first()
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
-        Source_Detail = db_details(src_db_id.db_id)
-        Target_Detail = db_details(des_db_id.db_id)
+        Source_Detail = db_details_without_password(src_db_id.db_id)
+        Target_Detail = db_details_without_password(des_db_id.db_id)
         if tabledetails['column'] is not {}:
             # column = obj.test_column
             column = tabledetails['column']

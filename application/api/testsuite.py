@@ -33,14 +33,13 @@ parser.add_argument('exvalue',
 def args_as_list(s):
     v = ast.literal_eval(s)
     if type(v) is not list:
-        print("not a list")
+        app.logger.debug('not in list')
     return v
 
 
 class TestSuites(Resource):
     @jwt_required
     def post(self):
-        app.logger.debug("reached in TEST Suite")
         current_user = get_jwt_identity()
         data = parser.parse_args()
         sheet = data['sheet']
@@ -56,23 +55,17 @@ class TestSuites(Resource):
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
         temp_test1 = [str(i - 2) for i in range(2, ws.max_row + 1)]
-        print(temp_test1)
         temp_test = []
-        app.logger.debug("done with testsuite-> test_case @61")
         for i in range(0, ws.max_column):
-            temp_test.append([str(ws[x][i].value)
-                              for x in range(2, ws.max_row + 1)])
-        app.logger.debug("after loop @65")
+            if (str(ws[1][i].value) != 'None'):
+                temp_test.append([str(ws[x][i].value)
+                                  for x in range(2, ws.max_row)])
         data = parser.parse_args()
         test_case_list = str(data['selectedcase']).split(",")
-        print(test_case_list)
         i = 0
         for j in range(ws.max_row - 1):
             if temp_test1[j] in test_case_list:
-                app.logger.debug("inside loop")
-                # app.logger.debug(temp_test[i][j])
                 test_case_list.remove(temp_test1[j])
-
                 db_list = split_db(temp_test[i + 2][j])
                 src_db_id = create_dbconnection(current_user,
                                                 db_list[2].lower(),
@@ -117,16 +110,13 @@ class TestSuites(Resource):
                 else:
                     if ";" in p:
                         query_split = p.split(";")
-                        print("113", query_split)
                         final = [a.split(":") for a in query_split]
-                        print("115", final)
                         query["sourceqry"] = final[0][1]
                         query["targetqry"] = final[1][1]
 
                     else:
                         q = p.strip("targetqry:")
                         query["targetqry"] = q
-                        print(query)
 
                 jsondict = {"column": column, "table": table, "query": query}
 
@@ -143,7 +133,7 @@ class TestSuites(Resource):
                 test_suite_id=temp.test_suite_id).first()
             for each_test in test_suite.test_case:
                 run_by_case_id(each_test.test_case_id)
-        print("done finally")
+        app.logger.debug('data saved to database')
         return {'message': 'data saved to database'}
 
     def get(self, user_id):
@@ -151,6 +141,7 @@ class TestSuites(Resource):
             return {"suites": TestSuite.return_all(user_id),
                     "success": True}
         except Exception as e:
+            app.logger.debug(str(e))
             return {"success": False, "message": str(e)}
 
 
@@ -230,6 +221,7 @@ class ConnectionDetails(Resource):
             all_connection = [i.db_id for i in db_obj]
             return {"all_connections": all_connection, "all_cases": all_case}
         except Exception as e:
+            app.logger.error(str(e))
             return {"success": False, "message": str(e)}
 
 
@@ -263,5 +255,5 @@ class SelectConnection(Resource):
                     testcase.save_to_db()
             return success({"success": True, "message": "Updated Details"})
         except Exception as e:
-            print(e)
+            app.loggger.error(e)
             return error({"success": False, "message": str(e)})

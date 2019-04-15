@@ -307,14 +307,14 @@ class TestCaseLog(db.Model):
     @classmethod
     def return_all_log(cls, test_case_log_id):
         def test_case_log_json(x):
-            print(x.test_cases.test_name)
-            print(x.test_cases.test_name)
+            app.logger.debug(x.test_cases.test_name)
             if (x.execution_status == 1):
                 dest = x.des_execution_log
                 src = x.src_execution_log
 
             else:
-                if (x.test_cases.test_name == 'NullCheck'):
+                if (x.test_cases.test_name == 'NullCheck' or x.test_cases.test_name == 'DuplicateCheck'):
+                    app.logger.debug("came here")
                     dest = json.loads(x.des_execution_log)
                     dest = dest[:10]
                     src = x.src_execution_log

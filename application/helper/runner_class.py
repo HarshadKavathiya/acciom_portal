@@ -60,20 +60,20 @@ def split_query(qry):
 
 
 def get_query(quires):
-    lst = []
     q = ast.literal_eval(quires)
     query = q["query"]
-    app.logger.debug(query)
     return query
 
 
 def get_column(columns):
+    '''
+    :param columns:
+    :return: list of target columns only as a list used in case of nullcheck
+    and duplicate check
+    '''
     c = ast.literal_eval(columns)
     column = c["column"]
-    app.logger.debug(column)
     column = list(column.values())
-
-    app.logger.debug(column)
     return column
 
 
@@ -149,8 +149,6 @@ def run_test(case_id):
                                     target_Detail['db_password']).cursor()
             table_name = split_table(case_id.test_db_table_detail)
             query = get_query(case_id.test_db_table_detail)
-
-            print(table_name)
             result = count_check(source_cursor,
                                  target_cursor,
                                  table_name['src_table'],
@@ -182,7 +180,6 @@ def run_test(case_id):
             table_name = split_table(case_id.test_db_table_detail)
             query = get_query(case_id.test_db_table_detail)
             column = get_column(case_id.test_db_table_detail)
-            app.logger.debug(column)
             result = duplication(target_cursor,
                                  table_name['target_table'],
                                  column,
@@ -273,5 +270,3 @@ def run_test(case_id):
 # ToNote:
 # status = {0: "new", 1: "pass", 2: "fail", 3: "in progress", 4: "error"}
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
-# select column_name from information_schema
-# .columns where table_name='Inventory';
