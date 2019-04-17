@@ -59,8 +59,12 @@ class TestCaseSparkJob(Resource):
     def post(self, spark_job_id):
         dict1 = request.data.decode('utf-8', 'ignore')
         res = ast.literal_eval(dict1)
-        print("line 43", res)
+        print("line 43", res['result']['src_to_dest'])
         result = json.dumps(res['result']['src_to_dest'])
+        print(result)
+        print(type(result))
+        result_des = json.dumps(res['result']['dest_to_src'])
+        print(type(result_des))
         result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         case_log = TestCaseLog.query.filter_by \
@@ -74,9 +78,14 @@ class TestCaseSparkJob(Resource):
             case.save_to_db()
 
         elif result_count != 0:
+            if result == '[]':
+                result = 'none'
+            elif result_des == '[]':
+                result_des = 'none'
             case_log.execution_status = 2
             case_log.save_to_db()
             case_log.src_execution_log = str(result)
+            case_log.des_execution_log = str(result_des)
             case_log.save_to_db()
             case = TestCase.query.filter_by \
                 (test_case_id=case_log.test_case_id).first()
@@ -99,9 +108,9 @@ class EditTestCase(Resource):
         des_qry = ''
         newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
-        tabledetail = obj.test_db_table_detail
+        tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
-        src_target_table = split_table(obj.test_db_table_detail)
+        src_target_table = split_table(obj.test_case_detail)
         # tables = split_table(obj.table_src_target)
         src_db_id = DbDetail.query.filter_by(db_id=obj.src_db_id).first()
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
@@ -155,7 +164,7 @@ class EditTestCase(Resource):
         parser.add_argument('target_query')
         data = parser.parse_args()
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
-        tabledetail = obj.test_db_table_detail
+        tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
         print("tabledetails", tabledetails)
 
@@ -174,6 +183,6 @@ class EditTestCase(Resource):
         else:
             queries['sourceqry'] = data['src_query']
             queries['targetqry'] = data['target_query']
-        obj.test_db_table_detail = json.dumps(tabledetails)
+        obj.test_case_detail = json.dumps(tabledetails)
         obj.save_to_db()
         return {"success": True, "message": "Succesfully Changed Values"}

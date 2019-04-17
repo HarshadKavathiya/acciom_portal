@@ -23,7 +23,7 @@ def null_check(target_cursor, target_table, column, test_queries):
         app.logger.debug(column)
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
-            "INFORMATION_SCHEMA.COLUMNS"
+            "information_schema.COLUMNS"
             " WHERE table_name='{0}'".format(target_table))
 
         for col in target_cursor:

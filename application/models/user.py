@@ -205,7 +205,7 @@ class TestSuite(db.Model):
 
         def test_case_to_json(x):
             tables = []
-            a = ast.literal_eval(x.test_db_table_detail)
+            a = ast.literal_eval(x.test_case_detail)
             b = a["table"]
             for key in b:
                 tables.append(key)
@@ -248,7 +248,7 @@ class TestCase(db.Model):
     test_suite_id = db.Column(db.ForeignKey(TestSuite.test_suite_id))
     test_id = db.Column(db.String(80), nullable=True)
     test_status = db.Column(db.Integer, nullable=True)
-    test_db_table_detail = db.Column(LONGTEXT, nullable=True)
+    test_case_detail = db.Column(LONGTEXT, nullable=True)
     test_name = db.Column(db.String(80), nullable=True)
     src_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
     target_db_id = db.Column(db.ForeignKey('dbdetail.db_id'))
@@ -266,14 +266,14 @@ class TestCase(db.Model):
         db.session.commit()
 
     def __init__(self, test_suite_id, test_id, test_status,
-                 test_db_table_detail,
+                 test_case_detail,
                  test_name,
                  src_db_id, target_db_id):
         self.test_suite_id = test_suite_id
         self.test_id = test_id
         self.test_status = test_status
         self.test_name = test_name
-        self.test_db_table_detail = test_db_table_detail
+        self.test_case_detail = test_case_detail
         self.src_db_id = src_db_id
         self.target_db_id = target_db_id
 
@@ -314,14 +314,20 @@ class TestCaseLog(db.Model):
 
             else:
                 if (x.test_cases.test_name == 'NullCheck' or x.test_cases.test_name == 'DuplicateCheck'):
-                    app.logger.debug("came here")
                     dest = json.loads(x.des_execution_log)
                     dest = dest[:10]
                     src = x.src_execution_log
                 elif x.test_cases.test_name == 'Datavalidation':
-                    dest = x.des_execution_log
-                    src = json.loads(x.src_execution_log)
-                    src = src[:10]
+                    if x.src_execution_log == 'none':
+                        src = 'none'
+                    else:
+                        src = json.loads(x.src_execution_log)
+                        src = src[:10]
+                    if x.des_execution_log == 'none':
+                        dest = 'none'
+                    else:
+                        dest = json.loads(x.des_execution_log)
+                        dest = dest[:10]
                 else:
                     dest = x.des_execution_log
                     src = x.src_execution_log

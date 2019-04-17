@@ -123,7 +123,7 @@ class TestSuites(Resource):
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],
                                 test_status=0,
-                                test_db_table_detail=json.dumps(jsondict),
+                                test_case_detail=json.dumps(jsondict),
                                 test_name=temp_test[i][j],
                                 src_db_id=src_db_id,
                                 target_db_id=target_db_id)

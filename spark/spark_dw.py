@@ -59,7 +59,9 @@ def get_count(db_detail):
         "url", url).option("driver", driver).option(
         "dbtable", query).option("user", db_detail["username"]).option(
         "password", db_detail["password"]).load()
+    print(query)
     count = df.collect()
+    print("COUNT   -----", count)
     return count[0] if count else None
 
 
@@ -77,6 +79,7 @@ def get_df_select(db_detail, start, end):
     elif db_detail["db_type"] == "postgres":
         query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} LIMIT {2} ) AS t".format(
             db_detail["table_name"], start, end)
+    print(query)
     df = sqlContext.read.format("jdbc").option(
         "url", url).option("driver", driver).option(
         "dbtable", query).option("user", db_detail["username"]).option(
@@ -100,7 +103,6 @@ def run(src_db, dest_db, src_start, src_end, tgt_start, tgt_end):
     #  Getting the data ready
     x = df_src.count()
     y = df_dest.count()
-
     global df_src_master
     if not df_src_master:
         df_src_master = sqlContext.createDataFrame([], df_src.schema)
@@ -114,7 +116,7 @@ def run(src_db, dest_db, src_start, src_end, tgt_start, tgt_end):
 
 
 def data_validation(df_src, df_dest):
-    return df_src.exceptAll(df_dest).toJSON().collect()
+    return df_src.subtract(df_dest).toJSON().collect()
 
 
 def dup_rows(df):
@@ -148,7 +150,7 @@ if __name__ == '__main__':
     # Call back api
     # Expecting testname=api_end_point
     testcases_tbr = dict([arg.split('=', maxsplit=1) for arg in sys.argv[13:]])
-    print(testcases_tbr)
+
     if len(testcases_tbr) <= 0:
         raise Exception("No testcases provided")
 
@@ -159,14 +161,17 @@ if __name__ == '__main__':
         src_db["count"] = src_count.asDict()["count"]
 
     if dest_count:
+        print(dest_count.asDict()["count"])
         dest_db["count"] = dest_count.asDict()["count"]
 
-    src_num = int(src_db["count"] / 4)
-    tgt_num = int(dest_db["count"] / 4)
+    src_num = 1 if (src_db["count"]) < 4 else int((src_db["count"] / 4) + 1)
+
+    tgt_num = 1 if (dest_db["count"]) < 4 else int((dest_db["count"] / 4) + 1)
+    print(tgt_num)
     threads = []
-    src_start = 1
+    src_start = 0
     src_end = src_num
-    tgt_start = 1
+    tgt_start = 0
     tgt_end = tgt_num
 
     for thread_num in range(4):
@@ -177,29 +182,32 @@ if __name__ == '__main__':
         threads.append(th)
         src_start = src_start + src_num
         tgt_start = tgt_start + tgt_num
+        th.join()
 
-    # joining them
-    for thread_num in threads:
-        thread_num.join()
+    # for thread_num in threads:
+    #     thread_num.join()
 
     for testcase, api_end_point in testcases_tbr.items():
         result = {}
         try:
             if testcase == "datavalidation":
-                result['src_to_dest'] = data_validation(df_src_master,
+
+                result["src_to_dest"] = data_validation(df_src_master,
                                                         df_dest_master)
-                # result["dest_to_src"] = data_validation(df_dest_master,
-                #                                         df_src_master)
-                print(result['src_to_dest'])
+                result["dest_to_src"] = data_validation(df_dest_master,
+                                                        df_src_master)
+
+                print(result)
+                print("source count", df_src_master.count())
+                print("TARGET count", df_dest_master.count())
                 data = {"result": result, "result_count":
-                    len(result["src_to_dest"])}
+                    len(result["src_to_dest"]) + len(result["dest_to_src"])}
                 result = requests.post(testcases_tbr['datavalidation'], json=data)
+
             elif testcase == "dupcheck":
                 result = dup_rows(df_dest_master)
                 data = {"result": result, "result_count": len(result)}
             else:
                 raise SparkException("Invalid Test Case")
-            # post call
-
         except Exception as e:
             print(e)

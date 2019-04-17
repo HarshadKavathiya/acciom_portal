@@ -14,7 +14,7 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url= 'http://0.0.0.0:5000/api';
+  url= '/api';
 
   constructor(private http:HttpClient) { }
   inputFile:File

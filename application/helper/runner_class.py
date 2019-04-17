@@ -147,8 +147,8 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.test_db_table_detail)
-            query = get_query(case_id.test_db_table_detail)
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
             result = count_check(source_cursor,
                                  target_cursor,
                                  table_name['src_table'],
@@ -163,9 +163,9 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.test_db_table_detail)
-            query = get_query(case_id.test_db_table_detail)
-            column = get_column(case_id.test_db_table_detail)
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
+            column = get_column(case_id.test_case_detail)
             result = null_check(target_cursor, table_name['target_table'],
                                 column, query)
 
@@ -177,15 +177,15 @@ def run_test(case_id):
                                     target_Detail['db_hostname'].lower(),
                                     target_Detail['db_username'],
                                     target_Detail['db_password']).cursor()
-            table_name = split_table(case_id.test_db_table_detail)
-            query = get_query(case_id.test_db_table_detail)
-            column = get_column(case_id.test_db_table_detail)
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
+            column = get_column(case_id.test_case_detail)
             result = duplication(target_cursor,
                                  table_name['target_table'],
                                  column,
                                  query)
         if case_id.test_name == 'Datavalidation':
-            table_name = split_table(case_id.test_db_table_detail)
+            table_name = split_table(case_id.test_case_detail)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
             spark_job = SparkJob()
@@ -200,7 +200,7 @@ def run_test(case_id):
 
         if case_id.test_name == 'DDLCheck':
             app.logger.info("DDL Check start")
-            table_name = split_table(case_id.test_db_table_detail)
+            table_name = split_table(case_id.test_case_detail)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
             source_cursor = source_db(src_Detail['db_name'],

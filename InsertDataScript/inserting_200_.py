@@ -1,15 +1,15 @@
 import pymysql
 
 # db_name = "source_db";
-# table_name = "src_inventory1";
-
+# table_name = "src_inventory";
+#
 db_name = "dest_db";
 table_name = "dest_inventory";
 
 user_name = "Acciom_user";
 password = "Acciomuser";
 host = "localhost"
-ranges = 4  # changes as per required rows to be inserted
+ranges = 1000  # changes as per required rows to be inserted
 
 connection = pymysql.connect(host=host, user=user_name, password=password,
                              db=db_name)

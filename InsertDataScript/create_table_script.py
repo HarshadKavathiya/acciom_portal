@@ -1,13 +1,13 @@
 import pymysql
 
-db_name = "source_db";
-table_name = "src_inventory";
+# db_name = "source_db";
+# table_name = "src_inventory";
 
-# db_name = "dest_db";
-# table_name = "dest_inventory";
+db_name = "dest_db";
+table_name = "dest_inventory";
 
-user_name = "acciom_user";
-password = "acciom_password";
+user_name = "Acciom_user";
+password = "Acciomuser";
 host = "localhost"
 
 connection = pymysql.connect(host=host, user=user_name, password=password,

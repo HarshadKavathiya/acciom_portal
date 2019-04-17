@@ -19,12 +19,16 @@ export interface DialogData {
   ddlcheck:boolean;
   key_src:Array<any>;
   value_src:Array<any>;
+  key_dest:Array<any>;
+  value_dest:Array<any>;
   case_log_id:number;
   execution_status:number;
   src_value_dataduplication:Array<any>;
   src_table:string;
   target_table:string;
   value_src_nullcheck:Array<any>;
+  show_src_table:boolean;
+  show_dest_table:boolean;
 }
 export interface DialogDataCaseDetail {
  src_db_name:string;
@@ -78,9 +82,13 @@ export class StartupComponent implements OnInit {
   ddlcheck:boolean=true;
   keys_src=[]
   value_src=[]
+  keys_dest =[]
+  value_dest=[]
   first_obj=[]
+  first_obj1=[]
   value_src_nullcheck=[]
   parsed_obj=""
+  parsed_obj1=""
   stilload=false;
   t:number;
   times:any;
@@ -98,6 +106,8 @@ export class StartupComponent implements OnInit {
   des_qry:String;
   len:number;
   case_name:String;
+  show_dest_table:boolean;
+  show_src_table:boolean;
   all_connection=[];
   all_cases=[];
   constructor( private router:Router,
@@ -280,7 +290,7 @@ showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_ty
     data : {case_id:case_id,src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
     src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
-  src_qry:src_qry, des_qry:des_qry,casename:case_name}
+  src_qry:src_qry, des_qry:des_qry,casename:case_name, show_src_table:this.show_src_table, show_dest_table:this.show_dest_table}
   });
   
   dialogRef.afterClosed().subscribe(result => {
@@ -350,7 +360,7 @@ getlog(test_name,src_table,target_table,case_log_id){
   //calls rest api with case_log_id and fetch the
   // case_name , case_src_log and case_des_log.
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
-
+console.log(data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
     // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
@@ -409,10 +419,15 @@ showlog(test_name,src_table,target_table,case_log){
   else if (test_name == "Datavalidation"){
     this.value_src=[]
     this.keys_src=[]
-    if(case_log.source_log=='none'){
+    this.keys_dest =[]
+  this.value_dest=[]
+    if(case_log.source_log == 'none'){
       this.show_logdialog(test_name)
+      console.log(case_log.source_log)
+      this.show_src_table=false;
     }
     else{
+      this.show_src_table=true;
       this.parsed_obj=(eval(case_log.source_log)[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
@@ -421,7 +436,27 @@ showlog(test_name,src_table,target_table,case_log){
         this.parsed_obj=(eval(case_log.source_log)[i])
         this.first_obj=(JSON.parse(String(this.parsed_obj)))
         this.value_src.push(Object.values(this.first_obj))
-      }
+      }  
+    }
+    if(case_log.destination_log == 'none' ){
+      this.show_dest_table=false;
+      this.show_logdialog(test_name)
+      console.log(case_log.source_log)
+
+    }
+    else{
+      this.show_dest_table=true;
+      this.parsed_obj1 = (eval(case_log.destination_log)[0])
+      console.log(this.parsed_obj1)
+      this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
+      this.keys_dest = (Object.keys(this.first_obj1))
+      this.len=eval(case_log.destination_log).length
+     for(var i=0;i<this.len;i++){
+      this.parsed_obj1=(eval(case_log.destination_log)[i])
+      this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
+      this.value_dest.push(Object.values(this.first_obj1))
+    }
+  }
       this.countcheck=true
       this.nullcheck=true
       this.datavalidation=false
@@ -431,7 +466,7 @@ showlog(test_name,src_table,target_table,case_log){
       this.ddlcheck=true
 
     }
-  }
+  
   else if(test_name == 'DDLCheck'){
   
    if(case_log.source_log=='none1')
@@ -459,7 +494,7 @@ showlog(test_name,src_table,target_table,case_log){
     height:'auto',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
-    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
+    key_dest:this.keys_dest, value_dest:this.value_dest,key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
       src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
   });
