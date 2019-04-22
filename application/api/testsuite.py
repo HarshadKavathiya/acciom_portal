@@ -80,7 +80,7 @@ class TestSuites(Resource):
                 jsondict = {}
                 columndata = temp_test[i + 4][j]
                 column = {}
-                if columndata == "None":
+                if columndata == "None" or columndata.isspace():
                     pass
                 else:
                     if ":" in columndata:
@@ -105,7 +105,7 @@ class TestSuites(Resource):
                 querylist = []
                 query = {}
                 p = temp_test[i + 5][j]
-                if p == "None":
+                if p == "None" or p.isspace():
                     pass
                 else:
                     if ";" in p:

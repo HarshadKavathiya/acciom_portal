@@ -127,8 +127,9 @@ class EditTestCase(Resource):
             des_qry = ''
         else:
             queries = tabledetails["query"]
+            print(queries)
             if obj.test_name == 'CountCheck':
-                src_query = queries["sourceqry"]
+                src_query = queries["srcqry"]
                 target_query = queries["targetqry"]
                 newlst.append(src_query)
                 newlst.append(target_query)
