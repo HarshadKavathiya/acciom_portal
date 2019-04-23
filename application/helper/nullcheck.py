@@ -29,7 +29,8 @@ def null_check(target_cursor, target_table, column, test_queries):
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
-        if (test_queries == {} or test_queries['targetqry'].isspace() or test_queries['targetqry'] == ""):
+        if (test_queries == {} or test_queries['targetqry'].isspace()
+                or test_queries['targetqry'] == ""):
             if column == []:
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)

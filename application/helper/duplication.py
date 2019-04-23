@@ -31,16 +31,20 @@ def duplication(target_cursor, target_table, column_name, test_queries):
     app.logger.debug(test_queries)
     try:
         target_cursor.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name='{0}'".format(target_table))
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS"
+            " WHERE table_name='{0}'".format(
+                target_table))
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
 
-        if (test_queries == {} or test_queries['targetqry'].isspace() or test_queries['targetqry'] == ""):
+        if (test_queries == {} or test_queries['targetqry'].isspace() or
+                test_queries['targetqry'] == ""):
             if column_name == []:
                 custom_query = qry_generator(col_list, target_table)
             else:
-                custom_query = qry_generator(column_name, target_table)  # if column give in excel
+                custom_query = qry_generator(column_name, target_table)
+                # if column give in excel
         else:
             target_query = test_queries["targetqry"]
             newlst.append(target_query)

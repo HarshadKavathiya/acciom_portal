@@ -14,7 +14,8 @@ from sqlalchemy.dialects.mysql import LONGTEXT, INTEGER
 from index import db, app
 
 BLOCK_SIZE = 16
-pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(
+    BLOCK_SIZE - len(s) % BLOCK_SIZE)
 unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 password1 = 'mypassword'
 
@@ -52,6 +53,7 @@ class User(db.Model):
         try:
             user_id = s.loads(token)['user_id']
         except Exception as e:
+            app.logger.error(e)
             return None
         return User.query.get(user_id)
 
@@ -151,16 +153,16 @@ class DbDetail(db.Model):
         return key
 
     def encrypt(raw):
-        password1 = "mypassword"
-        private_key = DbDetail.get_private_key(app.config.get('DB_ENCRYPTION_KEY'))
+        private_key = DbDetail.get_private_key(
+            app.config.get('DB_ENCRYPTION_KEY'))
         raw = pad(raw)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(private_key, AES.MODE_CBC, iv)
         return base64.b64encode(iv + cipher.encrypt(raw))
 
     def decrypt(enc):
-        password1 = "mypassword"
-        private_key = DbDetail.get_private_key(app.config.get('DB_ENCRYPTION_KEY'))
+        private_key = DbDetail.get_private_key(
+            app.config.get('DB_ENCRYPTION_KEY'))
         enc = base64.b64decode(enc)
         iv = enc[:16]
         cipher = AES.new(private_key, AES.MODE_CBC, iv)
@@ -313,7 +315,8 @@ class TestCaseLog(db.Model):
                 src = x.src_execution_log
 
             else:
-                if (x.test_cases.test_name == 'NullCheck' or x.test_cases.test_name == 'DuplicateCheck'):
+                if x.test_cases.test_name == 'NullCheck' or \
+                        x.test_cases.test_name == 'DuplicateCheck':
                     dest = json.loads(x.des_execution_log)
                     dest = dest[:10]
                     src = x.src_execution_log

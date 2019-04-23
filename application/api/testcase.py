@@ -22,7 +22,6 @@ def db_details_without_password(db_id):
     db_id (foreign Key)
     """
     db_obj = DbDetail.query.filter_by(db_id=db_id).first()
-    x = db_obj.db_password.encode()
     db_list['db_id'] = db_obj.db_id
     db_list['db_type'] = db_obj.db_type
     db_list['db_name'] = db_obj.db_name
@@ -67,13 +66,13 @@ class TestCaseSparkJob(Resource):
         print(type(result_des))
         result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
-        case_log = TestCaseLog.query.filter_by \
-            (test_case_log_id=spark_job.test_case_log_id).first()
+        case_log = TestCaseLog.query.filter_by(
+            test_case_log_id=spark_job.test_case_log_id).first()
         if result_count == 0:
             case_log.execution_status = 1
             case_log.save_to_db()
-            case = TestCase.query.filter_by \
-                (test_case_id=case_log.test_case_id).first()
+            case = TestCase.query.filter_by(
+                test_case_id=case_log.test_case_id).first()
             case.test_status = 1
             case.save_to_db()
 
@@ -87,8 +86,8 @@ class TestCaseSparkJob(Resource):
             case_log.src_execution_log = str(result)
             case_log.des_execution_log = str(result_des)
             case_log.save_to_db()
-            case = TestCase.query.filter_by \
-                (test_case_id=case_log.test_case_id).first()
+            case = TestCase.query.filter_by(
+                test_case_id=case_log.test_case_id).first()
             case.test_status = 2
             case.save_to_db()
 

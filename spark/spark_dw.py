@@ -77,8 +77,8 @@ def get_df_select(db_detail, start, end):
         query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t".format(
             db_detail["table_name"], start, end)
     elif db_detail["db_type"] == "postgres":
-        query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} LIMIT {2} ) AS t".format(
-            db_detail["table_name"], start, end)
+        query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} " \
+                "LIMIT {2} ) AS t".format(db_detail["table_name"], start, end)
     print(query)
     df = sqlContext.read.format("jdbc").option(
         "url", url).option("driver", driver).option(
@@ -101,8 +101,6 @@ def run(src_db, dest_db, src_start, src_end, tgt_start, tgt_end):
     df_dest.cache()
 
     #  Getting the data ready
-    x = df_src.count()
-    y = df_dest.count()
     global df_src_master
     if not df_src_master:
         df_src_master = sqlContext.createDataFrame([], df_src.schema)
@@ -200,9 +198,11 @@ if __name__ == '__main__':
                 print(result)
                 print("source count", df_src_master.count())
                 print("TARGET count", df_dest_master.count())
-                data = {"result": result, "result_count":
-                    len(result["src_to_dest"]) + len(result["dest_to_src"])}
-                result = requests.post(testcases_tbr['datavalidation'], json=data)
+                data = {"result": result, "result_count": len(
+                    result["src_to_dest"]) + len(
+                    result["dest_to_src"])}
+                result = requests.post(
+                    testcases_tbr['datavalidation'], json=data)
 
             elif testcase == "dupcheck":
                 result = dup_rows(df_dest_master)

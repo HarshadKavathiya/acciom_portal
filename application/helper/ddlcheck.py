@@ -1,3 +1,6 @@
+from flask import current_app as app
+
+
 def ddl_check(source_cursor, target_cursor, source_table, target_table):
     try:
         cursor = source_cursor
@@ -78,4 +81,5 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table):
         else:
             pass
     except Exception as e:
+        app.logger.error(e)
         return {"res": 2, "src_value": None, "des_value": None}
