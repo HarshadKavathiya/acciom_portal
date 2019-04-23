@@ -65,8 +65,8 @@ export class HomeComponent implements OnInit  {
   all_db_detail_value=[]
   url='/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx';
   column_dict=[{0:'Test Case ID'}, {1:'Details'},{ 2:'Columns'},
-               {3:'Table Source:Target'}, {4:'Test Class'},
-               {5:'Test queries'}];
+    {3:'Table Source:Target'}, {4:'Test Class'},
+    {5:'Test queries'}];
   constructor(private fileUploadService:UploadserviceService,
     private route:ActivatedRoute,
     private router:Router,
@@ -111,8 +111,6 @@ OnClick(v) {
      this.executevalue = 1
    }
    this.changessaved=true;
-   console.log(this.selectedValue)
-   console.log("leaving home ")
      this.fileUploadService.postFile(this.file,this.selectedradio,this.selectedValue,this.suitename,this.executevalue).subscribe(data => {
     this.name=data['message']
     this.filevalue=null;
@@ -181,13 +179,15 @@ OnClick(v) {
     fileReader.readAsArrayBuffer(this.file);
   }
 selectBadge (e, x) {
+  console.log(typeof(e.target.value))
   if (e.target.checked) {
     this.disable2=false;
-
     this.selectedValue.push(x.toString());
   }  else { 
-    this.selectedValue.splice(this.selectedValue.indexOf(x), 1);
+    this.selectedValue.splice(this.selectedValue.indexOf(x.toString()), 1);
   }
+  console.log(this.selectedValue.indexOf(x.toString()))
+
   this.selectedtestcases=this.selectedValue
 console.log(this.selectedValue)
   var totalSelected =  0;
@@ -257,17 +257,14 @@ if (this.selectedAll){
   }
   //below func validate db details
   if(!this.validate_db_detail(this.temp_db_detailarr)){
-    console.log("3")
       this.clearAll("filecannot be uploaded, db details are not valid")
       return;
   }
   // below func to validate table name
  if(!this.validate_table_names(this.temp_table_detail)){
-  console.log("4")
       this.clearAll("filecannot be uploaded, Table Names are not valid")
       return;
  }
-  console.log('directly came here')
     this.prog=75;                                        
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {   
       width: '250px',

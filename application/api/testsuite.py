@@ -102,7 +102,6 @@ class TestSuites(Resource):
                 tablelist = temp_test[i + 3][j].split(":")
                 table = {}
                 table[tablelist[0]] = tablelist[1]
-                querylist = []
                 query = {}
                 p = temp_test[i + 5][j]
                 if p == "None" or p.isspace():
