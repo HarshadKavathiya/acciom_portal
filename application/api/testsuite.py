@@ -152,6 +152,23 @@ class TestCaseLogDetail(Resource):
 
 
 class ExportTestLog(Resource):
+    """
+    This is an example
+        ---
+        tags:
+          - restful
+        parameters:
+          - in: path
+            name: case_log_id
+            required: true
+            description: The ID of the case_log_id, try 42!
+            type: int
+        responses:
+          200:
+            description: The task data
+
+    """
+
     def get(self, case_log_id):
         case_log = TestCaseLog.query.filter_by(
             test_case_log_id=case_log_id).first()

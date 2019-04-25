@@ -2,6 +2,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+from flasgger import Swagger
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -41,3 +42,16 @@ jwt = JWTManager(app)
 api = Api(app)
 CORS(app)
 mail = Mail(app)
+
+swagger_template = {'securityDefinitions': {'basicAuth': {'type': 'basic'}}}
+swagger_config = {"title": "Acciom Portal",
+                  "jquery_js": "",
+                  "headers": [],
+                  "specs": [{"endpoint": 'api',
+                             "route": '/specifications.json',
+                             }
+                            ],
+                  "specs_route": "/",
+                  "url_prefix": "/api"
+                  }
+swagger = Swagger(app, config=swagger_config, template=swagger_template)

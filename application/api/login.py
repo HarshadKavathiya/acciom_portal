@@ -72,6 +72,28 @@ class Register(Resource):
 
 
 class Login(Resource):
+    """
+       login
+           ---
+           tags:
+             - restful
+           parameters:
+             - in: body
+               name: user
+               description: To login
+               schema:
+                 type:object
+                 properties:
+                    email:
+                    type:string
+                    password:
+                    type:string
+
+           responses:
+             200:
+               description: The task data
+
+       """
 
     def post(self):
         try:

@@ -2,6 +2,12 @@ from flask import current_app as app
 
 
 def qry_generator(columns, target_table):
+    '''
+
+    :param columns: columns
+    :param target_table: table name
+    :return: custom query for duplication check
+    '''
     sub_startquery = ""
     sub_endquery = ""
     for each_col in range(len(columns)):

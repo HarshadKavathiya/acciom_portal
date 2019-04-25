@@ -42,13 +42,17 @@ class TestCaseJob(Resource):
                 test_suite = TestSuite.query.filter_by(
                     test_suite_id=data['suite_id']).first()
                 for each_test in test_suite.test_case:
-                    # my_background_task.delay(each_test.test_case_id)
                     run_by_case_id(each_test.test_case_id)
-                return success({"success": True})
+                return success(
+                    {"success": True,
+                     "message": "Job Submitted Succesfully for Suite id {0}".format(
+                         data['suite_id'])})
             else:
-                # my_background_task.delay(data['case_id'])
                 run_by_case_id(data['case_id'])
-                return success({"success": True})
+                return success(
+                    {"success": True,
+                     "message": "Job Submitted Succesfully for case id {0}".format(
+                         data['case_id'])})
         except Exception as e:
             app.logger.error(e)
             return error({"success": False, "msg": str(e)})
@@ -103,6 +107,24 @@ class EditTestCase(Resource):
 
     @jwt_required
     def get(self, case_id):
+        """
+            This is an example
+                ---
+                tags:
+                  - restful
+                parameters:
+                  - in: path
+                    name: case_id
+                    required: true
+                    description: The ID of the case_log_id, try 10!
+                    type: int
+
+                responses:
+                  200:
+                    description: The task data
+
+
+            """
         src_qry = ''
         des_qry = ''
         newlst = []
@@ -110,13 +132,11 @@ class EditTestCase(Resource):
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
         src_target_table = split_table(obj.test_case_detail)
-        # tables = split_table(obj.table_src_target)
         src_db_id = DbDetail.query.filter_by(db_id=obj.src_db_id).first()
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
         Source_Detail = db_details_without_password(src_db_id.db_id)
         Target_Detail = db_details_without_password(des_db_id.db_id)
         if tabledetails['column'] is not {}:
-            # column = obj.test_column
             column = tabledetails['column']
             keys = []
             for key in column:

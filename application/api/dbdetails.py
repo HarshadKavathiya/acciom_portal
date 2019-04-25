@@ -33,7 +33,8 @@ class DbDetails(Resource):
                 db_password=db_password,
             )
             new_db.save_to_db()
-            return success({"message": "success", "success": True})
+            return success(
+                {"message": "successfully saved DB Details ", "success": True})
         except Exception as e:
             return error({"message": str(e), "success": False})
 

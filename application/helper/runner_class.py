@@ -51,6 +51,11 @@ def save_test_status(test_case_id, status):
 
 
 def split_query(qry):
+    '''
+
+    :param qry: custom query (in json )
+    :return: returns source and target query
+    '''
     res = {}
     split_qry = qry.split(';')
     new_list = [i.split(':') for i in split_qry]
@@ -59,8 +64,8 @@ def split_query(qry):
     return
 
 
-def get_query(quires):
-    q = ast.literal_eval(quires)
+def get_query(queries):
+    q = ast.literal_eval(queries)
     query = q["query"]
     return query
 
@@ -186,8 +191,6 @@ def run_test(case_id):
                                  query)
         if case_id.test_name == 'Datavalidation':
             table_name = split_table(case_id.test_case_detail)
-            src_Detail = db_details(case_id.src_db_id)
-            target_Detail = db_details(case_id.target_db_id)
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id

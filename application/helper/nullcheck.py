@@ -6,6 +6,12 @@ from flask import current_app as app
 
 
 def qry_generator(columns, target_table):
+    '''
+
+    :param columns: columns (1 or more)
+    :param target_table: table name
+    :return: gives a custom query based for null check based on params.
+    '''
     sub_query = ""
     for each_col in columns:
         if sub_query == "":
@@ -17,6 +23,14 @@ def qry_generator(columns, target_table):
 
 
 def null_check(target_cursor, target_table, column, test_queries):
+    '''
+
+    :param target_cursor: as name tells
+    :param target_table: table
+    :param column: all columns
+    :param test_queries: custom query
+    :return: result for the test(pass, fail, error)
+    '''
     try:
         col_list = []
         newlst = []
