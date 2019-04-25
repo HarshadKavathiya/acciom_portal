@@ -135,9 +135,12 @@ class TestSuites(Resource):
         app.logger.debug('data saved to database')
         return {'message': 'data saved to database'}
 
-    def get(self, user_id):
+    @jwt_required
+    def get(self):
         try:
-            return {"suites": TestSuite.return_all(user_id),
+            uid = get_jwt_identity()
+            app.logger.debug(uid)
+            return {"suites": TestSuite.return_all(uid),
                     "success": True}
         except Exception as e:
             app.logger.debug(str(e))

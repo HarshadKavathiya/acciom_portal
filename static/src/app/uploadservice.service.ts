@@ -111,8 +111,14 @@ export class UploadserviceService {
 
   }
   getSuiteById(id){
-    let headers=new HttpHeaders().set('Content-Type','application/json')
-    return this.http.get<any>(`${this.url}/test-suite/${id}`,{headers:headers});
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    console.log(this.newtoken)
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+      
+    })
+    return this.http.get<any>(`${this.url}/test-suite`,{headers:headers});
   }
 
   ExecuteTestbySuiteId(suite_id:any):Observable<any>{
