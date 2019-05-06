@@ -1,0 +1,30 @@
+
+tags:
+- "User"
+summary: "list of users"
+description: "this endpoint uses a post request"
+operationId: "login"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "add login detail"
+  required: true
+  schema:
+    $ref: "#/definitions/Login"
+responses:
+  405:
+    description: "Invalid input"
+definitions:
+  Login:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "roja.t@accionlabs.com"
+      password:
+        type: "string"
+        example: "4731"

@@ -2,6 +2,7 @@ import ast
 import json
 from io import BytesIO
 
+from flasgger import swag_from
 from flask import current_app as app
 from flask import request, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -39,6 +40,7 @@ def args_as_list(s):
 
 class TestSuites(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/test_suitepost.yml')
     def post(self):
         current_user = get_jwt_identity()
         data = parser.parse_args()
@@ -138,6 +140,7 @@ class TestSuites(Resource):
         return {'message': 'data saved to database'}
 
     @jwt_required
+    @swag_from('/application/apidocs/test_suiteget.yml')
     def get(self):
         try:
             uid = get_jwt_identity()
@@ -151,29 +154,14 @@ class TestSuites(Resource):
 
 class TestCaseLogDetail(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/testcaselogdetail.yml')
     def get(self, test_case_log_id):
         return {"test_case_log": TestCaseLog.return_all_log(test_case_log_id),
                 "success": True}
 
 
 class ExportTestLog(Resource):
-    """
-    This is an example
-        ---
-        tags:
-          - restful
-        parameters:
-          - in: path
-            name: case_log_id
-            required: true
-            description: The ID of the case_log_id, try 42!
-            type: int
-        responses:
-          200:
-            description: The task data
-
-    """
-
+    @swag_from('/application/apidocs/exporttestlog.yml')
     def get(self, case_log_id):
         case_log = TestCaseLog.query.filter_by(
             test_case_log_id=case_log_id).first()
@@ -227,6 +215,7 @@ class ConnectionDetails(Resource):
     '''
 
     @jwt_required
+    @swag_from('/application/apidocs/connectiondetails.yml')
     def get(self, suite_id):
         try:
             all_connection = []
@@ -248,6 +237,7 @@ class ConnectionDetails(Resource):
 
 class SelectConnection(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/selectconnection.yml')
     def post(self):
         try:
             parser = reqparse.RequestParser()

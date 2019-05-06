@@ -1,5 +1,6 @@
 import datetime
 
+from flasgger import swag_from
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
                                 get_raw_jwt, get_jwt_identity)
@@ -44,6 +45,7 @@ class Register(Resource):
                         help='This field cannot be blank',
                         required=True)
 
+    @swag_from('/application/apidocs/register.yml')
     def post(self):
         try:
             data = parser.parse_args()
@@ -72,29 +74,7 @@ class Register(Resource):
 
 
 class Login(Resource):
-    """
-       login
-           ---
-           tags:
-             - restful
-           parameters:
-             - in: body
-               name: user
-               description: To login
-               schema:
-                 type:object
-                 properties:
-                    email:
-                    type:string
-                    password:
-                    type:string
-
-           responses:
-             200:
-               description: The task data
-
-       """
-
+    @swag_from('/application/apidocs/login.yml')
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -151,6 +131,7 @@ class Logout(Resource):
 
 
 class ResetPasswordEmail(Resource):
+    @swag_from('/application/apidocs/resetpasswordemail.yml')
     def post(self):  # api/resetpassword
         parser = reqparse.RequestParser()
         parser.add_argument('email',
@@ -213,6 +194,7 @@ def send_reset_email(user):
 
 class SettingNewPaswword(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/settingnewpassword.yml')
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('old_password',
@@ -254,6 +236,7 @@ def send_mail_to_verify(user):
 
 
 class VerifyAccount(Resource):
+    @swag_from('/application/apidocs/verify.yml')
     def get(self, token):
         user = User.verify_reset_token(token)
         if user is None:

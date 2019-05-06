@@ -1,3 +1,4 @@
+from flasgger import swag_from
 from flask import current_app as app
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource, reqparse
@@ -16,6 +17,7 @@ parser.add_argument('password', help='this is required', required=True)
 
 class DbDetails(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/dbdetailpost.yml')
     def post(self):
         try:
             print("came here")
@@ -39,6 +41,7 @@ class DbDetails(Resource):
             return error({"message": str(e), "success": False})
 
     @jwt_required
+    @swag_from('/application/apidocs/dbdetail.yml')
     def get(self, db_id=None):
         current_user = get_jwt_identity()
         if db_id:
@@ -68,6 +71,7 @@ class DbDetails(Resource):
                                            (user_id=current_user)))}
 
     @jwt_required
+    @swag_from('/application/apidocs/dbdetailupdate.yml')
     def put(self, db_id):
         try:
             current_user = get_jwt_identity()

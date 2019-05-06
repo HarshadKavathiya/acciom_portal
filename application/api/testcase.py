@@ -1,6 +1,7 @@
 import ast
 import json
 
+from flasgger import swag_from
 from flask import current_app as app
 from flask import request
 from flask_jwt_extended import jwt_required
@@ -32,6 +33,7 @@ def db_details_without_password(db_id):
 
 class TestCaseJob(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/testcasejob.yml')
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -106,6 +108,7 @@ class EditTestCase(Resource):
                 "message": "Succesfully Deleted case {0}".format(case_id)}
 
     @jwt_required
+    @swag_from('/application/apidocs/edittestcaseget.yml')
     def get(self, case_id):
         newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
@@ -156,6 +159,7 @@ class EditTestCase(Resource):
         return {"success": True, "res": payload}
 
     @jwt_required
+    @swag_from('/application/apidocs/edittestcaseput.yml')
     def put(self, case_id):
         parser = reqparse.RequestParser()
         parser.add_argument('src_table')
