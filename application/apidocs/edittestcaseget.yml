@@ -1,0 +1,26 @@
+tags:
+- "TestCase"
+summary: "Find testsuite by userID"
+description: "Returns a testcase details"
+operationId: "edittestcase"
+produces:
+- "application/json"
+parameters:
+- name: "Authorization"
+  in: "header"
+  description : "Bearer ey....."
+  required: true
+  type: "string"
+- name: "case_id"
+  in: "path"
+  description: "case_id"
+  required: true
+  type: "integer"
+  format: "int64"
+responses:
+  200:
+    description: "successful operation"
+  400:
+    description: "Invalid ID supplied"
+  404:
+    description: "Pet not found"

@@ -1,0 +1,38 @@
+tags:
+- "Acciom"
+summary: "CheckConnection"
+description: "this endpoint uses a post request"
+operationId: "checkconnection"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "check connection detail"
+  required: true
+  schema:
+    $ref: "#/definitions/Connection"
+responses:
+  405:
+    description: "Invalid input"
+definitions:
+  Connection:
+    type: "object"
+    properties:
+        type:
+          type: "string"
+          example: "mysql"
+        hostname:
+          type: "string"
+          example: "localhost"
+        username:
+          type: "string"
+          example: "root"
+        password:
+          type: "string"
+          example: "Password1234"
+        name:
+          type: "string"
+          example: "TestDB"

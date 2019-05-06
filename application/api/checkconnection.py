@@ -2,9 +2,11 @@ from flask_restful import Resource, reqparse
 
 from application.common.Response import success
 from application.helper.connection_check import connection_check
+from flasgger import swag_from
 
 
 class CheckConnection(Resource):
+    @swag_from('/application/apidocs/CheckConnection.yml')
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('type',

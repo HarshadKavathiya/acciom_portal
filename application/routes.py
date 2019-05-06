@@ -40,8 +40,7 @@ api.add_resource(Logout, '/api/logout')
 api.add_resource(DbDetails, '/api/db-detail/', '/api/db-detail/<int:db_id>',
                  '/api/db-detail-update/<int:db_id>', )
 api.add_resource(TestSuites,
-                 '/api/test-suite',
-                 '/api/test-suite/<int:user_id>')
+                 '/api/test-suite','/api/test-suite/<int:user_id>')
 api.add_resource(TestCaseJob,
                  '/api/test-case-job')
 api.add_resource(TestCaseSparkJob, '/api/spark-job-status/<int:spark_job_id>')

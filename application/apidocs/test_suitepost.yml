@@ -1,0 +1,76 @@
+
+tags:
+- "TestSuite"
+summary: "uploading testsuite"
+description: "this endpoint uses a post request"
+operationId: "addtestsuite"
+consumes:
+- multipart/form-data
+- multipart/form-data
+produces:
+- application/json
+parameters:
+- name: Authorization
+  in: header
+  description : "Bearer ey....."
+  required: true
+  type: string
+#- in: body
+#  name: "body"
+#  description: "add testsuite detail"
+#  required: true
+#  schema:
+#    $ref: "#/definitions/FileDetail"
+- name: inputFile
+  in: formData
+  required: true
+  description: "something"
+  type: file
+- name: sheet
+  in : formData
+  required: true
+  type: string
+  description: "some"
+- name: selectedcase
+  in: formData
+  required: true
+  description: "something"
+  type: string
+- name: suitename
+  in : formData
+  required: true
+  type: string
+  description: "some"
+- name: exvalue
+  in : formData
+  required: true
+  type: string
+  description: "some"
+
+
+#  schema:
+#    $ref: "#/definitions/File"
+responses:
+  405:
+    description: "Invalid input"
+
+#definitions:
+#  File:
+#    properties:
+#      inputFile:
+#        type: file
+#  FileDetail:
+#    properties:
+#      sheet:
+#        type: string
+#        example: "sheet1"
+#      selectedcase:
+#        type: string
+#        example:  '1,2'
+#
+#      suitename:
+#        type: string
+#        example: "firstfile"
+#      exvalue:
+#        type: string
+#        example: "0"

@@ -12,6 +12,8 @@ from application.helper.runner_class import run_by_case_id, split_table
 from application.models.user import TestSuite, SparkJob, \
     TestCaseLog, TestCase, DbDetail
 from index import db
+from flasgger import swag_from
+
 
 
 def db_details_without_password(db_id):
@@ -32,6 +34,7 @@ def db_details_without_password(db_id):
 
 class TestCaseJob(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/testcasejob.yml')
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -93,15 +96,16 @@ class TestCaseSparkJob(Resource):
 
 
 class EditTestCase(Resource):
-    @jwt_required
-    def delete(self, case_id):
-        del_obj = TestCase.query.filter_by(test_case_id=case_id).one()
-        db.session.delete(del_obj)
-        db.session.commit()
-        return {"success": True,
-                "message": "Succesfully Deleted case {0}".format(case_id)}
+    # @jwt_required
+    # def delete(self, case_id):
+    #     del_obj = TestCase.query.filter_by(test_case_id=case_id).one()
+    #     db.session.delete(del_obj)
+    #     db.session.commit()
+    #     return {"success": True,
+    #             "message": "Succesfully Deleted case {0}".format(case_id)}
 
     @jwt_required
+    @swag_from('/application/apidocs/edittestcaseget.yml')
     def get(self, case_id):
         src_qry = ''
         des_qry = ''
@@ -156,6 +160,7 @@ class EditTestCase(Resource):
         return {"success": True, "res": payload}
 
     @jwt_required
+    @swag_from('/application/apidocs/edittestcaseput.yml')
     def put(self, case_id):
         parser = reqparse.RequestParser()
         parser.add_argument('src_table')

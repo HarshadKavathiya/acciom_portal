@@ -12,6 +12,10 @@ from application.common.exception import InvalidInput
 from application.models.user import User, RevokedTokenModel
 from index import app
 from index import db
+from flasgger import swag_from
+
+
+
 
 mail = Mail(app)
 parser = reqparse.RequestParser()
@@ -44,6 +48,7 @@ class Register(Resource):
                         help='This field cannot be blank',
                         required=True)
 
+    @swag_from('/application/apidocs/register.yml')
     def post(self):
         try:
             data = parser.parse_args()
@@ -72,8 +77,12 @@ class Register(Resource):
 
 
 class Login(Resource):
-
+    @swag_from('/application/apidocs/login.yml')
     def post(self):
+        # """
+        # file: /application/apidocs/login.yml
+        #
+        # """
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('email',
@@ -130,6 +139,7 @@ class Logout(Resource):
 
 
 class ResetPasswordEmail(Resource):
+    @swag_from('/application/apidocs/resetpasswordemail.yml')
     def post(self):  # api/resetpassword
         parser = reqparse.RequestParser()
         parser.add_argument('email',
@@ -192,6 +202,7 @@ def send_reset_email(user):
 
 class SettingNewPaswword(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/settingnewpassword.yml')
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('old_password',
@@ -233,6 +244,7 @@ def send_mail_to_verify(user):
 
 
 class VerifyAccount(Resource):
+    @swag_from('/application/apidocs/verify.yml')
     def get(self, token):
         user = User.verify_reset_token(token)
         if user is None:

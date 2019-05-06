@@ -14,13 +14,12 @@ from application.common.Response import success, error
 from application.helper.runner_class import run_by_case_id
 from application.helper.runner_class import split_db
 from application.models.user import TestSuite, TestCase, TestCaseLog, DbDetail
+from flasgger import swag_from
 
 parser = reqparse.RequestParser()
-parser.add_argument('sheet',
-                    help='This field cannot be blank',
-                    required=True)
+parser.add_argument('sheet')
 parser.add_argument('selectedcase',
-                    help='this field is required',
+                    help='this field is requiredtfuhys',
                     required=True)
 parser.add_argument('suitename',
                     help='this field is required',
@@ -39,9 +38,11 @@ def args_as_list(s):
 
 class TestSuites(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/test_suitepost.yml',methods=['POST'])
     def post(self):
         current_user = get_jwt_identity()
         data = parser.parse_args()
+        app.logger.debug(data)
         sheet = data['sheet']
         file = request.files['inputFile']
         suite_name = data['suitename']
@@ -135,6 +136,7 @@ class TestSuites(Resource):
         app.logger.debug('data saved to database')
         return {'message': 'data saved to database'}
 
+    @swag_from('/application/apidocs/test_suiteget.yml')
     def get(self, user_id):
         try:
             return {"suites": TestSuite.return_all(user_id),
@@ -145,6 +147,7 @@ class TestSuites(Resource):
 
 
 class TestCaseLogDetail(Resource):
+    @swag_from('/application/apidocs/testcaselogdetail.yml')
     @jwt_required
     def get(self, test_case_log_id):
         return {"test_case_log": TestCaseLog.return_all_log(test_case_log_id),
@@ -152,6 +155,7 @@ class TestCaseLogDetail(Resource):
 
 
 class ExportTestLog(Resource):
+    @swag_from('/application/apidocs/exporttestlog.yml')
     def get(self, case_log_id):
         case_log = TestCaseLog.query.filter_by(
             test_case_log_id=case_log_id).first()
@@ -205,6 +209,7 @@ class ConnectionDetails(Resource):
     '''
 
     @jwt_required
+    @swag_from('/application/apidocs/connectiondetails.yml')
     def get(self, suite_id):
         try:
             all_connection = []
@@ -226,6 +231,7 @@ class ConnectionDetails(Resource):
 
 class SelectConnection(Resource):
     @jwt_required
+    @swag_from('/application/apidocs/selectconnection.yml')
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -254,5 +260,5 @@ class SelectConnection(Resource):
                     testcase.save_to_db()
             return success({"success": True, "message": "Updated Details"})
         except Exception as e:
-            app.loggger.error(e)
+            # app.loggger.error(e)
             return error({"success": False, "message": str(e)})
