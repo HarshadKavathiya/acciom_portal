@@ -49,20 +49,17 @@ def null_check(target_cursor, target_table, column, test_queries):
                 sub_query = qry_generator(col_list, target_table)
                 target_cursor.execute(sub_query)
             else:
-                app.logger.debug("came here")
                 sub_query = qry_generator(column, target_table)
                 target_cursor.execute(sub_query)
         else:
             target_query = test_queries["targetqry"]
             newlst.append(target_query)
-            print(newlst[0])
             target_cursor.execute(newlst[0])
 
         all_results = []
 
         for row in target_cursor:
             all_results.append(list(map(str, row)))
-        print(type(all_results))
 
         if all_results:
             all_results.insert(0, col_list)
