@@ -107,26 +107,6 @@ class EditTestCase(Resource):
 
     @jwt_required
     def get(self, case_id):
-        """
-            This is an example
-                ---
-                tags:
-                  - restful
-                parameters:
-                  - in: path
-                    name: case_id
-                    required: true
-                    description: The ID of the case_log_id, try 10!
-                    type: int
-
-                responses:
-                  200:
-                    description: The task data
-
-
-            """
-        src_qry = ''
-        des_qry = ''
         newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
         tabledetail = obj.test_case_detail

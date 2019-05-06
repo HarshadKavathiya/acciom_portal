@@ -30,6 +30,15 @@ def save_case_log(test_case_id, execution_status,
                   src_execution_log,
                   des_execution_log,
                   error_log):
+    '''
+
+    :param test_case_id: test_case_id of test
+    :param execution_status: status can be (1=pass) (0=fail)
+    :param src_execution_log: src execution log in text format
+    :param des_execution_log: des execution log in text
+    :param error_log: error log
+    :return: save test_case_log .
+    '''
     temp = TestCaseLog(test_case_id=test_case_id,
                        execution_status=execution_status,
                        src_execution_log=src_execution_log,

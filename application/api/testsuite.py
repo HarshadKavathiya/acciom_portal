@@ -42,6 +42,7 @@ class TestSuites(Resource):
     def post(self):
         current_user = get_jwt_identity()
         data = parser.parse_args()
+        app.logger.debug(data)
         sheet = data['sheet']
         file = request.files['inputFile']
         suite_name = data['suitename']
@@ -62,6 +63,7 @@ class TestSuites(Resource):
                                   for x in range(2, ws.max_row)])
         data = parser.parse_args()
         test_case_list = str(data['selectedcase']).split(",")
+        app.logger.debug(test_case_list)
         i = 0
         for j in range(ws.max_row - 1):
             if temp_test1[j] in test_case_list:
