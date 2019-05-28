@@ -1,7 +1,7 @@
-#Acciom Portal
+# Acciom Portal
 Acciom is a Data quality tool
 
-#Prerequisites
+# Prerequisites
 Softwares to be Installed for Acciom:
 1)python 3.7.3
 2)Spark 2.4.7
@@ -41,7 +41,7 @@ Download (mysql-installer-community-8.0.16.0.msi) from https://dev.mysql.com/dow
 
 
 
-#Installing
+# Installing
 
 Steps for Setup Acciom in System (Ubuntu):
 RUN mkdir /acciom  <br>
