@@ -2,7 +2,7 @@
 Acciom is a Data quality tool
 
 # Prerequisites
-Softwares to be Installed for Acciom:
+Softwares to be Installed for Acciom:<br>
 1)python 3.7.3 <br>
 2)Spark 2.4.7 <br>
 3)mysql 8.0.16 <br>
@@ -53,7 +53,7 @@ go to system env variable click path and add :  C:\ProgramFiles(x86)\java\jdk1.8
 
 # Installing
 
-Steps for Setup Acciom in System (Ubuntu):<br>
+#### Steps for Setup Acciom in System (Ubuntu):<br>
 RUN mkdir /acciom  <br>
 WORKDIR /acciom <br>
 RUN mkdir logs/  <br>
@@ -63,7 +63,7 @@ export FLASK_APP="manage.py" <br>
 flask db init <br>
 Python app.py
 
-Steps for Setup Acciom in System (Windows):<br>
+#### Steps for Setup Acciom in System (Windows):<br>
 RUN mkdir /acciom  <br>
 WORKDIR /acciom  <br>
 RUN mkdir logs/ <br>
