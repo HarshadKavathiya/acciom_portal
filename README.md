@@ -1,7 +1,7 @@
 # Acciom Portal
 Acciom is a Data quality tool
 
-# Prerequisites
+## Prerequisites
 Softwares to be Installed for Acciom:<br>
 1)python 3.7.3 <br>
 2)Spark 2.4.7 <br>
@@ -16,7 +16,7 @@ Download python 3 from https://www.python.org/downloads/
 
 #### 2.Installing Spark:(Ubuntu)
 wget http://mirrors.estointernet.in/apache/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz
-RUN tar xvf spark-2.4.0-bin-hadoop2.7.tgz <br>
+*) RUN tar xvf spark-2.4.0-bin-hadoop2.7.tgz <br>
 RUN mv spark-2.4.0-bin-hadoop2.7 /usr/local/ <br>
 RUN rm spark-2.4.0-bin-hadoop2.7.tgz  <br>
 RUN ln -s /usr/local/spark-2.4.0-bin-hadoop2.7/ /usr/local/spark
@@ -51,17 +51,17 @@ go to system env variable click path and add :  C:\ProgramFiles(x86)\java\jdk1.8
 
 
 
-# Installing
+## Installing
 
 #### Steps for Setup Acciom in System (Ubuntu):<br>
-RUN mkdir /acciom  <br>
-WORKDIR /acciom <br>
-RUN mkdir logs/  <br>
-Clone Acciom repository in /acciom directory <br>
-RUN pip3 install -r requirements.txt <br>
-export FLASK_APP="manage.py" <br>
-flask db init <br>
-Python app.py
+* RUN mkdir /acciom  <br>
+* WORKDIR /acciom <br>
+* RUN mkdir logs/  <br>
+* Clone Acciom repository in /acciom directory <br>
+* RUN pip3 install -r  requirements.txt <br>
+* export FLASK_APP="manage.py" <br>
+* flask db init <br>
+* Python app.py
 
 #### Steps for Setup Acciom in System (Windows):<br>
 RUN mkdir /acciom  <br>
