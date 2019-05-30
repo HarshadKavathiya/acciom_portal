@@ -1,15 +1,15 @@
 # Acciom Portal
 Acciom is a Data quality tool
 
-## Prerequisites
-Softwares to be Installed for Acciom:<br>
-1)python 3.7.3 <br>
-2)Spark 2.4.7 <br>
-3)mysql 8.0.16 <br>
-4)java <br>
+## Windows Installation
 
-###Ubuntu Installation
-For Ubuntu Installation:<link
+For Windows Installation click on the link:
 
-###Windows Installation<link
+https://github.com/HarshadKavathiya/acciom_portal/wiki/Windows-Installation-Steps
+## Ubuntu Installation
+
+For Ubuntu Installation click on the link:
+
+https://github.com/HarshadKavathiya/acciom_portal/wiki/Ubuntu-Installation-Steps
+
 
