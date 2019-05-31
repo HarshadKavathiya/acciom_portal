@@ -1,5 +1,4 @@
 from flasgger import swag_from
-from flask import current_app as app
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource, reqparse
 
@@ -98,7 +97,6 @@ class DbDetails(Resource):
 
 
 def create_dbconnection(current_user, db_type, db, hostname, username):
-    app.logger.debug("inside db details ")
     temp = DbDetail.query.filter_by(user_id=current_user,
                                     db_type=db_type,
                                     db_name=db,

@@ -33,8 +33,6 @@ def qry_generator(columns, target_table):
 def duplication(target_cursor, target_table, column_name, test_queries):
     col_list = []
     newlst = []
-    app.logger.debug(column_name)
-    app.logger.debug(test_queries)
     try:
         target_cursor.execute(
             "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS"
@@ -55,24 +53,19 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             target_query = test_queries["targetqry"]
             newlst.append(target_query)
             custom_query = newlst[0]
-        app.logger.debug(custom_query)
 
         target_cursor.execute(custom_query)
         all_results = []
         for row in target_cursor:
-            app.logger.debug(row)
             all_results.append(list(map(str, row)))
         import json
         if all_results:
             all_results.insert(0, column_name)
             res1 = json.dumps(all_results)
-            app.logger.debug(res1)
 
-            app.logger.debug("Duplication Test Executed")
             return {"res": 0, "src_value": "src_val_not required",
                     "des_value": res1}
         else:
-            app.logger.debug("Duplication Test Executed")
             return {"res": 1, "src_value": "src_value not require",
                     "des_value": None}
 

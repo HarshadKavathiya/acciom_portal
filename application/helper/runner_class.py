@@ -1,7 +1,5 @@
 import ast
 
-from flask import current_app as app
-
 from application.common.dbconnect import source_db, dest_db
 from application.helper.countcheck import count_check
 from application.helper.datavalidation import datavalidation
@@ -148,7 +146,6 @@ def run_test(case_id):
 
     if case_id.test_status == 3:
         if case_id.test_name == 'CountCheck':  # 1st Test
-            app.logger.debug("count check start")
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
             source_cursor = source_db(src_Detail['db_name'],
@@ -170,7 +167,6 @@ def run_test(case_id):
                                  query)
 
         if case_id.test_name == 'NullCheck':  # 2nd Test
-            app.logger.debug("Null check start")
             target_Detail = db_details(case_id.target_db_id)
             target_cursor = dest_db(target_Detail['db_name'],
                                     target_Detail['db_type'].lower(),
@@ -184,7 +180,6 @@ def run_test(case_id):
                                 column, query)
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
-            app.logger.debug("Duplicate check start")
             target_Detail = db_details(case_id.target_db_id)
             target_cursor = dest_db(target_Detail['db_name'],
                                     target_Detail['db_type'].lower(),
@@ -211,7 +206,6 @@ def run_test(case_id):
             result = {'res': 3, "src_value": "none", "des_value": "none"}
 
         if case_id.test_name == 'DDLCheck':
-            app.logger.info("DDL Check start")
             table_name = split_table(case_id.test_case_detail)
             src_Detail = db_details(case_id.src_db_id)
             target_Detail = db_details(case_id.target_db_id)
