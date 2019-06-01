@@ -1,0 +1,35 @@
+tags:
+- "User"
+summary: "user registration"
+description: "this endpoint uses a post request"
+operationId: "register"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "add registeration detail"
+  required: true
+  schema:
+    $ref: "#/definitions/Register"
+responses:
+  405:
+    description: "Invalid input"
+definitions:
+  Register:
+    type: "object"
+    properties:
+        email:
+          type: "string"
+          example: "roja.t@accionlabs.com"
+        first_name:
+          type: "string"
+          example: "roja"
+        last_name:
+          type: "string"
+          example: "t"
+        password:
+          type: "string"
+          example: "4731"

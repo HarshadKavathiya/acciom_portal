@@ -1,7 +1,7 @@
 <app-navbarlogout></app-navbarlogout>
 <mat-card class="card">
   <div class="droppanel">
-    <mat-accordion *ngFor="let i of all_test_suite ;let x = index ">
+    <mat-accordion *ngFor="let i of all_test_suite  ;let x = index">
       <mat-expansion-panel class="dropdown" 
         (opened)="suitestatusopen(x)"
         (closed)="suitestatusclose(x)"
@@ -17,9 +17,14 @@
             class="panel_title-outer"> 
               Quality Suite{{x+1}}
           </mat-panel-title>
+
           <mat-panel-description 
             class="panel-desc-outer"
-            [@divState]= "state">
+          >
+          <div>
+
+            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections</button>
+          </div>
             <div class="paneldesc"> 
               {{i.excel_name}},<div class="bold">Uploaded At:</div> {{ i.created | date:'medium'}}
             </div>
@@ -120,8 +125,6 @@
                     </tr>
                     <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log; let run_id=index ">
                       <td>{{run_id+1}}
-                        <!-- {{case_log.test_case_id}} -->
-
                       </td>
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
@@ -139,6 +142,10 @@
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 4">Error
                       </td>
+                      <td class="tableheader-test-execution"
+                      [ngStyle]="{'background-color':getcolor(4)}"
+                      *ngIf="case_log.test_execution_status == null">Error
+                      </td>
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 3">Waiting</td>
@@ -154,7 +161,6 @@
           </div>
           
 
-      <!--  this has the logic to write inside the expansion.-->
     </mat-expansion-panel>
     <!--  first expansion got closed here.-->
   </mat-accordion>

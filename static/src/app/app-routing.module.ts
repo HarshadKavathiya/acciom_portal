@@ -9,22 +9,35 @@ import { DbdetailsComponent } from './dbdetails/dbdetails.component';
 import { AuthGuard } from "./guards/auth.guard";
 import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
 import {DashboardComponent} from './dashboard/dashboard.component'
+import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
+import { UpdatepasswordComponent } from './updatepassword/updatepassword.component';
+import { ChangepasswordComponent } from './changepassword/changepassword.component';
+import { VerifyuserComponent } from './verifyuser/verifyuser.component';
+import { AfterverifyComponent } from './afterverify/afterverify.component';
+import { ViewdbComponent } from './viewdb/viewdb.component';
+import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'/startup', pathMatch:'full'},
   {path:'*', component:HomeComponent},
-  {path:'home',component:HomeComponent,canActivate:[AuthGuard], canDeactivate: [CanDeactivateGuard]},
+  {path:'home',component:HomeComponent,canActivate:[AuthGuard]},
   {path:'login',component:LoginComponent},
   {path:'register',component:RegisterComponent},
   {path: 'user',component:UserdetailComponent,canActivate:[AuthGuard]},
   {path:'startup',component:StartupComponent,canActivate:[AuthGuard]},
-  {path:'db',component:DbdetailsComponent,canActivate:[AuthGuard]},
+  {path:'add-db',component:DbdetailsComponent,canActivate:[AuthGuard]},
   {path:'dashboard',component:DashboardComponent},
+  {path:'forgot-password',component:ForgotpasswordComponent},
+  {path:'changepassword',component:ChangepasswordComponent},
+  {path:'reset-password/:token',component:UpdatepasswordComponent},
+  {path:'Verifyuser',component:VerifyuserComponent},
+  {path:'verified/:token',component:AfterverifyComponent},
+  {
+    path:'Viewdb',component:ViewdbComponent},
+    {path:'editdb/:db_id',component:EditdbdetailComponent},
   {path:'**',redirectTo:'/startup', pathMatch: 'full' },
- 
-
 ];
-
+// canDeactivate: [CanDeactivateGuard]
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

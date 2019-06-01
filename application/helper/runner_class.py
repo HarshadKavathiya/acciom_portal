@@ -1,4 +1,4 @@
-from flask import current_app as app
+import ast
 
 from application.common.dbconnect import source_db, dest_db
 from application.helper.countcheck import count_check
@@ -6,9 +6,8 @@ from application.helper.datavalidation import datavalidation
 from application.helper.ddlcheck import ddl_check
 from application.helper.duplication import duplication
 from application.helper.nullcheck import null_check
+from application.models.user import DbDetail
 from application.models.user import SparkJob, TestCaseLog, TestCase
-from db_config import (SOURCE_DB_USERNAME, SOURCE_DB_PASSWORD, SOURCE_DB_HOSTNAME, \
-                       DEST_DB_USERNAME, DEST_DB_PASSWORD, DEST_DB_HOSTNAME)
 
 
 def split_table(table_name):
@@ -16,10 +15,12 @@ def split_table(table_name):
     :param table_name: gets table_src_target value stored in TestSuite table
     :return: returns a list consist of source and destination db.
     """
-
-    lst1 = []
-    lst = table_name.strip(';').split(':')
-    lst1.append(lst)
+    table_names = ast.literal_eval(table_name)
+    lst1 = {}
+    tables = table_names["table"]
+    for key in tables:
+        lst1['src_table'] = key
+        lst1['target_table'] = tables[key]
     return lst1
 
 
@@ -27,6 +28,15 @@ def save_case_log(test_case_id, execution_status,
                   src_execution_log,
                   des_execution_log,
                   error_log):
+    '''
+
+    :param test_case_id: test_case_id of test
+    :param execution_status: status can be (1=pass) (0=fail)
+    :param src_execution_log: src execution log in text format
+    :param des_execution_log: des execution log in text
+    :param error_log: error log
+    :return: save test_case_log .
+    '''
     temp = TestCaseLog(test_case_id=test_case_id,
                        execution_status=execution_status,
                        src_execution_log=src_execution_log,
@@ -38,7 +48,6 @@ def save_case_log(test_case_id, execution_status,
 
 def save_test_status(test_case_id, status):
     """
-
     :param test_case_id : utils case object.
     :param status: test_status of Testcase object
     :return: just store value in db.
@@ -48,20 +57,72 @@ def save_test_status(test_case_id, status):
     return True
 
 
+def split_query(qry):
+    '''
+
+    :param qry: custom query (in json )
+    :return: returns source and target query
+    '''
+    res = {}
+    split_qry = qry.split(';')
+    new_list = [i.split(':') for i in split_qry]
+    res['src_qry'] = new_list[0][1]
+    res['target_qry'] = new_list[1][1]
+    return
+
+
+def get_query(queries):
+    q = ast.literal_eval(queries)
+    query = q["query"]
+    return query
+
+
+def get_column(columns):
+    '''
+    :param columns:
+    :return: list of target columns only as a list used in case of nullcheck
+    and duplicate check
+    '''
+    c = ast.literal_eval(columns)
+    column = c["column"]
+    column = list(column.values())
+    return column
+
+
+def db_details(db_id):
+    db_list = {}
+    """
+    :return: returns the db_type,db_name,db_username,
+    db_hostname,db_password based on
+    db_id (foreign Key)
+    """
+    db_obj = DbDetail.query.filter_by(db_id=db_id).first()
+    x = db_obj.db_password.encode()
+    decrypted = DbDetail.decrypt(x)
+    newpassword = bytes.decode(decrypted)
+    db_list['db_id'] = db_obj.db_id
+    db_list['db_type'] = db_obj.db_type
+    db_list['db_name'] = db_obj.db_name
+    db_list['db_hostname'] = db_obj.db_hostname
+    db_list['db_username'] = db_obj.db_username
+    db_list['db_password'] = newpassword
+    return db_list
+
+
 def split_db(test_db_detail):
     lst1 = []
     lst2 = []
-
-    strip_db_detail = test_db_detail.strip("@'").split("'@")
-
+    strip_db_detail = test_db_detail.split(";")
     for i in range(len(strip_db_detail)):
-        lst1.append(strip_db_detail[i].split(':'))
-
-    lst2.append(lst1[2][1].strip('\n'))
-    lst2.append(lst1[4][1].strip('\n'))
-    lst2.append(lst1[0][1].strip('\n'))
-    lst2.append(lst1[3][1].strip('\n'))
-
+        lst1.append(strip_db_detail[i].split(':', 1))
+    lst2.append(lst1[2][1])
+    lst2.append(lst1[5][1])
+    lst2.append(lst1[0][1])
+    lst2.append(lst1[4][1])
+    lst2.append(lst1[1][1])
+    lst2.append(lst1[6][1])
+    lst2.append(lst1[3][1])
+    lst2.append(lst1[7][1])
     return lst2
 
 
@@ -75,21 +136,6 @@ def run_by_case_id(test_case_id):
     return True
 
 
-def get_count(src_db, src_tables, src_db_type, target_db, target_table,
-              target_db_type):
-    source_cursor = source_db(src_db, src_db_type).cursor()
-    target_cursor = dest_db(target_db, target_db_type).cursor()
-    source_cursor.execute('SELECT COUNT(*) FROM {}'.format(src_tables))
-    target_cursor.execute('SELECT COUNT(*) FROM {}'.format(target_table))
-    for row in source_cursor:
-        for x in row:
-            pass
-    for row in target_cursor:
-        for y in row:
-            pass
-    return max(x, y)
-
-
 def run_test(case_id):
     """
     :param case_id: case_id is test_case_id
@@ -100,62 +146,59 @@ def run_test(case_id):
 
     if case_id.test_status == 3:
         if case_id.test_name == 'CountCheck':  # 1st Test
-            app.logger.debug("count check start")
-            db_type = split_db(case_id.test_detail)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
-            table_name = split_table(case_id.table_src_target)
+            src_Detail = db_details(case_id.src_db_id)
+            target_Detail = db_details(case_id.target_db_id)
+            source_cursor = source_db(src_Detail['db_name'],
+                                      src_Detail['db_type'].lower(),
+                                      src_Detail['db_hostname'].lower(),
+                                      src_Detail['db_username'],
+                                      src_Detail['db_password']).cursor()
+            target_cursor = dest_db(target_Detail['db_name'],
+                                    target_Detail['db_type'].lower(),
+                                    target_Detail['db_hostname'].lower(),
+                                    target_Detail['db_username'],
+                                    target_Detail['db_password']).cursor()
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
             result = count_check(source_cursor,
                                  target_cursor,
-                                 table_name[0][0],
-                                 table_name[0][1], case_id.test_queries)
+                                 table_name['src_table'],
+                                 table_name['target_table'],
+                                 query)
 
         if case_id.test_name == 'NullCheck':  # 2nd Test
-            app.logger.debug("Null check start")
-            db_type = split_db(case_id.test_detail)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
-            table_name = split_table(case_id.table_src_target)
-            result = null_check(target_cursor, table_name[0][1],
-                                case_id.test_column, case_id.test_queries)
+            target_Detail = db_details(case_id.target_db_id)
+            target_cursor = dest_db(target_Detail['db_name'],
+                                    target_Detail['db_type'].lower(),
+                                    target_Detail['db_hostname'].lower(),
+                                    target_Detail['db_username'],
+                                    target_Detail['db_password']).cursor()
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
+            column = get_column(case_id.test_case_detail)
+            result = null_check(target_cursor, table_name['target_table'],
+                                column, query)
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
-            app.logger.debug("Duplicate check start")
-            db_type = split_db(case_id.test_detail)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
-            table_name = split_table(case_id.table_src_target)
-            result = duplication(target_cursor=target_cursor,
-                                 target_table=table_name[0][1],
-                                 column_name=case_id.test_column,
-                                 test_queries=case_id.test_queries)
+            target_Detail = db_details(case_id.target_db_id)
+            target_cursor = dest_db(target_Detail['db_name'],
+                                    target_Detail['db_type'].lower(),
+                                    target_Detail['db_hostname'].lower(),
+                                    target_Detail['db_username'],
+                                    target_Detail['db_password']).cursor()
+            table_name = split_table(case_id.test_case_detail)
+            query = get_query(case_id.test_case_detail)
+            column = get_column(case_id.test_case_detail)
+            result = duplication(target_cursor,
+                                 table_name['target_table'],
+                                 column,
+                                 query)
         if case_id.test_name == 'Datavalidation':
-            src_user_name = SOURCE_DB_USERNAME
-            src_user_password = SOURCE_DB_PASSWORD
-            src_hostname = SOURCE_DB_HOSTNAME
-            des_user_name = DEST_DB_USERNAME
-            des_user_password = DEST_DB_PASSWORD
-            des_hostname = DEST_DB_HOSTNAME
-            db_type = split_db(case_id.test_detail)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            table_name = split_table(case_id.table_src_target)
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
-            table_name = split_table(case_id.table_src_target)
-            print(db_type[0][1:], table_name[0][0], db_type[2][1:],
-                  db_type[1][1:], table_name[0][1], db_type[3][1:])
-            row_count = get_count(db_type[0][1:], table_name[0][0],
-                                  db_type[2][1:], db_type[1][1:],
-                                  table_name[0][1],
-                                  db_type[3][1:])
-            if row_count < 10000:
-                limit = 10000
-            elif row_count >= 10000 and row_count < 100000:
-                limit = 50000
-            else:
-                limit = 200000
-
+            table_name = split_table(case_id.test_case_detail)
             spark_job = SparkJob()
             spark_job.save_to_db()
             spark_job.test_case_log_id = case_log.test_case_log_id
-            spark_job.save_to_db()  # TODO:add memory
+            spark_job.save_to_db()
 
             spark_job.job_id = 1
             spark_job.status = "any"
@@ -163,13 +206,23 @@ def run_test(case_id):
             result = {'res': 3, "src_value": "none", "des_value": "none"}
 
         if case_id.test_name == 'DDLCheck':
-            app.logger.info("DDL Check start")
-            db_type = split_db(case_id.test_detail)
-            table_name = split_table(case_id.table_src_target)
-            source_cursor = source_db(db_type[0][1:], db_type[2][1:]).cursor()
-            target_cursor = dest_db(db_type[1][1:], db_type[3][1:]).cursor()
-            result = ddl_check(source_cursor, target_cursor, table_name[0][0],
-                               table_name[0][1])
+            table_name = split_table(case_id.test_case_detail)
+            src_Detail = db_details(case_id.src_db_id)
+            target_Detail = db_details(case_id.target_db_id)
+            source_cursor = source_db(src_Detail['db_name'],
+                                      src_Detail['db_type'].lower(),
+                                      src_Detail['db_hostname'].lower(),
+                                      src_Detail['db_username'],
+                                      src_Detail['db_password']).cursor()
+            target_cursor = dest_db(target_Detail['db_name'],
+                                    target_Detail['db_type'].lower(),
+                                    target_Detail['db_hostname'].lower(),
+                                    target_Detail['db_username'],
+                                    target_Detail['db_password']).cursor()
+            result = ddl_check(source_cursor,
+                               target_cursor,
+                               table_name['src_table'],
+                               table_name['target_table'])
 
         if result['res'] == 1:
             save_test_status(case_id, 1)  # TestCase object.
@@ -187,13 +240,21 @@ def run_test(case_id):
             case_log.error_log = None
             case_log.save_to_db()
             if case_id.test_name == 'Datavalidation':
-                datavalidation(db_type[0][1:], table_name[0][0], db_type[2][1:],
-                               db_type[1][1:], table_name[0][1], db_type[3][1:],
-                               spark_job.spark_job_id, row_count, limit, src_user_name,
-                               src_user_password, src_hostname,
-                               des_user_name, des_user_password, des_hostname)
-
-
+                src_Detail = db_details(case_id.src_db_id)
+                target_Detail = db_details(case_id.target_db_id)
+                datavalidation(src_Detail['db_name'],
+                               table_name['src_table'],
+                               src_Detail['db_type'].lower(),
+                               target_Detail['db_name'],
+                               table_name['target_table'],
+                               target_Detail['db_type'].lower(),
+                               spark_job.spark_job_id,
+                               src_Detail['db_username'],
+                               src_Detail['db_password'],
+                               src_Detail['db_hostname'],
+                               target_Detail['db_username'],
+                               target_Detail['db_password'],
+                               target_Detail['db_hostname'])
         elif result['res'] == 0:
             save_test_status(case_id, 2)
             case_log.execution_status = 2
@@ -215,5 +276,3 @@ def run_test(case_id):
 # ToNote:
 # status = {0: "new", 1: "pass", 2: "fail", 3: "in progress", 4: "error"}
 # test_case_result = {1: "pass", 0: "fail", 2: "error"}
-# select column_name from information_schema
-# .columns where table_name='Inventory';

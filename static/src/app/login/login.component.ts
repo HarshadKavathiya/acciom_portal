@@ -11,7 +11,7 @@ import Swal from 'sweetalert2'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  createForm:FormGroup;
+  createForm:FormGroup; 
 
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
     private router:Router) {
@@ -29,26 +29,29 @@ export class LoginComponent implements OnInit {
 
   LogIn()
 {
-  console.log(this.createForm.value);
   this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
     if(data.success==true){
       Swal("success",data.message,"success")
-
-      console.log(data.expires_time)
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }
-
-   
  },err=>{
    console.log(err.success)
+   if(err.error.message == 'Verify User'){
+     console.log("go to some page")
+     
+     this.router.navigate(['Verifyuser'])
+   }
+   else{
    Swal("error",err.error.message,"error")
-  
+   }
   });
 
 
 }
-
+forgot_password(){
+  this.router.navigate(['forgot-password']);
+}
 signup(){
   this.router.navigate(['register'])
 }

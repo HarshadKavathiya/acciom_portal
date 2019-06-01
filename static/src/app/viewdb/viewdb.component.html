@@ -1,0 +1,19 @@
+<app-navbarlogout></app-navbarlogout>
+<div class="add-btn"> <div><button class="btn-add" mat-button (click)="add_db()" >Add New Connection</button>
+</div></div>
+<mat-card class="card">
+  
+<div class="list">
+        
+        <div class="list-db" *ngFor=" let i of db_connection;let x = index">
+        <div >{{x+1}}</div>
+        <div *ngIf="i.connection_name === null">Connection{{x+1}}</div>
+         <div  *ngIf="i.connection_name != null">{{i.connection_name}}</div>  
+        <div > {{ i.db_hostname}}</div>
+        <div> {{ i.db_name}}</div>
+        <div > {{ i.db_type}}</div>
+        <div><button (click)="edit_detail(i.db_id)" mat-button color="warn">Edit</button></div>
+        </div> 
+</div> 
+
+</mat-card>

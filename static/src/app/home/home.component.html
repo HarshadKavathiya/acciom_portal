@@ -6,9 +6,14 @@
             <div class="card-title">           
                 <img class="upload-image" src="/assets/images/group-3.png"/>
                     <mat-card-title class="title">
-                        <div class="title-content"> Downlaod Sample File <button  mat-button class="btndownlaod1" color="accent" (click)="downloadFile()">Here!</button> </div>
+                        <div class="title-content"> Download Sample File 
+                            <button  mat-button class="btndownlaod1" 
+                            color="accent" (click)="downloadFile()">Here!
+                            </button> </div>
                     </mat-card-title>
-                        <button mat-button class="closebtn" (click)="closed()">
+                        <button 
+                        mat-button class="closebtn" 
+                        (click)="closed()">
                             <i class="material-icons">close
                             </i>
                         </button>
@@ -40,7 +45,10 @@
                 <div class="btn-content">Next</div>
             </button>
         </mat-card>
+
     </div>
+    <!-- <mat-spinner></mat-spinner> -->
+
     <div *ngIf="show1">
         <mat-card class="result-card">
             <p class="result">{{ msg }}</p>
@@ -55,9 +63,11 @@
                     <tr *ngFor=" let case of all_cases" class="cright">
 
                         <td >{{ case.name }}</td>
-                        <td>   <input class="form-check-input" 
-                            value="{{ case.name }}" 
-                            [(ngModel)]="case.selected"  type="checkbox" (change)="selectBadge($event, case.name)" >
+                        <td>  
+                            <input  
+                            value="{{ case.id }}" 
+                            [(ngModel)]="case.selected"  type="checkbox" (change)="selectBadge($event, case.id)">
+                        
                         </td>
                     </tr>
                 </div>
@@ -70,7 +80,6 @@
                 <h4>Test Cases To be Tested</h4>
                 </div>
             </table>
-            <!-- <div *ngFor="let x of selectedValue "> {{ x.testCases }}</div> -->
         </mat-card>
     </div>
         

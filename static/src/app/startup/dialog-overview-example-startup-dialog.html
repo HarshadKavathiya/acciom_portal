@@ -141,7 +141,17 @@ opacity: 0.9;
                                     </tr>
                             </table>
                      </div>
+
             <div class="test-result">Both Source and Target records count matches</div>
+            <table  cellspacing=12 class="table1" >
+                    <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
+                        <th>Target Table-{{ data.target_table }}</th>
+                    </tr>
+                    <tr class="tabledata">
+                        <td>{{data.source_log}}</td>
+                        <td>{{data.destination_log}}</td>
+                    </tr>
+                </table >
         </div>
     </div>
 
@@ -232,8 +242,9 @@ opacity: 0.9;
                  <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
 
                 </div>
-            <div class="test-result">Target Rows mismatch with Source</div>
         </div>
+        <!-- <div *ngIf="data.show_src_table"> -->
+        <div class="test-result">Target Rows mismatch with Source</div>
         <table class="table1">
             <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_src">
@@ -244,6 +255,21 @@ opacity: 0.9;
                 <div>{{z}}</div></td>
             </tr>
         </table>
+    <!-- </div> -->
+    <!-- <div *ngIf="data.show_dest_table"> -->
+        <div class="test-result">Source Rows mismatch with Target</div>
+
+        <table class="table1">
+            <tr cellspacing=2 class="tableheader">
+                <th *ngFor="let i of data.key_dest">
+                    <div>{{i}}</div></th>
+            </tr>
+            <tr *ngFor="let y of data.value_dest" cellspacing=2>
+                <td *ngFor= "let z of y" cellspacing=2>
+                <div>{{z}}</div></td>
+            </tr>
+        </table>
+    <!-- </div> -->
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.datavalidation_pass">
             <div class="test-heading">Data Validation</div>
@@ -305,7 +331,7 @@ opacity: 0.9;
 </div>
 <div mat-dialog-actions class="close">
         <a mat-flat-button  
-        class="export-btn" [disabled]="data.execution_status === 1"
+        class="export-btn" *ngIf="data.execution_status !== 1"
         href="{{onexport(data.case_log_id)}}" >Export </a>
 
     </div>

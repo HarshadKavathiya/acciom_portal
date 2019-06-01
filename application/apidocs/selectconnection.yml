@@ -1,0 +1,38 @@
+
+tags:
+- "Acciom"
+summary: "select Connection"
+description: "this endpoint uses a post request"
+operationId: "selectconnection"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- name: "Authorization"
+  in: "header"
+  description : "Bearer ey....."
+  required: true
+  type: "string"
+- in: "body"
+  name: "body"
+  description: "select db"
+  required: true
+  schema:
+    $ref: "#/definitions/Selectdb"
+responses:
+  405:
+    description: "Invalid input"
+definitions:
+  Selectdb:
+    type: "object"
+    properties:
+      connection_type:
+        type: "string"
+        example: "source"
+      case_id:
+        type: "string"
+        example: "[1,4]"
+      db_id:
+        type: "string"
+        example: "4"

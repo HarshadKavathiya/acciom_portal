@@ -2,13 +2,12 @@ import { Component, OnInit,OnChanges,Inject, SimpleChanges,ChangeDetectionStrate
 import { Routes, RouterModule, Router } from '@angular/router';
 import {UploadserviceService} from '../uploadservice.service';
 import Swal from 'sweetalert2'
-import {trigger,state,style,transition,animate  } from '@angular/animations'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ExcelService} from '../services/excel.service';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms'
 
 
 export interface DialogData {
-  
   source_log: string;
   destination_countcheck:boolean;
   countcheck:boolean;
@@ -20,13 +19,16 @@ export interface DialogData {
   ddlcheck:boolean;
   key_src:Array<any>;
   value_src:Array<any>;
+  key_dest:Array<any>;
+  value_dest:Array<any>;
   case_log_id:number;
   execution_status:number;
   src_value_dataduplication:Array<any>;
   src_table:string;
   target_table:string;
-  
   value_src_nullcheck:Array<any>;
+  show_src_table:boolean;
+  show_dest_table:boolean;
 }
 export interface DialogDataCaseDetail {
  src_db_name:string;
@@ -41,37 +43,22 @@ export interface DialogDataCaseDetail {
  src_qry:String;
  des_qry:String;
  casename:string;
+ case_id:number;
 }
 
+export interface DialogManageConnection{
+  connections:Array<any>;
+  test_case:Array<any>;
+}
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { $ } from 'protractor';
-
 @Component({
   selector: 'app-startup',
   templateUrl: './startup.component.html',
   styleUrls: ['./startup.component.css'],
   changeDetection: ChangeDetectionStrategy.Default,
-  animations:[
-    trigger('divState',[
-      state('normal',style({
-        'background-color':'transarent',
-        transform:'translateX(0px)'
-      })),
-      state('high',
-      style({
-        backgroundColor:'black',
-        transform:'translateX(0px)'
-      })),
-      transition('normal => high', [
-        style({transform: 'translateX(-100%)'}),
-        animate(100)
-    ]),
-     
-    ])
-  ]
+  
 })
-
-
 export class StartupComponent implements OnInit {
   panelOpenState = false;
   id:any;
@@ -95,9 +82,13 @@ export class StartupComponent implements OnInit {
   ddlcheck:boolean=true;
   keys_src=[]
   value_src=[]
+  keys_dest =[]
+  value_dest=[]
   first_obj=[]
+  first_obj1=[]
   value_src_nullcheck=[]
   parsed_obj=""
+  parsed_obj1=""
   stilload=false;
   t:number;
   times:any;
@@ -115,6 +106,10 @@ export class StartupComponent implements OnInit {
   des_qry:String;
   len:number;
   case_name:String;
+  show_dest_table:boolean;
+  show_src_table:boolean;
+  all_connection=[];
+  all_cases=[];
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -123,9 +118,9 @@ export class StartupComponent implements OnInit {
 
   ngOnInit() {
     this.Initialize()
-    
+  
   }
-
+  
   suitestatusopen(x){
     localStorage.setItem('suite'+x,x)
   }  
@@ -136,13 +131,11 @@ export class StartupComponent implements OnInit {
     if(x == localStorage.getItem('suite'+x)){
       return 'true'
     }
-
   }
 
   starttimer(){
     clearInterval(this.times)
  this.times=setInterval(()=>{this.Initialize();},39000)
-
   }
 
   Initialize(){
@@ -151,8 +144,6 @@ export class StartupComponent implements OnInit {
       if(data.success){
         this.stilload=false;    
       this.all_test_suite=data.suites.user
-      // this.all_test_suite.expandCol = localStorage.getItem("col");
-      console.log(this.all_test_suite)
        this.arr1=[]
       for (var i=0;i<this.all_test_suite.length;i++)
       {
@@ -160,7 +151,6 @@ export class StartupComponent implements OnInit {
         this.playButtons[i]=true;
         this.show[i]=true;
       }
-   
       this.playButtons2 = new Array();
       this.show2=[]
       for(var i=0;i<this.arr1.length;i++)
@@ -169,20 +159,51 @@ export class StartupComponent implements OnInit {
         this.show2.push(true)
         for(var j=0;j<this.arr1[i].length;j++)
         {
-          this.temparr.push(true)
-          
+          this.temparr.push(true) 
         }
         this.playButtons2.push(this.temparr)
-      }
+      }}
+   },err=>{
 
-      }
    });
+  }
+  logout(){
+    this.fileUploadService.logout();
+    this.router.navigate(['/login']);
   }
   ToHome(){
     this.router.navigate(['home'])
   }
   ToDB(){
     this.router.navigate(['db'])
+  }
+  manage_connection(suite_id){
+    this.all_cases=[]
+    this.all_connection=[]
+    event.stopPropagation();
+    this.fileUploadService.get_all_connections(suite_id).subscribe(data=>{
+      for(let i=0;i<data.all_cases.length;i++){
+        this.all_cases.push({'case_id':data.all_cases[i][0], 'case_name':data.all_cases[i][1],'checked':false})
+      }
+      this.all_connection=data.all_connections
+
+      this.show_connection(this.all_connection, this.all_cases)
+      
+    },err=>{
+    })
+  }
+  show_connection(connections, cases){
+    const dialogRef = this.dialog.open(DialogManageConnection, {    //break
+      panelClass: 'my-class',
+      width: '40%',
+      height:'auto',
+      data:{
+        connections:connections, test_case:cases
+      }
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {
+     });
   }
   executeTestCase(test_Suite_id,event:Event,x){
     event.stopPropagation();
@@ -199,7 +220,7 @@ export class StartupComponent implements OnInit {
         this.playButtons[x]=!this.playButtons[x]
       this.show2[x]=true;
 
-        Swal("Success","Test Done Succesfully","success")
+        Swal("Success","Job Submitted Succesfully","success")
   
       }
       else{
@@ -222,7 +243,7 @@ export class StartupComponent implements OnInit {
         this.playButtons2[x][z]=true
         this.Initialize();
         this.starttimer();
-        Swal("Success","Test Done Succesfully","success")
+        Swal("Success","Job Submitted Succesfully","success")
   
       }else{
         this.Initialize();
@@ -230,18 +251,22 @@ export class StartupComponent implements OnInit {
       }
     },err=>{
       Swal("error",err.error.msg,"error")
-      this.Initialize();
-        this.starttimer();
+        let temp="Token has expired"
+        if (temp == err.error.msg){
+          clearInterval(this.times)
 
+          this.logout()
+        }else{
+          this.Initialize();
+        this.starttimer();
+        }
     })
   }
+
 getcasedetails(case_id,case_name){
-//   this.src_db_name="",this.des_db_name="",this.src_table="",this.target_table="",
-// this.src_db_type="",this.des_db_type="";
   event.stopPropagation();
-  console.log(case_name)
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
-console.log(data.res)
+
 this.src_db_name=data.res.src_db_name;
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
@@ -253,19 +278,19 @@ this.des_column=data.res.des_column
 this.src_qry=data.res.src_qry
 this.des_qry=data.res.des_qry
 this.case_name=case_name
-  this.showcaseresult(this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
+  this.showcaseresult(case_id,this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
     this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry,this.case_name)
   });
 }
-showcaseresult(src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
+showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
     panelClass: 'my-class',
     width: '60%',
-    height:'70%',
-    data : {src_db_name:src_db_name,des_db_name:des_db_name,
+    height:'auto',
+    data : {case_id:case_id,src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
     src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
-  src_qry:src_qry, des_qry:des_qry,casename:case_name}
+  src_qry:src_qry, des_qry:des_qry,casename:case_name, show_src_table:this.show_src_table, show_dest_table:this.show_dest_table}
   });
   
   dialogRef.afterClosed().subscribe(result => {
@@ -304,8 +329,7 @@ topFunction() {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 } 
  isNull(val){
-   return val == null
-      
+   return val == null 
 }
 
 show_logdialog(test_name){
@@ -336,8 +360,7 @@ getlog(test_name,src_table,target_table,case_log_id){
   //calls rest api with case_log_id and fetch the
   // case_name , case_src_log and case_des_log.
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
-
-    console.log(data.test_case_log.data)
+console.log(data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
     // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
@@ -346,7 +369,6 @@ getlog(test_name,src_table,target_table,case_log_id){
 }
 
 showlog(test_name,src_table,target_table,case_log){
-  console.log(case_log.test_case_log_id)
   if (test_name =='CountCheck'){
     this.show_logdialog(test_name)
   }
@@ -355,7 +377,6 @@ showlog(test_name,src_table,target_table,case_log){
     this.show_logdialog(test_name)
     
     if(case_log.destination_log==null){
-      console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
@@ -378,7 +399,6 @@ showlog(test_name,src_table,target_table,case_log){
     if(case_log.destination_log==null 
       || case_log.destination_log == "No Duplicate Records Available"
     ){
-      console.log("in null")
     }else{
       this.len=eval(case_log.destination_log).length
       for(var i=0;i<this.len;i++){
@@ -399,10 +419,15 @@ showlog(test_name,src_table,target_table,case_log){
   else if (test_name == "Datavalidation"){
     this.value_src=[]
     this.keys_src=[]
-    if(case_log.source_log=='none'){
+    this.keys_dest =[]
+  this.value_dest=[]
+    if(case_log.source_log == 'none'){
       this.show_logdialog(test_name)
+      console.log(case_log.source_log)
+      this.show_src_table=false;
     }
     else{
+      this.show_src_table=true;
       this.parsed_obj=(eval(case_log.source_log)[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
@@ -411,7 +436,27 @@ showlog(test_name,src_table,target_table,case_log){
         this.parsed_obj=(eval(case_log.source_log)[i])
         this.first_obj=(JSON.parse(String(this.parsed_obj)))
         this.value_src.push(Object.values(this.first_obj))
-      }
+      }  
+    }
+    if(case_log.destination_log == 'none' ){
+      this.show_dest_table=false;
+      this.show_logdialog(test_name)
+      console.log(case_log.source_log)
+
+    }
+    else{
+      this.show_dest_table=true;
+      this.parsed_obj1 = (eval(case_log.destination_log)[0])
+      console.log(this.parsed_obj1)
+      this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
+      this.keys_dest = (Object.keys(this.first_obj1))
+      this.len=eval(case_log.destination_log).length
+     for(var i=0;i<this.len;i++){
+      this.parsed_obj1=(eval(case_log.destination_log)[i])
+      this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
+      this.value_dest.push(Object.values(this.first_obj1))
+    }
+  }
       this.countcheck=true
       this.nullcheck=true
       this.datavalidation=false
@@ -421,7 +466,7 @@ showlog(test_name,src_table,target_table,case_log){
       this.ddlcheck=true
 
     }
-  }
+  
   else if(test_name == 'DDLCheck'){
   
    if(case_log.source_log=='none1')
@@ -445,11 +490,11 @@ showlog(test_name,src_table,target_table,case_log){
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     panelClass: 'my-class',
-    width: '48%',
-    height:'55%',
+    width: 'auto',
+    height:'auto',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
-    key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
+    key_dest:this.keys_dest, value_dest:this.value_dest,key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
       src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
   });
@@ -474,13 +519,87 @@ export class DialogOverviewExampleDialogstartup {
   templateUrl: 'dialog-overview-example-dialog-case-detail.html',
 })
 export class DialogOverviewExampleDialogCaseDetail {
+card:boolean=true;
+form:boolean=false;
+createForm:FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialogCaseDetail>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataCaseDetail,
+    private fileUploadService:UploadserviceService,
+    private fb:FormBuilder) {
+      this.createForm=fb.group({
+        src_name:[''],
+        target_table:[''],
+        src_query:[''],
+        target_query:['']
+      });
+    }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+  showform(){
+    this.card=false;
+    this.form=true;
+  }
+  showhome(){
+    this.card=true;
+    this.form=false;
+  }
+  Update(src_table, target_table, src_qry, target_qry, case_id){
+    console.log(src_table.value, target_table.value, src_qry.value, target_qry.value, case_id)
+    this.fileUploadService.update_case_details(case_id,src_table.value, target_table.value, src_qry.value, target_qry.value).subscribe(result=>{
+      Swal("success",result.message,"success")
+    })
+  }
 
+}
+@Component({
+  selector: 'dialog-manage-connection',
+  templateUrl: 'dialog-manage-connection.html',
+})
+export class DialogManageConnection {
+connection:number;
+selectedValue=[]
+show:boolean=false;
+show1:boolean=false;
+disable2=true;
+
+  constructor(private fileUploadService:UploadserviceService,
+    public dialogRef: MatDialogRef<DialogManageConnection>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogManageConnection,
+   ) {
+     
+    }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  changeselect(selectval){
+    this.connection=selectval
+    this.show=true;
+    this.show1=true;
+  }
+
+  submit_connection(type){
+    this.fileUploadService.select_connections(type,JSON.stringify(this.selectedValue),this.connection).subscribe(data=>{
+      if(data.success){
+        Swal("success",data.message,"success")
+        this.selectedValue=[]
+        this.connection;
+    this.dialogRef.close();
+
+      }
+    },err=>{
+      Swal("error",err.error.message,"error")
+    })
+
+  }
+  selectBadge(e,x){
+    if (e.target.checked) {  
+      this.selectedValue.push(x);
+    }  else { 
+      this.selectedValue.splice(this.selectedValue.indexOf(x), 1);
+    }
+  }
 }

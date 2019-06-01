@@ -15,6 +15,7 @@ import { DbdetailsComponent } from './dbdetails/dbdetails.component';
 
 import { StartupComponent } from './startup/startup.component';
 import{DialogOverviewExampleDialogCaseDetail} from './startup/startup.component'
+import {DialogManageConnection} from './startup/startup.component';
 import {DialogOverviewExampleDialog} from './home/home.component';
 import{DialogOverviewExampleDialogstartup} from './startup/startup.component';
 import {UploadserviceService} from './uploadservice.service';
@@ -37,15 +38,27 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTabsModule} from '@angular/material/tabs';
+
 
 import {ColorDirective} from './directive/color1.directive';
-import { AppcolorDirective } from './appcolor.directive'
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { CanDeactivate } from '@angular/router/src/utils/preactivation';
 import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
 import { UserdetailComponent } from './userdetail/userdetail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
+import { UpdatepasswordComponent } from './updatepassword/updatepassword.component';
+import { ChangepasswordComponent } from './changepassword/changepassword.component';
+import { VerifyuserComponent } from './verifyuser/verifyuser.component';
+import { AfterverifyComponent } from './afterverify/afterverify.component';
+import {MatSelectModule} from '@angular/material/select';
+import { ViewdbComponent } from './viewdb/viewdb.component';
+import {MatListModule} from '@angular/material/list';
+import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,10 +73,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     DialogOverviewExampleDialog,
     DialogOverviewExampleDialogstartup,
     DialogOverviewExampleDialogCaseDetail,
+    DialogManageConnection,
     ColorDirective,
-    AppcolorDirective,
     UserdetailComponent,
     DashboardComponent,
+    ForgotpasswordComponent,
+    UpdatepasswordComponent,
+    ChangepasswordComponent,
+    VerifyuserComponent,
+    AfterverifyComponent,
+    ViewdbComponent,
+    EditdbdetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,9 +98,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     MatToolbarModule,
     MatInputModule,
     MatCardModule,
+    MatListModule,
+    MatDividerModule,
     MatTableModule,
+    MatSelectModule,
     MatIconModule,
     MatDialogModule,
+    MatTabsModule,
     MatRadioModule,
     MatProgressBarModule,
     MatExpansionModule,
@@ -95,7 +119,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   providers: [UploadserviceService,CanDeactivateGuard,ExcelService],
   bootstrap: [AppComponent],
   entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup,
-    DialogOverviewExampleDialogCaseDetail]
+    DialogOverviewExampleDialogCaseDetail,DialogManageConnection]
 
 
 })

@@ -1,0 +1,50 @@
+
+tags:
+- "DbDetail"
+summary: "post dbdetails"
+description: "this endpoint uses a post request"
+operationId: "adddbdetail"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- name: "Authorization"
+  in: "header"
+  description : "Bearer ey....."
+  required: true
+  type: "string"
+- in: "body"
+  name: "body"
+  description: "add dbdetails detail"
+  required: true
+  schema:
+    $ref: "#/definitions/Dbdetail"
+responses:
+  405:
+    description: "Invalid input"
+definitions:
+  Dbdetail:
+    type: "object"
+    properties:
+      connection_name:
+        type: "string"
+        example: "connection1"
+      user_id:
+        type: "string"
+        example: "1"
+      type:
+        type: "string"
+        example: "mysql"
+      name:
+        type: "string"
+        example: "TestDB"
+      hostname:
+        type: "string"
+        example: "localhost"
+      username:
+          type: "string"
+          example: "root"
+      password:
+        type: "string"
+        example: "Password1234"
