@@ -9,7 +9,7 @@ from pyspark import SparkContext
 from pyspark.sql import SQLContext
 
 # No of Thread for spark to download
-thread_count = int(sys.argv[17])  # Need to check count
+thread_count = int(sys.argv[17])  # TODO: Need to check count
 
 conf = SparkConf()
 conf.set("appName", "first app")
@@ -27,7 +27,7 @@ df_dest_master = None
 
 
 def get_db_details(db_type, hostname, db_name, username, password, table_name,
-                   custom_query=None):
+                   custom_query):
     db_detail = {"db_type": db_type,
                  "hostname": hostname,
                  "db_name": db_name,
@@ -36,6 +36,7 @@ def get_db_details(db_type, hostname, db_name, username, password, table_name,
                  "table_name": table_name,
                  "count": 0,
                  "custom_query": custom_query
+                 # TODO: If needed, add logic to convert str(None) to None
                  }
     return db_detail
 
@@ -58,7 +59,7 @@ def get_connection_detail(db_detail):
 
 def get_count(db_detail):
     print(db_detail)
-    if db_detail["custom_query"]:
+    if not db_detail["custom_query"]:
         query = " (SELECT count(1) as count FROM {}) as t".format(
             db_detail["table_name"])
     else:
@@ -79,7 +80,7 @@ def get_count(db_detail):
 def get_df_select(db_detail, start, end):
     url, driver = get_connection_detail(db_detail)
     query = ""
-    if db_detail["custom_query"]:
+    if not db_detail["custom_query"]:
         if db_detail["db_type"] == "sqlserver":
             query = "(SELECT * FROM {} " \
                     "ORDER BY 1 OFFSET {} " \
@@ -164,7 +165,8 @@ if __name__ == '__main__':
                             username=sys.argv[2],
                             password=sys.argv[3],
                             table_name=sys.argv[5],
-                            custom_query=sys.argv[13]  # Need to check count
+                            custom_query=sys.argv[13]
+                            # TODO: Need to check count
                             )
 
     # fetch destination details
@@ -174,12 +176,13 @@ if __name__ == '__main__':
                              username=sys.argv[8],
                              password=sys.argv[9],
                              table_name=sys.argv[11],
-                             custom_query=sys.argv[14]  # Need to check count
+                             custom_query=sys.argv[14]
+                             # TODO: Need to check count
                              )
 
     # Will use for no of record to return
-    source_record_count = sys.argv[15]  # Need to check count
-    target_record_count = sys.argv[16]  # Need to check count
+    source_record_count = int(sys.argv[15])  # TODO: Need to check count
+    target_record_count = int(sys.argv[16])  # TODO: Need to check count
 
     # tests and mapped callbacks
     # Call back api
@@ -230,9 +233,9 @@ if __name__ == '__main__':
             if testcase == "datavalidation":
 
                 result["src_to_dest"] = data_validation(df_src_master,
-                                                        df_dest_master)
+                                                        df_dest_master)  # Add Limit as per source_record_count
                 result["dest_to_src"] = data_validation(df_dest_master,
-                                                        df_src_master)
+                                                        df_src_master)  # Add Limit as per target_record_count [:10]
 
                 print("Source Type = ", type(result["src_to_dest"]))
                 print("Target Type = ", type(result["dest_to_src"]))
