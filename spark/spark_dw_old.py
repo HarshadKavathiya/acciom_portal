@@ -8,13 +8,10 @@ from pyspark import SparkConf
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 
-# No of Thread for spark to download
-thread_count = int(sys.argv[17])  # Need to check count
-
 conf = SparkConf()
 conf.set("appName", "first app")
 conf.set("master", "local")
-conf.set("spark.executor.cores", thread_count)
+conf.set("spark.executor.cores", 4)
 conf.set("spark.scheduler.mode", "FAIR")
 current_path = os.path.abspath(os.path.dirname(__file__))
 scheduler_path = os.path.join(current_path, "fairSchedular.xml")
@@ -26,17 +23,14 @@ df_src_master = None
 df_dest_master = None
 
 
-def get_db_details(db_type, hostname, db_name, username, password, table_name,
-                   custom_query=None):
+def get_db_details(db_type, hostname, db_name, username, password, table_name):
     db_detail = {"db_type": db_type,
                  "hostname": hostname,
                  "db_name": db_name,
                  "username": username,
                  "password": password,
                  "table_name": table_name,
-                 "count": 0,
-                 "custom_query": custom_query
-                 }
+                 "count": 0}
     return db_detail
 
 
@@ -58,13 +52,8 @@ def get_connection_detail(db_detail):
 
 def get_count(db_detail):
     print(db_detail)
-    if db_detail["custom_query"]:
-        query = " (SELECT count(1) as count FROM {}) as t".format(
-            db_detail["table_name"])
-    else:
-        query = " (SELECT count(1) as count FROM ({}) as t2) as t".format(
-            db_detail["custom_query"])
-
+    query = " (SELECT count(*) as count FROM {}) as t".format(
+        db_detail["table_name"])
     url, driver = get_connection_detail(db_detail)
     df = sqlContext.read.format("jdbc").option(
         "url", url).option("driver", driver).option(
@@ -79,35 +68,17 @@ def get_count(db_detail):
 def get_df_select(db_detail, start, end):
     url, driver = get_connection_detail(db_detail)
     query = ""
-    if db_detail["custom_query"]:
-        if db_detail["db_type"] == "sqlserver":
-            query = "(SELECT * FROM {} " \
-                    "ORDER BY 1 OFFSET {} " \
-                    "ROWS FETCH NEXT  {} " \
-                    "ROWS ONLY ) as t ".format(db_detail["table_name"], start,
-                                               end)
-        elif db_detail["db_type"] == "mysql":
-            query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t".format(
-                db_detail["table_name"], start, end)
-        elif db_detail["db_type"] == "postgres":
-            query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} " \
-                    "LIMIT {2} ) AS t".format(db_detail["table_name"], start,
-                                              end)
-    else:
-        if db_detail["db_type"] == "sqlserver":
-            query = "(SELECT * FROM ({}) as tt " \
-                    "ORDER BY 1 OFFSET {} " \
-                    "ROWS FETCH NEXT  {} " \
-                    "ROWS ONLY ) as t ".format(db_detail["custom_query"],
-                                               start, end)
-        elif db_detail["db_type"] == "mysql":
-            query = "(SELECT * FROM ({0}) as tt ORDER BY 1 LIMIT {1}, {2}) AS t".format(
-                db_detail["custom_query"], start, end)
-        elif db_detail["db_type"] == "postgres":
-            query = "(SELECT * FROM  ({0}) as tt ORDER BY 1 OFFSET {1} " \
-                    "LIMIT {2} ) AS t".format(db_detail["custom_query"], start,
-                                              end)
-
+    if db_detail["db_type"] == "sqlserver":
+        query = "(SELECT * FROM {} " \
+                "ORDER BY 1 OFFSET {} " \
+                "ROWS FETCH NEXT  {} " \
+                "ROWS ONLY ) as t ".format(db_detail["table_name"], start, end)
+    elif db_detail["db_type"] == "mysql":
+        query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t".format(
+            db_detail["table_name"], start, end)
+    elif db_detail["db_type"] == "postgres":
+        query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} " \
+                "LIMIT {2} ) AS t".format(db_detail["table_name"], start, end)
     print(query)
     df = sqlContext.read.format("jdbc").option(
         "url", url).option("driver", driver).option(
@@ -163,9 +134,7 @@ if __name__ == '__main__':
                             db_name=sys.argv[4],
                             username=sys.argv[2],
                             password=sys.argv[3],
-                            table_name=sys.argv[5],
-                            custom_query=sys.argv[13]  # Need to check count
-                            )
+                            table_name=sys.argv[5])
 
     # fetch destination details
     dest_db = get_db_details(db_type=sys.argv[12],
@@ -173,13 +142,7 @@ if __name__ == '__main__':
                              db_name=sys.argv[10],
                              username=sys.argv[8],
                              password=sys.argv[9],
-                             table_name=sys.argv[11],
-                             custom_query=sys.argv[14]  # Need to check count
-                             )
-
-    # Will use for no of record to return
-    source_record_count = sys.argv[15]  # Need to check count
-    target_record_count = sys.argv[16]  # Need to check count
+                             table_name=sys.argv[11])
 
     # tests and mapped callbacks
     # Call back api
@@ -199,11 +162,9 @@ if __name__ == '__main__':
         print(dest_count.asDict()["count"])
         dest_db["count"] = dest_count.asDict()["count"]
 
-    src_num = 1 if (src_db["count"]) < thread_count else int(
-        (src_db["count"] / thread_count) + 1)
+    src_num = 1 if (src_db["count"]) < 4 else int((src_db["count"] / 4) + 1)
 
-    tgt_num = 1 if (dest_db["count"]) < thread_count else int(
-        (dest_db["count"] / thread_count) + 1)
+    tgt_num = 1 if (dest_db["count"]) < 4 else int((dest_db["count"] / 4) + 1)
     print(tgt_num)
     threads = []
     src_start = 0
@@ -211,7 +172,7 @@ if __name__ == '__main__':
     tgt_start = 0
     tgt_end = tgt_num
 
-    for thread_num in range(thread_count):
+    for thread_num in range(4):
         th = Thread(target=run, args=(src_db, dest_db, src_start, src_end,
                                       tgt_start,
                                       tgt_end))
@@ -234,12 +195,9 @@ if __name__ == '__main__':
                 result["dest_to_src"] = data_validation(df_dest_master,
                                                         df_src_master)
 
-                print("Source Type = ", type(result["src_to_dest"]))
-                print("Target Type = ", type(result["dest_to_src"]))
-
+                print(result)
                 print("source count", df_src_master.count())
                 print("TARGET count", df_dest_master.count())
-
                 data = {"result": result, "result_count": len(
                     result["src_to_dest"]) + len(
                     result["dest_to_src"])}
