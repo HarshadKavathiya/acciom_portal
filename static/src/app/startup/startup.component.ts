@@ -492,28 +492,31 @@ showlog(test_name,src_table,target_table,case_log){
 
     }
   }
-  
   else if(test_name == 'DDLCheck'){
   
-   if(case_log.source_log=='none1')
-    {
-      this.show_logdialog(test_name)
-    }
-   else if(case_log.destination_log=='none1')
-    {
-      this.show_logdialog(test_name)
-
-    }
-   else {
-    this.countcheck=true
-    this.nullcheck=true
-    this.datavalidation=true
-    this.datavalidation_pass=true
-    this.ddlcheck_pass=true
-    this.duplicate=true
-    this.ddlcheck=false
+    if(case_log.source_log == 'none1' && case_log.destination_log=='none1')
+     {
+       this.show_logdialog(test_name)
+     }
+     else{
+       console.log(typeof(case_log.source_log))
+       var t = JSON.parse(case_log.source_log)
+       case_log.source_log=t
+       var t = JSON.parse(case_log.destination_log)
+       case_log.destination_log=t
+       this.countcheck=true
+     this.nullcheck=true
+     this.datavalidation=true
+     this.datavalidation_pass=true
+     this.ddlcheck_pass=true
+     this.duplicate=true
+     this.ddlcheck=false
+     }
+     
+    
    }
-  }
+  
+  
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     panelClass: 'my-class',
     width: 'auto',

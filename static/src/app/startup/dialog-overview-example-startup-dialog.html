@@ -339,10 +339,13 @@ opacity: 0.9;
                 <th>Source Table</th>
                 <th>Target Table </th>
                 </tr>
-                <tr class="tabledata">
-                    <td>{{data.source_log}}</td>
-                    <td>{{data.destination_log}}</td>
-                </tr>
+                 
+<tr class="tabledata" *ngFor="let i of data.source_log; let k = index ">
+                        
+    <td > {{data.source_log[k]}}</td>
+    <td >{{data.destination_log[k]}}</td>
+</tr>
+
             </table>
     </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
