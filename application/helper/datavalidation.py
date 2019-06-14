@@ -26,7 +26,7 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     target_record_count = current_app.config.get('SPARK_TARGET_RECORDS_COUNT')
     thread_count = current_app.config.get('SPARK_THREAD_COUNT')
     app.logger.debug(datetime.datetime.now())
-
+    print("Data validation Job start at = ", str(datetime.datetime.now()))
     subprocess.Popen(
         'spark-submit --driver-memory {0} '
         '--executor-memory {1} --jars {2},{3},{4}'
