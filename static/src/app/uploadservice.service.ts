@@ -59,8 +59,6 @@ export class UploadserviceService {
     return !!localStorage.getItem('id_token'); 
 
   }
-
-
   logout(){
     this.authToken = null;
     this.user = null;
@@ -68,10 +66,8 @@ export class UploadserviceService {
   }
 
   register(createForm){
-
     let headers = new HttpHeaders().set('Content-Type','application/json')
     return this.http.post<any>(`${this.url}/register`,createForm,{headers: headers})
-
   }
 
   StoreDB(createForm){
@@ -113,7 +109,6 @@ export class UploadserviceService {
   getSuiteById(id){
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    console.log(this.newtoken)
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
       

@@ -8,9 +8,7 @@ from pyspark import SparkConf
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 
-# No of Thread for spark to download
-thread_count = int(sys.argv[17])  # TODO: Need to check count
-
+thread_count = int(sys.argv[17])
 conf = SparkConf()
 conf.set("appName", "first app")
 conf.set("master", "local")
@@ -36,7 +34,6 @@ def get_db_details(db_type, hostname, db_name, username, password, table_name,
                  "table_name": table_name,
                  "count": 0,
                  "custom_query": custom_query
-                 # TODO: If needed, add logic to convert str(None) to None
                  }
     return db_detail
 
@@ -166,7 +163,6 @@ if __name__ == '__main__':
                             password=sys.argv[3],
                             table_name=sys.argv[5],
                             custom_query=sys.argv[13]
-                            # TODO: Need to check count
                             )
 
     # fetch destination details
@@ -177,17 +173,16 @@ if __name__ == '__main__':
                              password=sys.argv[9],
                              table_name=sys.argv[11],
                              custom_query=sys.argv[14]
-                             # TODO: Need to check count
                              )
 
     # Will use for no of record to return
-    source_record_count = int(sys.argv[15])  # TODO: Need to check count
-    target_record_count = int(sys.argv[16])  # TODO: Need to check count
+    source_record_count = int(sys.argv[15])
+    target_record_count = int(sys.argv[16])
 
     # tests and mapped callbacks
     # Call back api
     # Expecting testname=api_end_point
-    testcases_tbr = dict([arg.split('=', maxsplit=1) for arg in sys.argv[13:]])
+    testcases_tbr = dict([arg.split('=', maxsplit=1) for arg in sys.argv[18:]])
 
     if len(testcases_tbr) <= 0:
         raise Exception("No testcases provided")
@@ -243,9 +238,13 @@ if __name__ == '__main__':
                 print("source count", df_src_master.count())
                 print("TARGET count", df_dest_master.count())
 
-                data = {"result": result, "result_count": len(
-                    result["src_to_dest"]) + len(
-                    result["dest_to_src"])}
+                data = {"result": result,
+                        "src_result_count": len(result["src_to_dest"]),
+                        "target_result_count": len(result["dest_to_src"]),
+                        "result_count": len(result["src_to_dest"]) + len(
+                            result["dest_to_src"]),
+                        "src_count": src_count,
+                        "dest_count": dest_count}
                 result = requests.post(
                     testcases_tbr['datavalidation'], json=data)
 

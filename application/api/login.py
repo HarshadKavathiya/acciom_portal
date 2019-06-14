@@ -103,7 +103,7 @@ class Login(Resource):
                         expires_delta=expires)
                     payload = {
                         'message':
-                            'logged in as {} '.format(current_user.email),
+                            'Logged in as {} '.format(current_user.email),
                         'uid': current_user.user_id,
                         'access_token': access_token,
                         'success': True,
@@ -111,7 +111,8 @@ class Login(Resource):
                         'name': current_user.first_name}
             else:
                 raise InvalidInput(
-                    "Credentials Does Not Match".format(data['email']))
+                    "Please enter valid Username and Password".format(
+                        data['email']))
 
         except InvalidInput as e:
             return input_error({"success": False, "message": str(e)})

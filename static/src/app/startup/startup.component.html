@@ -26,7 +26,7 @@
             <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections</button>
           </div>
             <div class="paneldesc"> 
-              {{i.excel_name}},<div class="bold">Uploaded At:</div> {{ i.created | date:'medium'}}
+              {{i.excel_name}}&nbsp;&nbsp;<div class="bold">Uploaded at:</div> {{ i.created | date:'medium'}}
             </div>
             <div class="btn-container">   
               <button mat-button
@@ -119,36 +119,52 @@
                   <table  class="t1" cellspacing=22>
                     <tr class="tableheading">
                       <th>Run ID</th> <!-- Run Id-->
-                      <th>Execution_status</th>
+                      <th>Execution Status</th>
                       <th>Executed At</th>
                       <th>Log</th>
                     </tr>
                     <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log; let run_id=index ">
                       <td>{{run_id+1}}
                       </td>
+
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 0">New
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 1" >Pass
+                      *ngIf="case_log.test_execution_status== 1" 
+                      matTooltip="Test Case passed"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Pass
                       </td>
+                      
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 2" >Fail
+                      *ngIf="case_log.test_execution_status== 2"
+                       matTooltip="Test Case failed"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Fail
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 4">Error
+                      *ngIf="case_log.test_execution_status== 4"
+                       matTooltip="Due to a technical issue, unable to execute the test case"
+                       aria-label="Button that displays a tooltip when focused or hovered over">Error
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(4)}"
-                      *ngIf="case_log.test_execution_status == null">Error
+                      *ngIf="case_log.test_execution_status == null"
+                       matTooltip="Due to a technical issue, unable to execute the test case"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Error
                       </td>
+
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 3">Waiting</td>
+                      *ngIf="case_log.test_execution_status== 3" matTooltip=" Test Case is executing"
+                      aria-label="Button that displays a tooltip when focused or hovered over" >Waiting</td>
+                      
                       <td> <div class="tableheader-test-date">{{ case_log.executed_at | date:'short' }}</div> </td>
                       <td><button  mat-button (click)="getlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">
                         dehaze

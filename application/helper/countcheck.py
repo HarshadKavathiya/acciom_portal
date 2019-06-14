@@ -13,7 +13,6 @@ def count_check(source_cursor, target_cursor, source_table,
         newlst = []
 
         app.logger.debug(newlst)
-        # newlst = split_query(test_query)
         if test_query == {}:
             source_cursor.execute(
                 'SELECT COUNT(1) FROM {}'.format(source_table))
@@ -43,7 +42,9 @@ def count_check(source_cursor, target_cursor, source_table,
             payload["des_value"] = target_count
             app.logger.info("count check fail")
     except Exception as e:
-        app.logger.error(e)
-        return {"res": 2, "src_value": str(e), "des_value": str(e)}
+        app.logger.error("error countcheck", e)
+        print("error", e)
+        return {"res": 2, "src_value": str(e), "des_value": str(e),
+                }
 
     return payload

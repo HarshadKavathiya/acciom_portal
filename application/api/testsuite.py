@@ -57,15 +57,22 @@ class TestSuites(Resource):
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
         temp_test1 = [str(i - 2) for i in range(2, ws.max_row + 1)]
+        # row+1 to avoid index out of range error
+        print(temp_test1)
         temp_test = []
         for i in range(0, ws.max_column):
             if (str(ws[1][i].value) != 'None'):
                 temp_test.append([str(ws[x][i].value)
                                   for x in range(2, ws.max_row)])
         data = parser.parse_args()
+        print(data['selectedcase'])
         test_case_list = str(data['selectedcase']).split(",")
+        print(len(test_case_list))
         i = 0
         for j in range(ws.max_row - 1):
+            print("73", temp_test1[j])
+            print('74', test_case_list)
+            print(temp_test1[j] in test_case_list)
             if temp_test1[j] in test_case_list:
                 test_case_list.remove(temp_test1[j])
                 db_list = split_db(temp_test[i + 2][j])
@@ -170,7 +177,6 @@ class ExportTestLog(Resource):
             key_list = [key for key in dict_key.keys()]
             response.append(key_list)
             for i in range(len(data)):
-                value_list = []
                 value_list = [x for x in ast.literal_eval(data[i]).values()]
                 response.append(value_list)
             response = json.dumps(response)
@@ -214,17 +220,13 @@ class ConnectionDetails(Resource):
     @swag_from('/application/apidocs/connectiondetails.yml')
     def get(self, suite_id):
         try:
-            all_connection = []
-            all_case = []
             current_user = get_jwt_identity()
             db_obj = DbDetail.query.filter_by(user_id=current_user).all()
             suite_obj = TestSuite. \
                 query.filter_by(test_suite_id=suite_id).first()
-            for i in suite_obj.test_case:
-                pass
             all_case = [(i.test_case_id, i.test_name)
                         for i in suite_obj.test_case]
-            all_connection = [i.db_id for i in db_obj]
+            all_connection = [(i.db_id, i.connection_name) for i in db_obj]
             return {"all_connections": all_connection, "all_cases": all_case}
         except Exception as e:
             app.logger.error(str(e))

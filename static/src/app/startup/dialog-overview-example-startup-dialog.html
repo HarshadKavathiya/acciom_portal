@@ -11,7 +11,7 @@
   text-align: justify;
   color: #2f2f2f;
   
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 
     }
     .table1{
@@ -55,6 +55,21 @@
   margin-top:5px;
 
     }
+    .test-result1{
+        font-family: 'OpenSans-Light', sans-serif;
+  font-size: 24px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-right: 10px;
+  margin-bottom:10px;
+  margin-top:5px;
+
+    }
 .close-btn{
 background-color: #ffffff;
 opacity: 0.9;
@@ -84,24 +99,34 @@ opacity: 0.9;
     .result{
         display:flex;
         justify-content: flex-start;
+        flex-direction: column;
     }
 
    .panel-body {
        background-color: #ffffff;
-        max-height: 390px;
+        max-height: auto;
         overflow:initial;
             
     }
     .panel-body1{
-        max-height: 250px;
+        max-height: auto;
             overflow: scroll;
     }
 .close{
     float:right;
 
 }
+.tablerow{
+    display: flex;
+    flex-direction: row;
+}
+
 .bold-text{
     font-weight: bold;
+}
+#Src_Count, #Dest_Count{
+    display: inline;
+    margin-right:15px;
 }
     </style>
 </head>
@@ -115,8 +140,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow" >
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
                                 </tr>
                         </table> 
@@ -135,8 +160,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
                                     <td><img src="assets/images/003-verification-symbol.png"/>
                                     </tr>
                             </table>
@@ -160,8 +185,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
                                     <td><img src="assets/images/003-verification-symbol.png"/>
                                     </tr>
                             </table>                    
@@ -171,8 +196,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
                                 </tr>
                         </table>
@@ -198,8 +223,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
             <div>
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Pass</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Pass</td>
                                 <td><img src="assets/images/003-verification-symbol.png"/>
                                 </tr>
                         </table>
@@ -210,8 +235,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
                                 </tr>
                         </table>
@@ -233,19 +258,23 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Fail</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Fail</td>
                                     <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
-                                    </tr>
-                            </table>     
-                 <!-- <div class="test-result">Result:Fail</div>
-                 <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
+                                </tr>
+                            </table> 
+                    <div class="test-result">            
+                    <div id="Dest_Count">Source Count : {{data.source_count}}</div>
+                    <div id="Src_Count">Target Count : {{data.target_count}}</div>   
+
+                    <div> Number of Mismatch found in Source : {{data.src_to_dest_count}}</div>
+                    <div> Number of Mismatch found in Target : {{data.dest_to_src_count}}</div>
 
                 </div>
+                </div>
         </div>
-        <!-- <div *ngIf="data.show_src_table"> -->
-        <div class="test-result">Target Rows mismatch with Source</div>
-        <table class="table1">
+        <div  *ngIf="data.show_src_table" class="test-result" >Target Rows mismatch with Source</div>
+        <table   *ngIf="data.show_src_table" class="table1">
             <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_src">
                     <div>{{i}}</div></th>
@@ -255,11 +284,10 @@ opacity: 0.9;
                 <div>{{z}}</div></td>
             </tr>
         </table>
-    <!-- </div> -->
     <!-- <div *ngIf="data.show_dest_table"> -->
-        <div class="test-result">Source Rows mismatch with Target</div>
+        <div *ngIf="data.show_dest_table" class="test-result">Source Rows mismatch with Target</div>
 
-        <table class="table1">
+        <table *ngIf="data.show_dest_table" class="table1">
             <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_dest">
                     <div>{{i}}</div></th>
@@ -273,15 +301,23 @@ opacity: 0.9;
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.datavalidation_pass">
             <div class="test-heading">Data Validation</div>
-
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
+                    <div>
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
-                                    <td><img src="assets/images/003-verification-symbol.png"/> </td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
+                                    <td><img  src="assets/images/003-verification-symbol.png"/> </td>
                                 </tr>
-                            </table> 
+                            </table>
+                        </div> 
+                            <div class="test-result">            
+                                <div id="Dest_Count">Source Count : {{data.source_count}}</div>
+                                 <div id="Src_Count">Target Count : {{data.target_count}}</div>   
+                                <div> Number of Mismatch found in Source : {{data.src_to_dest_count}}</div>
+                                <div> Number of Mismatch found in Target : {{data.dest_to_src_count}}</div>
+            
+                            </div>
             </div>
             <div class="test-result">Both Source and Target Data matches</div>
         </div>
@@ -290,17 +326,14 @@ opacity: 0.9;
             <div class="test-heading">DDL Check</div> 
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
                                 </td>
                             </tr>
                         </table>
-             <!-- <div class="test-result">Result:Fail</div>
-             <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
-
             </div>
-        <div class="test-result">Both Source and Target schema doesn’t matches</div>
+        <div class="test-result">Both Source and Target Schema not matches</div>
             <table cellspacing=12 class="table1">
                 <tr class="tableheader">
                 <th>Source Table</th>
@@ -316,8 +349,8 @@ opacity: 0.9;
             <div class="test-heading">DDL Check</div> 
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Pass</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Pass</td>
                                 <td><img src="assets/images/003-verification-symbol.png"/>
                                 </td>
                             </tr>
@@ -326,7 +359,7 @@ opacity: 0.9;
              <img src="assets/images/003-verification-symbol.png"/> -->
 
             </div>
-        <div class="test-result">Both Source and Target Data matches</div>
+        <div class="test-result">Both Source and Target Schema matches</div>
     </div>
 </div>
 <div mat-dialog-actions class="close">

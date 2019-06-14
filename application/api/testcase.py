@@ -1,4 +1,5 @@
 import ast
+import datetime
 import json
 
 from flasgger import swag_from
@@ -62,14 +63,13 @@ class TestCaseJob(Resource):
 
 class TestCaseSparkJob(Resource):
     def post(self, spark_job_id):
+        app.logger.debug(datetime.datetime.now())
         dict1 = request.data.decode('utf-8', 'ignore')
         res = ast.literal_eval(dict1)
-        print("line 43", res['result']['src_to_dest'])
-        result = json.dumps(res['result']['src_to_dest'])
-        print(result)
-        print(type(result))
+        result_src = json.dumps(res['result']['src_to_dest'])
         result_des = json.dumps(res['result']['dest_to_src'])
-        print(type(result_des))
+        src_count = res['src_result_count']
+        target_count = res["target_result_count"]
         result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         case_log = TestCaseLog.query.filter_by(
@@ -80,17 +80,36 @@ class TestCaseSparkJob(Resource):
             case = TestCase.query.filter_by(
                 test_case_id=case_log.test_case_id).first()
             case.test_status = 1
+            src_result = {}
+            des_result = {}
+            src_result['src_count'] = res['src_count']
+            src_result['src_to_dest_count'] = src_count
+            src_result['result'] = 'none'
+            case_log.src_execution_log = str(src_result)
+            des_result['tar_count'] = res['dest_count']
+            des_result['dest_to_src_count'] = target_count
+            des_result['result'] = 'none'
+            case_log.des_execution_log = str(des_result)
+            case_log.save_to_db()
             case.save_to_db()
 
         elif result_count != 0:
-            if result == '[]':
-                result = 'none'
+            if result_src == '[]':
+                result_src = 'none'
             elif result_des == '[]':
                 result_des = 'none'
             case_log.execution_status = 2
             case_log.save_to_db()
-            case_log.src_execution_log = str(result)
-            case_log.des_execution_log = str(result_des)
+            src_result = {}
+            des_result = {}
+            src_result['src_count'] = res['src_count']
+            src_result['src_to_dest_count'] = src_count
+            src_result['result'] = str(result_src)
+            des_result['tar_count'] = res['dest_count']
+            des_result['dest_to_src_count'] = target_count
+            des_result['result'] = str(result_des)
+            case_log.src_execution_log = str(src_result)
+            case_log.des_execution_log = str(des_result)
             case_log.save_to_db()
             case = TestCase.query.filter_by(
                 test_case_id=case_log.test_case_id).first()
@@ -131,7 +150,14 @@ class EditTestCase(Resource):
             queries = tabledetails["query"]
             print(queries)
             if obj.test_name == 'CountCheck':
-                src_query = queries["srcqry"]
+                src_query = queries["sourceqry"]
+                target_query = queries["targetqry"]
+                newlst.append(src_query)
+                newlst.append(target_query)
+                src_qry = newlst[0]
+                des_qry = newlst[1]
+            elif obj.test_name == 'Datavalidation':
+                src_query = queries["sourceqry"]
                 target_query = queries["targetqry"]
                 newlst.append(src_query)
                 newlst.append(target_query)
@@ -170,7 +196,6 @@ class EditTestCase(Resource):
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
-        print("tabledetails", tabledetails)
 
         table = tabledetails["table"]
 
@@ -188,5 +213,6 @@ class EditTestCase(Resource):
             queries['sourceqry'] = data['src_query']
             queries['targetqry'] = data['target_query']
         obj.test_case_detail = json.dumps(tabledetails)
+        app.logger.debug(json.dumps(tabledetails))
         obj.save_to_db()
         return {"success": True, "message": "Succesfully Changed Values"}

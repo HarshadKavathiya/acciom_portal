@@ -287,7 +287,7 @@ class TestCaseLog(db.Model):
     execution_status = db.Column(db.Integer, nullable=True)
     src_execution_log = db.Column(LONGTEXT, nullable=True)
     des_execution_log = db.Column(LONGTEXT, nullable=True)
-    error_log = db.Column(db.String(80), nullable=True)
+    error_log = db.Column(LONGTEXT, nullable=True)
     test_cases = db.relationship(TestCase,
                                  back_populates='test_case_log', lazy=True)
     spark_job = db.relationship("SparkJob", back_populates='test_cases_log',
@@ -310,29 +310,92 @@ class TestCaseLog(db.Model):
     def return_all_log(cls, test_case_log_id):
         def test_case_log_json(x):
             if (x.execution_status == 1):
-                dest = x.des_execution_log
-                src = x.src_execution_log
 
+                if x.test_cases.test_name == 'Datavalidation':
+                    src = ast.literal_eval(x.src_execution_log)
+                    if src['result'] == 'none':
+                        print("in if 333")
+                        src_pass = {'res': src['result'],
+                                    'src_count': src['src_count'],
+                                    'src_to_dest_count': src[
+                                        'src_to_dest_count']}
+                    else:
+                        print('came here 339')
+
+                        src_dict = json.loads(src['result'])
+                        src_pass = {'res': src_dict[:10],
+                                    'src_count': src['src_count'],
+                                    'src_to_dest_count': src[
+                                        'src_to_dest_count']}
+
+                    dest = ast.literal_eval(x.des_execution_log)
+                    if dest['result'] == 'none':
+                        dest_pass = {'res': dest['result'],
+                                     'dest_count': dest['tar_count'],
+                                     'dest_to_src_count': dest[
+                                         'dest_to_src_count']}
+                    else:
+                        des_dict = json.loads(dest['result'])
+                        dest_pass = {'res': des_dict[:10],
+                                     'dest_count': dest['tar_count'],
+                                     'dest_to_src_count': dest[
+                                         'dest_to_src_count']}
+                    dest = dest_pass
+                    src = src_pass
+                else:
+                    dest = x.des_execution_log
+                    src = x.src_execution_log
             else:
                 if x.test_cases.test_name == 'NullCheck' or \
                         x.test_cases.test_name == 'DuplicateCheck':
                     dest = json.loads(x.des_execution_log)
+                    print(dest)
                     dest = dest[:10]
                     src = x.src_execution_log
                 elif x.test_cases.test_name == 'Datavalidation':
+                    print("324", x.src_execution_log)
                     if x.src_execution_log == 'none':
+                        print("came here")  # not Valid now.
                         src = 'none'
                     else:
-                        src = json.loads(x.src_execution_log)
-                        src = src[:10]
+                        print("came here else")
+                        src = ast.literal_eval(x.src_execution_log)
+                        print(src)
+                        if src['result'] == 'none':
+                            print("in if 333")
+                            src = {'res': src['result'],
+                                   'src_count': src['src_count'],
+                                   'src_to_dest_count': src[
+                                       'src_to_dest_count']}
+                        else:
+                            print('came here 339')
+
+                            src_dict = json.loads(src['result'])
+                            src = {'res': src_dict[:10],
+                                   'src_count': src['src_count'],
+                                   'src_to_dest_count': src[
+                                       'src_to_dest_count']}
                     if x.des_execution_log == 'none':
                         dest = 'none'
                     else:
-                        dest = json.loads(x.des_execution_log)
-                        dest = dest[:10]
+                        print('came here 347')
+                        dest = ast.literal_eval(x.des_execution_log)
+                        if dest['result'] == 'none':
+                            dest = {'res': dest['result'],
+                                    'dest_count': dest['tar_count'],
+                                    'dest_to_src_count': dest[
+                                        'dest_to_src_count']}
+                        else:
+                            des_dict = json.loads(dest['result'])
+                            dest = {'res': des_dict[:10],
+                                    'dest_count': dest['tar_count'],
+                                    'dest_to_src_count': dest[
+                                        'dest_to_src_count']}
                 else:
+                    print("came h")
                     dest = x.des_execution_log
                     src = x.src_execution_log
+
             return {
                 'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,

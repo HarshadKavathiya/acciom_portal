@@ -21,6 +21,10 @@ export interface DialogData {
   value_src:Array<any>;
   key_dest:Array<any>;
   value_dest:Array<any>;
+  source_count:number;
+  target_count:number;
+  src_to_dest_count:number;
+  dest_to_src_count:number;
   case_log_id:number;
   execution_status:number;
   src_value_dataduplication:Array<any>;
@@ -29,6 +33,7 @@ export interface DialogData {
   value_src_nullcheck:Array<any>;
   show_src_table:boolean;
   show_dest_table:boolean;
+  
 }
 export interface DialogDataCaseDetail {
  src_db_name:string;
@@ -108,6 +113,10 @@ export class StartupComponent implements OnInit {
   case_name:String;
   show_dest_table:boolean;
   show_src_table:boolean;
+  source_count:number;
+  target_count:number;
+  src_to_dest_count:number;
+  dest_to_src_count:number;
   all_connection=[];
   all_cases=[];
   constructor( private router:Router,
@@ -185,9 +194,11 @@ export class StartupComponent implements OnInit {
       for(let i=0;i<data.all_cases.length;i++){
         this.all_cases.push({'case_id':data.all_cases[i][0], 'case_name':data.all_cases[i][1],'checked':false})
       }
+      console.log(data.all_connection)
       this.all_connection=data.all_connections
-
+      console.log(this.all_connection)
       this.show_connection(this.all_connection, this.all_cases)
+   
       
     },err=>{
     })
@@ -267,7 +278,7 @@ getcasedetails(case_id,case_name){
   event.stopPropagation();
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
 
-this.src_db_name=data.res.src_db_name;
+this.src_db_name=data.res.src_db_name
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
 this.target_table=data.res.target_table
@@ -290,7 +301,7 @@ showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_ty
     data : {case_id:case_id,src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
     src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
-  src_qry:src_qry, des_qry:des_qry,casename:case_name, show_src_table:this.show_src_table, show_dest_table:this.show_dest_table}
+  src_qry:src_qry, des_qry:des_qry,casename:case_name}
   });
   
   dialogRef.afterClosed().subscribe(result => {
@@ -303,11 +314,11 @@ showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_ty
       case 1:
       return '#4ac69b';
       case 2:
-      return "#e56868";
+      return "#ef8160";
       case 3:
       return '#f3a563'
       case 4:
-      return 'red';
+      return '#e56868';
     }
 
   }
@@ -362,10 +373,7 @@ getlog(test_name,src_table,target_table,case_log_id){
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
 console.log(data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
-    // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
-
-
 }
 
 showlog(test_name,src_table,target_table,case_log){
@@ -421,38 +429,55 @@ showlog(test_name,src_table,target_table,case_log){
     this.keys_src=[]
     this.keys_dest =[]
   this.value_dest=[]
-    if(case_log.source_log == 'none'){
-      this.show_logdialog(test_name)
-      console.log(case_log.source_log)
+  this.show_src_table=true;
+  this.show_dest_table=true;
+    if(case_log.source_log['res'] == 'none' && case_log.destination_log['res'] == 'none'){
+    this.show_logdialog(test_name)
+    this.source_count=case_log.source_log['src_count']
+    this.src_to_dest_count = case_log.source_log['src_to_dest_count']
+    this.target_count=case_log.destination_log['dest_count']
+    this.dest_to_src_count=case_log.destination_log['dest_to_src_count']
+    }
+    else{
+    if(case_log.source_log['res'] == 'none' ){
+      this.source_count=case_log.source_log['src_count']
+      this.src_to_dest_count = case_log.source_log['src_to_dest_count']
       this.show_src_table=false;
     }
     else{
       this.show_src_table=true;
-      this.parsed_obj=(eval(case_log.source_log)[0])
+      this.source_count=case_log.source_log['src_count']
+      this.src_to_dest_count=case_log.source_log['src_to_dest_count']
+      this.parsed_obj=(eval(case_log.source_log['res'])[0])
     this.first_obj=(JSON.parse(String(this.parsed_obj)))
     this.keys_src=(Object.keys(this.first_obj))
-     this.len=eval(case_log.source_log).length
+     this.len=eval(case_log.source_log['res']).length
     for(var i=0;i<this.len;i++){
-        this.parsed_obj=(eval(case_log.source_log)[i])
+        this.parsed_obj=(eval(case_log.source_log['res'])[i])
         this.first_obj=(JSON.parse(String(this.parsed_obj)))
         this.value_src.push(Object.values(this.first_obj))
       }  
     }
-    if(case_log.destination_log == 'none' ){
+    
+    if(case_log.destination_log['res'] == 'none' ){
       this.show_dest_table=false;
-      this.show_logdialog(test_name)
-      console.log(case_log.source_log)
+      this.target_count=case_log.destination_log['dest_count']
+      this.dest_to_src_count=case_log.destination_log['dest_to_src_count']
+
 
     }
     else{
       this.show_dest_table=true;
-      this.parsed_obj1 = (eval(case_log.destination_log)[0])
-      console.log(this.parsed_obj1)
+      console.log(case_log.destination_log['res'])
+      this.target_count=case_log.destination_log['dest_count']
+      this.dest_to_src_count=case_log.destination_log['dest_to_src_count']
+
+      this.parsed_obj1 = (eval(case_log.destination_log['res'])[0])
       this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
       this.keys_dest = (Object.keys(this.first_obj1))
-      this.len=eval(case_log.destination_log).length
+      this.len=eval(case_log.destination_log['res']).length
      for(var i=0;i<this.len;i++){
-      this.parsed_obj1=(eval(case_log.destination_log)[i])
+      this.parsed_obj1=(eval(case_log.destination_log['res'])[i])
       this.first_obj1=(JSON.parse(String(this.parsed_obj1)))
       this.value_dest.push(Object.values(this.first_obj1))
     }
@@ -466,6 +491,7 @@ showlog(test_name,src_table,target_table,case_log){
       this.ddlcheck=true
 
     }
+  }
   
   else if(test_name == 'DDLCheck'){
   
@@ -494,9 +520,11 @@ showlog(test_name,src_table,target_table,case_log){
     height:'auto',
     data : {countcheck:this.countcheck,nullcheck:this.nullcheck,duplicate:this.duplicate,
       datavalidation:this.datavalidation,source_log :case_log.source_log,destination_log:case_log.destination_log,
-    key_dest:this.keys_dest, value_dest:this.value_dest,key_src:this.keys_src,value_src:this.value_src,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
+    key_dest:this.keys_dest, value_dest:this.value_dest,key_src:this.keys_src,value_src:this.value_src,source_count:this.source_count,target_count:this.target_count,
+    src_to_dest_count:this.src_to_dest_count,dest_to_src_count:this.dest_to_src_count,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
-      src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication}
+      src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication
+      ,show_src_table:this.show_src_table, show_dest_table:this.show_dest_table}
   });
   dialogRef.afterClosed().subscribe(result => {
    });}}

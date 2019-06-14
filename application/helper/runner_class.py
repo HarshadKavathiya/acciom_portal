@@ -1,8 +1,11 @@
 import ast
 
+from flask import current_app as app
+
 from application.common.dbconnect import source_db, dest_db
 from application.helper.countcheck import count_check
-from application.helper.datavalidation import datavalidation
+from application.helper.datavalidation import datavalidation, \
+    datavalidation_link
 from application.helper.ddlcheck import ddl_check
 from application.helper.duplication import duplication
 from application.helper.nullcheck import null_check
@@ -44,6 +47,15 @@ def save_case_log(test_case_id, execution_status,
                        error_log=error_log)
     temp.save_to_db()
     return temp
+
+
+def get_count(cursor, table_name):
+    cursor.execute(
+        'SELECT COUNT(1) FROM {}'.format(table_name))
+    for row in cursor:
+        for count in row:
+            pass
+    return count
 
 
 def save_test_status(test_case_id, status):
@@ -160,6 +172,7 @@ def run_test(case_id):
                                     target_Detail['db_password']).cursor()
             table_name = split_table(case_id.test_case_detail)
             query = get_query(case_id.test_case_detail)
+            print(query)
             result = count_check(source_cursor,
                                  target_cursor,
                                  table_name['src_table'],
@@ -175,6 +188,7 @@ def run_test(case_id):
                                     target_Detail['db_password']).cursor()
             table_name = split_table(case_id.test_case_detail)
             query = get_query(case_id.test_case_detail)
+            print(query)
             column = get_column(case_id.test_case_detail)
             result = null_check(target_cursor, table_name['target_table'],
                                 column, query)
@@ -224,6 +238,19 @@ def run_test(case_id):
                                table_name['src_table'],
                                table_name['target_table'])
 
+        if case_id.test_name == 'Datavalidation-link':
+            query = get_query(case_id.test_case_detail)
+            target_Detail = db_details(case_id.target_db_id)
+            target_cursor = dest_db(target_Detail['db_name'],
+                                    target_Detail['db_type'].lower(),
+                                    target_Detail['db_hostname'].lower(),
+                                    target_Detail['db_username'],
+                                    target_Detail['db_password']).cursor()
+
+            query = query['targetqry']
+            result = datavalidation_link(target_cursor, query)
+            print("252 res", result)
+
         if result['res'] == 1:
             save_test_status(case_id, 1)  # TestCase object.
             case_log.execution_status = 1
@@ -233,6 +260,8 @@ def run_test(case_id):
             case_log.save_to_db()
 
         elif result['res'] == 3:
+            src_qry = ''
+            target_qry = ''
             save_test_status(case_id, 3)  # TestCase object.
             case_log.execution_status = 3
             case_log.src_execution_log = result['src_value']
@@ -242,6 +271,19 @@ def run_test(case_id):
             if case_id.test_name == 'Datavalidation':
                 src_Detail = db_details(case_id.src_db_id)
                 target_Detail = db_details(case_id.target_db_id)
+                query = get_query(case_id.test_case_detail)
+                if query == {}:
+                    src_qry = ""
+                    target_qry = ""
+                else:
+                    src_qry = query['sourceqry']
+                    target_qry = query['targetqry']
+
+                app.logger.debug(
+                    "srcqry " + src_qry + "targetqry " + target_qry)
+
+                table_name = split_table(case_id.test_case_detail)
+
                 datavalidation(src_Detail['db_name'],
                                table_name['src_table'],
                                src_Detail['db_type'].lower(),
@@ -254,7 +296,8 @@ def run_test(case_id):
                                src_Detail['db_hostname'],
                                target_Detail['db_username'],
                                target_Detail['db_password'],
-                               target_Detail['db_hostname'])
+                               target_Detail['db_hostname'],
+                               src_qry, target_qry)
         elif result['res'] == 0:
             save_test_status(case_id, 2)
             case_log.execution_status = 2
@@ -268,7 +311,7 @@ def run_test(case_id):
             case_log.execution_status = 4
             case_log.src_execution_log = result['src_value']
             case_log.des_execution_log = result['des_value']
-            case_log.error_log = None
+            # case_log.error_log = result['err_value']
             case_log.save_to_db()
 
     return True

@@ -289,7 +289,7 @@ if (this.selectedAll){
  {
       var status=true;
       var standard_cases=['CountCheck','Datavalidation','DuplicateCheck',
-      'NullCheck','DDLCheck']
+      'NullCheck','DDLCheck','Datavalidation-link']
       for(let i=0;i<case_name.length;i++){
           if(standard_cases.includes(case_name[i].name) && case_name[i] != undefined)
           {

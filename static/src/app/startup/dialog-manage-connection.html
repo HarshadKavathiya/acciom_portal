@@ -47,7 +47,7 @@
         <mat-select  (selectionChange)="changeselect($event.value)">
         <mat-option *ngFor="let x of data.connections; let i=index"
         [value]="x">
-        Connection{{i+1}}
+            {{x[1]}}
         </mat-option>
         </mat-select>
         </mat-form-field>
@@ -83,7 +83,7 @@
         <mat-select (selectionChange)="changeselect($event.value)">
                 <mat-option *ngFor="let x of data.connections;let i=index"
         [value]="x">
-        Connection{{i+1}}
+        {{x[1]}}
     </mat-option>
     
         </mat-select>
