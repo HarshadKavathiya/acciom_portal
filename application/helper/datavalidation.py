@@ -54,7 +54,7 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
             str(thread_count),
             api_end_point),
         shell=True, universal_newlines=False)
-    app.logger.debug(datetime.datetime.now())
+    app.logger.debug(str(datetime.datetime.now()))
 
 
 def datavalidation_link(cursor, query):
