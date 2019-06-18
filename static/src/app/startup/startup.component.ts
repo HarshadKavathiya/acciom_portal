@@ -148,7 +148,7 @@ export class StartupComponent implements OnInit {
     clearInterval(this.times)
  this.times=setInterval(()=>{this.Initialize();},39000)
   }
-
+  
   Initialize(){
     this.id=localStorage.getItem('id')
     this.fileUploadService.getSuiteById(this.id).subscribe(data => {

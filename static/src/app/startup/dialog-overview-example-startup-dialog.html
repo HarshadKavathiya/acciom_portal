@@ -148,7 +148,7 @@ opacity: 0.9;
                                 </tr>
                         </table> 
                 </div>
-            <div class="test-result">Source and Target records count does not match</div>
+            <div class="test-result">Source and Target Record Count do not Match</div>
             <table  cellspacing=12 class="table1" >
                     <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
                         <th>Target Table-{{ data.target_table }}</th>
@@ -169,7 +169,7 @@ opacity: 0.9;
                             </table>
                      </div>
 
-            <div class="test-result">Both Source and Target records count matches</div>
+            <div class="test-result">Source and Target Record Count Matches</div>
             <table  cellspacing=12 class="table1" >
                     <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
                         <th>Target Table-{{ data.target_table }}</th>
@@ -207,7 +207,7 @@ opacity: 0.9;
                
             </div>
             <div class="test-result1">Total Null Records {{data.len_null}}</div>
-            <div class="test-result">Null values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
+            <div class="test-result">Null Values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
             <table border=1 style="border-collapse: collapse">
                     <tr  *ngFor="let each_row of data.value_src_nullcheck">
                      <td  *ngFor= "let z of each_row">
@@ -231,7 +231,7 @@ opacity: 0.9;
                         </table>
                 
             </div>
-            <div class="test-result">No Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
+            <div class="test-result">No Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
         </div>
         <div *ngIf="data.execution_status === 2">
             <div class="result">
@@ -242,7 +242,7 @@ opacity: 0.9;
                                 </tr>
                         </table>
             </div>
-            <div class="test-result">Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
+            <div class="test-result">Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
             <table>
                     <tr> <th>Column Name(s) </th></tr>
                     <tr *ngFor="let y of data.src_value_dataduplication" cellspacing=2>
@@ -268,8 +268,8 @@ opacity: 0.9;
                     <div id="Dest_Count">Source Count : {{data.source_count}}</div>
                     <div id="Src_Count">Target Count : {{data.target_count}}</div>   
 
-                    <div> Number of Mismatch found in Source : {{data.src_to_dest_count}}</div>
-                    <div> Number of Mismatch found in Target : {{data.dest_to_src_count}}</div>
+                    <div> Number of Mismatch Records found in Source : {{data.src_to_dest_count}}</div>
+                    <div> Number of Mismatch Records found in Target : {{data.dest_to_src_count}}</div>
 
                 </div>
                 </div>
@@ -320,7 +320,7 @@ opacity: 0.9;
             
                             </div>
             </div>
-            <div class="test-result">Both Source and Target Data matches</div>
+            <div class="test-result">Source and Target Data are Same</div>
         </div>
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.ddlcheck">
@@ -334,7 +334,7 @@ opacity: 0.9;
                             </tr>
                         </table>
             </div>
-        <div class="test-result">Both Source and Target Schema not matches</div>
+        <div class="test-result">Source and Target Schema do not Match</div>
             <table cellspacing=12 class="table1">
                 <tr class="tableheader">
                 <th>Source Table</th>
@@ -358,13 +358,13 @@ opacity: 0.9;
                             </tr>
                     </table>
             </div>
-        <div class="test-result">Both Source and Target Schema matches</div>
+        <div class="test-result">Source and Target Schema are Same</div>
     </div>
 </div>
-<div mat-dialog-actions class="close">
+<!-- <div mat-dialog-actions class="close">
         <a mat-flat-button  
         class="export-btn" *ngIf="data.execution_status !== 1"
         href="{{onexport(data.case_log_id)}}" >Export </a>
 
-    </div>
+    </div> -->
 
