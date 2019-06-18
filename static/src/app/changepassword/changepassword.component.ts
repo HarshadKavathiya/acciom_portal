@@ -23,19 +23,25 @@ export class ChangepasswordComponent implements OnInit {
   }
   changepassword(){
     if(!this.createForm.valid || (this.createForm.controls.password.value != this.createForm.controls.confirm_password.value))
-    { alert("please enter correct passwords")
+    { Swal("Error","Please enter correct passwords","error")
+
   }
+  else{
   console.log(this.createForm)
   this.fileUploadService.change_password(this.createForm.controls.old_password.value,this.createForm.controls.password.value).subscribe(data=>{
     if(data.success){
-      Swal("success","password changed","success")
+      Swal("Success","Password changed","success")
       this.router.navigate(['login'])
     }
   },err=>{
-    Swal("error","incorrect passwords","error")
-    this.router.navigate(['login'])
+    Swal("Error","Incorrect password","error")
+    // this.router.navigate(['login'])
 
   })
+}
+  }
+  gobacktohome(){
+    this.router.navigate(['/start-up'])
   }
 
 }

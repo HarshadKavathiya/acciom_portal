@@ -35,6 +35,8 @@ export class DbdetailsComponent implements OnInit {
       console.log(data)
       if(data.success){
       Swal("success","Succesfully Updated Details","success")
+      this.router.navigate(['Viewdb'])
+
       }  
    },err=>{
       Swal("error","Something went wrong","error")
@@ -42,6 +44,11 @@ export class DbdetailsComponent implements OnInit {
   }
   viewconnection(){
     this.router.navigate(['Viewdb'])
+  }
+  Cancel(){
+    this.router.navigate(['Viewdb'])
+
+
   }
 
 }

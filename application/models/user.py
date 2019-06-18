@@ -320,8 +320,6 @@ class TestCaseLog(db.Model):
                                     'src_to_dest_count': src[
                                         'src_to_dest_count']}
                     else:
-                        print('came here 339')
-
                         src_dict = json.loads(src['result'])
                         src_pass = {'res': src_dict[:10],
                                     'src_count': src['src_count'],
@@ -350,15 +348,14 @@ class TestCaseLog(db.Model):
                         x.test_cases.test_name == 'DuplicateCheck':
                     dest = json.loads(x.des_execution_log)
                     print(dest)
+                    print(dest)
                     dest = dest[:10]
                     src = x.src_execution_log
                 elif x.test_cases.test_name == 'Datavalidation':
                     print("324", x.src_execution_log)
                     if x.src_execution_log == 'none':
-                        print("came here")  # not Valid now.
                         src = 'none'
                     else:
-                        print("came here else")
                         src = ast.literal_eval(x.src_execution_log)
                         print(src)
                         if src['result'] == 'none':
@@ -378,7 +375,6 @@ class TestCaseLog(db.Model):
                     if x.des_execution_log == 'none':
                         dest = 'none'
                     else:
-                        print('came here 347')
                         dest = ast.literal_eval(x.des_execution_log)
                         if dest['result'] == 'none':
                             dest = {'res': dest['result'],

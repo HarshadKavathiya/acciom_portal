@@ -33,6 +33,7 @@ export interface DialogData {
   value_src_nullcheck:Array<any>;
   show_src_table:boolean;
   show_dest_table:boolean;
+  len_null:number;
   
 }
 export interface DialogDataCaseDetail {
@@ -119,6 +120,7 @@ export class StartupComponent implements OnInit {
   dest_to_src_count:number;
   all_connection=[];
   all_cases=[];
+  len_null:number;
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -381,12 +383,14 @@ showlog(test_name,src_table,target_table,case_log){
     this.show_logdialog(test_name)
   }
   else if (test_name == 'NullCheck'){
+    this.len_null=0
     this.value_src_nullcheck=[]
     this.show_logdialog(test_name)
-    
     if(case_log.destination_log==null){
     }else{
       this.len=eval(case_log.destination_log).length
+      this.len_null=this.len - 1
+      console.log(case_log.destination_log)
       for(var i=0;i<this.len;i++){
         var temp=[]
         temp=Object.values(eval(case_log.destination_log)[i])
@@ -399,6 +403,7 @@ showlog(test_name,src_table,target_table,case_log){
           }); }
         this.value_src_nullcheck.push(temp)
     } 
+    console.log(this.value_src_nullcheck)
   }
 }
   else if (test_name == "DuplicateCheck"){
@@ -527,7 +532,7 @@ showlog(test_name,src_table,target_table,case_log){
     src_to_dest_count:this.src_to_dest_count,dest_to_src_count:this.dest_to_src_count,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
   case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
       src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication
-      ,show_src_table:this.show_src_table, show_dest_table:this.show_dest_table}
+      ,show_src_table:this.show_src_table, show_dest_table:this.show_dest_table, len_null:this.len_null}
   });
   dialogRef.afterClosed().subscribe(result => {
    });}}
