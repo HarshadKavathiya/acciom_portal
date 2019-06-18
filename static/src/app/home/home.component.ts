@@ -179,6 +179,7 @@ OnClick(v) {
     fileReader.readAsArrayBuffer(this.file);
   }
 selectBadge (e, x) {
+  console.log(this.all_cases)
   console.log(typeof(e.target.value))
   if (e.target.checked) {
     this.disable2=false;
@@ -218,7 +219,7 @@ return true;
 
   this.selectedAll = !this.selectedAll
 if (this.selectedAll){
-  for (var i = 0; i < this.all_cases.length; i++) {
+  for (var i = 0; i < this.all_cases.length; i++) {''
       this.all_cases[i].selected = this.selectedAll;
      this.selectedValue.push(this.all_cases[i].id.toString());
     //  this.selectedValue.push(this.all_cases[i].name);

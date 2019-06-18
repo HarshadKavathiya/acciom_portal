@@ -14,7 +14,9 @@ export class ViewdbComponent implements OnInit {
     private router:Router) {}
   ngOnInit() {
     this.fileUploadService.get_db_connect().subscribe(data=>{
+      console.log(data)
       this.db_connection=(data.connection)
+      console.log(this.db_connection)
       
 
   })

@@ -14,10 +14,12 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url= '/api';
+  url= 'http://localhost:5000/api';
 
   constructor(private http:HttpClient) { }
   inputFile:File
+  
+  abc :boolean;
 
   postFile(fileToUpload: File,selectedsheet:any,selectedCase:any,suitename:any,executevalue:any):Observable<any>{
     console.log("came in service")
@@ -226,6 +228,53 @@ export class UploadserviceService {
     }) 
     return this.http.get<any>(`${this.url}/connection-detail/${suite_id}`,{headers: headers})
   }
+  get_all_suites(){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/test-suite-list`,{headers: headers})
+  }
+  get_suite_details(suite_id){
+  
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/user-test-suite/${suite_id}`,{headers: headers})
+  }
+  get_all_users(){
+    return this.http.get<any>(`${this.url}/user-list`)
+  }
+  update_test_suite_details(test_case_id,update){
+    console.log(update)
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+  
+    return this.http.put<any>(`${this.url}/edit-test-suite/${test_case_id}`,{"update":update},{headers:headers})
+   
+  }
+  update_test_suite_details1(db_id,update1){
+    
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken
+    })
+    return this.http.put<any>(`${this.url}/edit-test-suitenew/${db_id}`,{"update1":update1},{headers:headers})
+  }
+ new_test_suite(testcases,suite_name){
+  console.log(testcases)
+  this.loadToken()
+  this.newtoken='Bearer'+" "+this.authToken
+  let headers = new HttpHeaders().set('Authorization',this.newtoken)
+  return this.http.post<any>(`${this.url}/create_new_test_suite`,{"testcases":testcases,"suite_name":suite_name},{headers: headers}); 
+ }
   select_connections(type, cases, connection_id){  
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
@@ -238,6 +287,7 @@ export class UploadserviceService {
       "db_id":connection_id
     },{headers: headers})
   }
+
   update_case_details(case_id, src_table, target_table, src_qry, target_qry){
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
@@ -251,4 +301,17 @@ export class UploadserviceService {
       "target_query":target_qry
     },{headers: headers})
   }
+  
+  // get(){  
+  //   console.log(this.abc);
+  //   return this.abc;
+    
+  // }
+
+  // put(value:boolean){
+  //   console.log(value)
+  //   this.abc = value;
+  //   console.log(this.abc)
+  
+  // }
 }

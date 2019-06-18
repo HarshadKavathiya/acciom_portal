@@ -303,11 +303,11 @@ showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_ty
       case 1:
       return '#4ac69b';
       case 2:
-      return "#e56868";
+      return "#ef8160";
       case 3:
       return '#f3a563'
       case 4:
-      return 'red';
+      return '#e56868';
     }
 
   }
@@ -353,14 +353,17 @@ show_logdialog(test_name){
       this.datavalidation_pass=false
     }
     if(test_name =='DDLCheck'){
-      this.ddlcheck_pass=false    }
+      console.log("356")
+      
+
+      this.ddlcheck_pass=false   }
 }
 
 getlog(test_name,src_table,target_table,case_log_id){
   //calls rest api with case_log_id and fetch the
   // case_name , case_src_log and case_des_log.
   this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
-console.log(data)
+  console.log(data)
     this.showlog(test_name, src_table, target_table, data.test_case_log.data)
     // this.showlog(test_name, src_table, target_table, data.test_case_log.data)
   });
@@ -438,7 +441,7 @@ showlog(test_name,src_table,target_table,case_log){
         this.value_src.push(Object.values(this.first_obj))
       }  
     }
-    if(case_log.destination_log == 'none' ){
+    if(case_log.destination_log == 'none'){
       this.show_dest_table=false;
       this.show_logdialog(test_name)
       console.log(case_log.source_log)
@@ -464,29 +467,30 @@ showlog(test_name,src_table,target_table,case_log){
       this.ddlcheck_pass=true
       this.duplicate=true
       this.ddlcheck=true
-
     }
   
   else if(test_name == 'DDLCheck'){
   
-   if(case_log.source_log=='none1')
+   if(case_log.source_log == 'none1' && case_log.destination_log=='none1')
     {
       this.show_logdialog(test_name)
     }
-   else if(case_log.destination_log=='none1')
-    {
-      this.show_logdialog(test_name)
-
-    }
-   else {
-    this.countcheck=true
+    else{
+      console.log(typeof(case_log.source_log))
+      var t = JSON.parse(case_log.source_log)
+      case_log.source_log=t
+      var t = JSON.parse(case_log.destination_log)
+      case_log.destination_log=t
+      this.countcheck=true
     this.nullcheck=true
     this.datavalidation=true
     this.datavalidation_pass=true
     this.ddlcheck_pass=true
     this.duplicate=true
     this.ddlcheck=false
-   }
+    }
+    
+   
   }
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogstartup, {    //break
     panelClass: 'my-class',

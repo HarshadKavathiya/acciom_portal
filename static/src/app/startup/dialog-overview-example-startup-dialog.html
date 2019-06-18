@@ -300,15 +300,16 @@ opacity: 0.9;
              <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
 
             </div>
-        <div class="test-result">Both Source and Target schema doesn’t matches</div>
+        <div class="test-result">Both Source and Target schema not matches</div>
             <table cellspacing=12 class="table1">
                 <tr class="tableheader">
                 <th>Source Table</th>
                 <th>Target Table </th>
                 </tr>
-                <tr class="tabledata">
-                    <td>{{data.source_log}}</td>
-                    <td>{{data.destination_log}}</td>
+                <tr class="tabledata" *ngFor="let i of data.source_log; let k = index ">
+                        
+                    <td > {{data.source_log[k]}}</td>
+                    <td >{{data.destination_log[k]}}</td>
                 </tr>
             </table>
     </div>
@@ -326,7 +327,7 @@ opacity: 0.9;
              <img src="assets/images/003-verification-symbol.png"/> -->
 
             </div>
-        <div class="test-result">Both Source and Target Data matches</div>
+        <div class="test-result">Both Source and Target Schema matches</div>
     </div>
 </div>
 <div mat-dialog-actions class="close">

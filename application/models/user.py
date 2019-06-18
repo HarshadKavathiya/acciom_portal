@@ -99,6 +99,17 @@ class User(db.Model):
         except Exception as e:
             return {'message': e}
 
+    @classmethod
+    def return_all_users(cls, current_user):
+        def test_suite_to_json(x):
+            return {
+                'user_id': x.user_id,
+
+            }
+
+        return {'user': list(map(lambda x: test_suite_to_json(x),
+                                 User.query.filter_by(user_id=current_user)))}
+
 
 class RevokedTokenModel(db.Model):
     __tablename__ = 'revoked_tokens'
@@ -200,9 +211,11 @@ class TestSuite(db.Model):
             }
 
         def db_id_to_json(x):
+
             return {
                 'db_id': x.db_id,
-                'db_type': x.db_type
+                'db_type': x.db_type,
+
             }
 
         def test_case_to_json(x):
@@ -243,6 +256,30 @@ class TestSuite(db.Model):
         return {'user': list(map(lambda x: test_suite_to_json(x),
                                  TestSuite.query.filter_by(user_id=user_id)))}
 
+    @classmethod
+    def return_all_suite(cls, current_user):
+        def db_id_to_json(x):
+            return {
+
+                'user_first_name': x.first_name,
+                'user_last_name':x.last_name
+
+
+            }
+        def test_suite_to_json(x):
+            return {
+                'test_suite_id': x.test_suite_id,
+                'excel_name':x.excel_name,
+                'test_suite_name':x.test_suite_name,
+                # 'created':x.created
+                'user_name':list(map(lambda x: db_id_to_json(x),
+                                      User.query.
+                                      filter_by(user_id=x.user_id))),
+
+            }
+
+        return {'user': list(map(lambda x: test_suite_to_json(x),
+                                 TestSuite.query.filter_by(user_id=current_user)))}
 
 class TestCase(db.Model):
     __tablename__ = "test_case"
@@ -278,6 +315,69 @@ class TestCase(db.Model):
         self.test_case_detail = test_case_detail
         self.src_db_id = src_db_id
         self.target_db_id = target_db_id
+
+    @classmethod
+    def return_all_case(cls, test_suite_id):
+        def db_id_to_json(x):
+            return {
+                'db_id':x.db_id,
+                'connection_name':x.connection_name,
+
+                'db_type': x.db_type,
+                'db_name':x.db_name,
+                'db_hostname':x.db_hostname,
+                'db_username':x.db_username
+
+
+            }
+
+
+        def test_suite_to_json(x):
+            y=json.loads(x.test_case_detail)
+            print(type(y))
+            return {
+                'test_case_id':x.test_case_id,
+               'test_suite_id': x.test_suite_id,
+               "test_suite_id": x.test_suite_id,
+               "test_id": x.test_id,
+               "test_status": x.test_status,
+               "test_case_detail": y,
+               "test_name": x.test_name,
+               # "src_db_id": x.src_db_id,
+               # "target_db_id": x.target_db_id,
+               'src_db_id': list(map(lambda x: db_id_to_json(x),
+                                      DbDetail.query.
+                                      filter_by(db_id=x.src_db_id))),
+                'target_db_id': list(map(lambda x: db_id_to_json(x),
+                                      DbDetail.query.
+                                      filter_by(db_id=x.target_db_id))),
+            }
+
+        return {'user': list(map(lambda x: test_suite_to_json(x),
+                                 TestCase.query.filter_by(test_suite_id=test_suite_id)))}
+
+    @classmethod
+    def return_excel_name(cls,test_case_id):
+
+        def   test_suite_to_json(x):
+            return {
+               'excel_name':x.excel_name
+            }
+
+        def test_case_to_json(x):
+
+            return {
+                'test_suite_id': list(map(lambda x: test_suite_to_json(x),
+                                   TestSuite.query.
+                                   filter_by(test_suite_id=x.test_suite_id)))}
+
+
+
+        return {'user': list(map(lambda x: test_case_to_json(x),
+                                     TestCase.query.filter_by(test_case_id=test_case_id)))}
+
+
+
 
 
 class TestCaseLog(db.Model):

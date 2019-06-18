@@ -5,6 +5,7 @@ import { Routes, RouterModule, Router } from '@angular/router';
 import Swal from 'sweetalert2'
 
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -29,9 +30,10 @@ export class LoginComponent implements OnInit {
 
   LogIn()
 {
+
   this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
     if(data.success==true){
-      Swal("success",data.message,"success")
+      Swal("Success",data.message,"success")
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit {
      this.router.navigate(['Verifyuser'])
    }
    else{
-   Swal("error",err.error.message,"error")
+   Swal("Error",err.error.message,"error")
    }
   });
 

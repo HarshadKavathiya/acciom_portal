@@ -13,3 +13,6 @@ body{
 }
 .mat-button-focus-overlay { background-color: transparent!important; }
 
+body{
+    overflow-x: hidden;
+}

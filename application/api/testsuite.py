@@ -13,8 +13,10 @@ from application.common.Response import success, error
 # from celery_task import my_background_task
 from application.helper.runner_class import run_by_case_id
 from application.helper.runner_class import split_db
-from application.models.user import TestSuite, TestCase, TestCaseLog, DbDetail
+from application.models.user import TestSuite, TestCase, TestCaseLog, DbDetail,User
 from flasgger import swag_from
+from sqlalchemy.sql import select
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('sheet')
@@ -45,13 +47,23 @@ class TestSuites(Resource):
         app.logger.debug(data)
         sheet = data['sheet']
         file = request.files['inputFile']
+        print("48",file)
         suite_name = data['suitename']
-        user_id = get_jwt_identity()
-        temp_file = TestSuite(user_id=user_id,
-                              excel_name=file.filename,
-                              test_suite_name=suite_name)
+        print("52",suite_name)
+        if suite_name == "undefined":
+            user_id = get_jwt_identity()
+            suite_name = "Quality Suite"
+            temp_file = TestSuite(user_id=user_id,
+                                  excel_name=file.filename,
+                                  test_suite_name=suite_name)
+            temp_file.save_to_db()
+        else:
+            user_id = get_jwt_identity()
+            temp_file = TestSuite(user_id=user_id,
+                                  excel_name=file.filename,
+                                  test_suite_name=suite_name)
 
-        temp_file.save_to_db()
+            temp_file.save_to_db()
         wb = load_workbook(filename=BytesIO(file.read()))
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
@@ -262,3 +274,156 @@ class SelectConnection(Resource):
         except Exception as e:
             # app.loggger.error(e)
             return error({"success": False, "message": str(e)})
+
+
+class TestSuiteList(Resource):
+    @jwt_required
+    def get(self):
+        current_user = get_jwt_identity()
+        print("271",current_user)
+        # print("284",user_id)
+        # test_suite=TestSuite.query.filter_by(
+        #     user_id=current_user).first()
+        # if test_suite:
+        # print(TestSuite.return_all_suite(user_id))
+        return {"suites": TestSuite.return_all_suite(current_user),
+                "success": True}
+
+
+class UserTestSuite(Resource):
+    @jwt_required
+    def get(self,test_suite_id):
+        current_user = get_jwt_identity()
+        print("271",current_user)
+        test_case=TestCase.query.filter_by(
+            test_suite_id=test_suite_id).first()
+        if test_case:
+            return {"suites": TestCase.return_all_case(test_suite_id),
+                    "success": True}
+        else:
+            return{"message":"false"}
+        # from sqlalchemy.orm import sessionmaker
+        # import sqlalchemy
+        # engine = sqlalchemy.create_engine('mysql://root:Password1234@localhost')
+        # Session = sessionmaker(bind=engine)
+        # session = Session()
+        # session.query(TestCase).filter(TestCase.test_suite_id.in_((test_suite_id))).all()
+        # engine.execute("select * from TestCase")
+
+
+        # payload = {"test_case_id": test_case.test_case_id,
+        #            "test_suite_id": test_case.test_suite_id,
+        #            "test_id": test_case.test_id,
+        #            "test_status": test_case.test_status,
+        #            "test_case_detail": test_case.test_case_detail,
+        #            "test_name": test_case.test_name,
+        #            "src_db_id": test_case.src_db_id,
+        #            "target_db_id": test_case.target_db_id,
+        #
+        #            }
+        #
+        # return {"success": True, "res": payload}
+
+class UserList(Resource):
+    def get(self):
+        l=User.query.all()
+        user=[]
+        for i in l:
+         user.append(i.user_id)
+        return {"success":True,"res":user}
+
+class CreateNewTestSuite(Resource):
+    @jwt_required
+    def post(self):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('testcases',
+                            help='This field cannot be blank',
+                            required=True,
+                            type=args_as_list, default=[])
+        parser.add_argument('suite_name',
+                            help='This field cannot be blank',
+                            required=True,
+                            )
+        data = parser.parse_args()
+        user_id = get_jwt_identity()
+
+        testcase=data["testcases"]
+
+        test_case = TestCase.query.filter_by(
+            test_case_id=testcase[0]).first()
+        if test_case:
+            get_execl_name=TestCase.return_excel_name(testcase[0])
+            excel_name=get_execl_name["user"][0]["test_suite_id"][0]["excel_name"]
+            print(user_id,excel_name,data["suite_name"])
+            if data["suite_name"] == None:
+               data["suite_name"] = "Quality Suite"
+               temp_file = TestSuite(user_id=user_id,
+                              excel_name=excel_name,
+                              test_suite_name=data["suite_name"])
+               temp_file.save_to_db()
+               for i in data["testcases"]:
+                   test_case = TestCase.query.filter_by(
+                       test_case_id=i).first()
+                   if test_case:
+                       temp = TestCase(test_suite_id=temp_file.test_suite_id,
+                                       test_id=test_case.test_id,
+                                       test_status=test_case.test_status,
+                                       test_case_detail=test_case.test_case_detail,
+                                       test_name=test_case.test_name,
+                                       src_db_id=test_case.src_db_id,
+                                       target_db_id=test_case.target_db_id)
+                       temp.save_to_db()
+            elif data["suite_name"] == "":
+                data["suite_name"] = "Quality Suite"
+                temp_file = TestSuite(user_id=user_id,
+                                      excel_name=excel_name,
+                                      test_suite_name=data["suite_name"])
+                temp_file.save_to_db()
+                for i in data["testcases"]:
+                    test_case = TestCase.query.filter_by(
+                        test_case_id=i).first()
+                    if test_case:
+                        temp = TestCase(test_suite_id=temp_file.test_suite_id,
+                                        test_id=test_case.test_id,
+                                        test_status=test_case.test_status,
+                                        test_case_detail=test_case.test_case_detail,
+                                        test_name=test_case.test_name,
+                                        src_db_id=test_case.src_db_id,
+                                        target_db_id=test_case.target_db_id)
+                        temp.save_to_db()
+
+            else:
+                temp_file = TestSuite(user_id=user_id,
+                                      excel_name=excel_name,
+                                      test_suite_name=data["suite_name"])
+                temp_file.save_to_db()
+                for i in data["testcases"]:
+                    test_case = TestCase.query.filter_by(
+                        test_case_id=i).first()
+                    if test_case:
+                        temp = TestCase(test_suite_id=temp_file.test_suite_id,
+                                        test_id=test_case.test_id,
+                                        test_status=test_case.test_status,
+                                        test_case_detail=test_case.test_case_detail,
+                                        test_name=test_case.test_name,
+                                        src_db_id=test_case.src_db_id,
+                                        target_db_id=test_case.target_db_id)
+                        temp.save_to_db()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

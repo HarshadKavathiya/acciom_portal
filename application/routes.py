@@ -11,9 +11,10 @@ from application.api.login import (Register,
 from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
     EditTestCase
 from application.api.testsuite import TestSuites, ExportTestLog, \
-    TestCaseLogDetail, ConnectionDetails, SelectConnection
+    TestCaseLogDetail, ConnectionDetails, SelectConnection,UserTestSuite,TestSuiteList,UserList,CreateNewTestSuite
 from application.models.user import RevokedTokenModel
 from index import jwt, app, api, static_folder
+from application.api.edittestsuite import EditTestSuite,EditTestSuiteNew
 
 
 @jwt.token_in_blacklist_loader
@@ -56,3 +57,11 @@ api.add_resource(VerifyAccount, '/api/verify-account/<string:token>')
 api.add_resource(CheckConnection, '/api/check-connection')
 api.add_resource(ConnectionDetails, '/api/connection-detail/<int:suite_id>')
 api.add_resource(SelectConnection, '/api/select-connection')
+api.add_resource(UserTestSuite,'/api/user-test-suite/<int:test_suite_id>')
+api.add_resource(TestSuiteList,'/api/test-suite-list')
+api.add_resource(UserList,'/api/user-list')
+api.add_resource(EditTestSuite,'/api/edit-test-suite/<int:test_case_id>')
+api.add_resource(EditTestSuiteNew,'/api/edit-test-suitenew/<int:db_id>')
+# api.add_resource(UpdateDBDetail,'/api/update_db_detail/<int:testcaseid>')
+api.add_resource(CreateNewTestSuite,'/api/create_new_test_suite')
+

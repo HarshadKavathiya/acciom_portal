@@ -4,6 +4,7 @@ import {UploadserviceService} from '../uploadservice.service';
 import { Routes, RouterModule, Router } from '@angular/router';
 import Swal from 'sweetalert2'
 
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',

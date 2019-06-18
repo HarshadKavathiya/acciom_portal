@@ -46,7 +46,7 @@ import {ColorDirective} from './directive/color1.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { CanDeactivate } from '@angular/router/src/utils/preactivation';
-import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
+// import { CanDeactivateGuard } from './home/can-deactivate-guard.service';
 import { UserdetailComponent } from './userdetail/userdetail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
@@ -58,6 +58,14 @@ import {MatSelectModule} from '@angular/material/select';
 import { ViewdbComponent } from './viewdb/viewdb.component';
 import {MatListModule} from '@angular/material/list';
 import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
+import { ViewtestcaseComponent } from './viewtestcase/viewtestcase.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { AuthGuard } from './auth-guard.service';
+import { AuthService } from './auth.service';
+import {CanDeactivateGuard} from './viewtestcase/can-deactivate-guard.service';
+import { MyDialogComponentComponent } from './my-dialog-component/my-dialog-component.component'
+
+
 
 @NgModule({
   declarations: [
@@ -84,6 +92,8 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     AfterverifyComponent,
     ViewdbComponent,
     EditdbdetailComponent,
+    ViewtestcaseComponent,
+    MyDialogComponentComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,12 +124,13 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     FlexLayoutModule,
     MultiselectDropdownModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
     Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [UploadserviceService,CanDeactivateGuard,ExcelService],
   bootstrap: [AppComponent],
   entryComponents: [DialogOverviewExampleDialog,DialogOverviewExampleDialogstartup,
-    DialogOverviewExampleDialogCaseDetail,DialogManageConnection]
+    DialogOverviewExampleDialogCaseDetail,DialogManageConnection,MyDialogComponentComponent]
 
 
 })

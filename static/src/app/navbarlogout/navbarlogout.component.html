@@ -5,15 +5,19 @@
         </button>
     </div> 
     <div class="menu">
-        <a  (click)="dashboard()"class="menubtn" mat-button>
+        <div class="dropdown">
+        <a  (click)="dashboard()"class="menubtn" mat-button>   
             <div class="iconimage">
                 <span class="imagespan"><img style="height:26px;width:27px" src="/assets/images/Dashboard1.png"/></span>
                 <span class="textspan">DashBoard</span>
             </div>
-            <!-- <i class="material-icons">
-            dashboard
-            </i> DashBoard -->
         </a>
+   
+        <div class="dropdown-content">
+                <a (click)="view_testsuitedetail()">View and Edit Test Suite</a>
+        </div>
+    </div>
+        <div>
         <a class="menubtn" mat-button (click)="upload()">
              <!-- <i class="material-icons">
             cloud_upload
@@ -24,6 +28,9 @@
                     <span class="textspan">Upload Suite</span>
                 </div>
         </a>
+    </div>
+    <div>
+
         <a class="menubtn1"  (click)="refresh()" mat-button>
             <div class="iconimage">
                <span class="imagespan"> <img style="height: 26px;width:27px;" src="/assets/images/Test Suite1.png"/></span>
@@ -31,6 +38,8 @@
             </div>
                 <!-- <div class="icontext">TestSuite</div> -->
              </a>
+            </div>
+
 <!-- <i class="material-icons"> view_list</i> -->
   </div>
   
@@ -47,9 +56,13 @@
             <a (click) ="Userdetail()" >User Details</a>    
             <a (click)="changepassword()">Change Password</a>
             <a (click)="view_connection()">View Connections</a>
+           
+
           </div>
     </div>
   </mat-toolbar>
+  
+
   
   
   
