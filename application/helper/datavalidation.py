@@ -25,7 +25,8 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     src_record_count = current_app.config.get('SPARK_SOURCE_RECORDS_COUNT')
     target_record_count = current_app.config.get('SPARK_TARGET_RECORDS_COUNT')
     thread_count = current_app.config.get('SPARK_THREAD_COUNT')
-    app.logger.debug(datetime.datetime.now())
+    app.logger.info(
+        "Data validation Job start at = {}".format(datetime.datetime.now()))
     print("Data validation Job start at = ", str(datetime.datetime.now()))
     print("queries", srcqry, targetqry)
     subprocess.Popen(
@@ -47,14 +48,14 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
             destination_password,
             des_db, des_table,
             des_db_type,
-            '"{0}"'.format(srcqry),
-            '"{0}"'.format(targetqry),
+            '{0}'.format(srcqry if srcqry else str(None)),
+            '{0}'.format(srcqry if targetqry else str(None)),
             str(src_record_count),
             str(target_record_count),
             str(thread_count),
             api_end_point),
         shell=True, universal_newlines=False)
-    app.logger.debug(datetime.datetime.now())
+    app.logger.debug(str(datetime.datetime.now()))
 
 
 def datavalidation_link(cursor, query):

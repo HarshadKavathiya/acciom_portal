@@ -33,7 +33,8 @@ def get_db_details(db_type, hostname, db_name, username, password, table_name,
                  "password": password,
                  "table_name": table_name,
                  "count": 0,
-                 "custom_query": custom_query
+                 "custom_query": custom_query if custom_query != str(
+                     None) else None
                  }
     return db_detail
 
