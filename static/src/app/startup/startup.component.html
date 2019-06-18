@@ -163,7 +163,7 @@
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 3" matTooltip=" Test Case is executing"
-                      aria-label="Button that displays a tooltip when focused or hovered over" >Waiting</td>
+                      aria-label="Button that displays a tooltip when focused or hovered over" >In Progress</td>
                       
                       <td> <div class="tableheader-test-date">{{ case_log.executed_at | date:'short' }}</div> </td>
                       <td><button  mat-button (click)="getlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">

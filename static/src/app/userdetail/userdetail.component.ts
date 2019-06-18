@@ -14,7 +14,9 @@ export class UserdetailComponent implements OnInit {
 
   ngOnInit() {
     this.email=localStorage.getItem('user')
+    this.email=this.email.replace("\"","").replace("\"","")
     this.name=localStorage.getItem('name')
+
   }
   closed(){
     this.router.navigate(['/startup'])

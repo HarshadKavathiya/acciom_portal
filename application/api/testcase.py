@@ -64,7 +64,6 @@ class TestCaseJob(Resource):
 class TestCaseSparkJob(Resource):
     def post(self, spark_job_id):
         print("Data validation Job ends at = ", str(datetime.datetime.now()))
-        app.logger.INFO(datetime.datetime.now())
         dict1 = request.data.decode('utf-8', 'ignore')
         res = ast.literal_eval(dict1)
         result_src = json.dumps(res['result']['src_to_dest'])

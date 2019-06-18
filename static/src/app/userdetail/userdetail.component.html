@@ -4,20 +4,21 @@
     <mat-card class="for-form">
         <mat-card-title class="title">User Details<hr></mat-card-title>
         
-      <table cellspacing=10>
+      <table class="tableStyle">
         <tr>
         <th>Name:</th>
-        <th>{{  name }}</th>
+        <th >{{  name }}</th>
       </tr>
       <tr>
           <th>Email:</th>
           <th>{{ email }}</th>
         </tr>
-      
+      <tr><td colspan="2"><br>
+        <button mat-button class="closebtn" (click)="closed()" color="warn">
+        Close</button>
+      </td></tr>
       </table>
-      <button mat-icon-button class="closebtn" (click)="closed()"color="warn">
-          Close
-    </button>
+      
 
     </mat-card>
 

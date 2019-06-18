@@ -6,7 +6,7 @@
 <div class="list">
         
         <div class="list-db" *ngFor=" let i of db_connection;let x = index">
-        <div >{{x+1}}</div>
+        <div style="margin-left: 10px">{{x+1}}</div>
         <div *ngIf="i.connection_name === null">Connection{{x+1}}</div>
          <div  *ngIf="i.connection_name != null">{{i.connection_name}}</div>  
         <div > {{ i.db_hostname}}</div>

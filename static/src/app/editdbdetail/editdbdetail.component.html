@@ -3,7 +3,7 @@
 
 <div class="body">
 <mat-card class="mat">
-    <div class="heading" > Update Your DB Details</div>
+    <div class="heading" > Update Database Details</div>
     <form class="form" [formGroup]="createForm">
     <mat-form-field class="example-full-width">
         <input type="text" autocomplete="off" matInput placeholder="Connection Name" formControlName="connection_name">
@@ -15,7 +15,7 @@
         </mat-form-field>
         <mat-form-field class="example-full-width">
             <input type="text" autocomplete="off" matInput placeholder=" Database Name" formControlName="name">
-            <mat-error>Enter  Name</mat-error>
+            <mat-error>Enter Database  Name</mat-error>
         </mat-form-field>
     
         <mat-form-field class="example-full-width">
@@ -31,7 +31,7 @@
             <mat-error>Enter Password </mat-error>
         </mat-form-field>
         <div  class="btn-class">
-        <button class="btn1" mat-raised-button mat-raised-button (click)="check_connection()" color="warn">Check Connection </button>
+        <button class="btn1" mat-raised-button [disabled]="createForm.invalid" mat-raised-button (click)="check_connection()" color="warn">Check Connection </button>
         <button class="btn2" mat-raised-button [disabled]="createForm.invalid" (click)="update_db_detail()" color="primary" >Update</button>
         </div>
     </form>

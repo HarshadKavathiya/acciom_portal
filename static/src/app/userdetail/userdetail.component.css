@@ -10,19 +10,23 @@
     
       height:100vh;
   }
+.tableStyle{
+  text-align: left;
+  margin-left: 10px;
+}
 
   .for-form{
     border:2px solid black; 
     height:200px;
-    width:auto;
+    width:400px;
     padding-right:0px;
     padding-left:0px;
     padding-top:0px;
     font-family: 'Hammersmith One', sans-serif;
   }
 .title{
-    color:rgb(241, 248, 230);
-    background-image: linear-gradient(to bottom right, #FF4848, #FF4848);
+    color:black;
+    background-color:#D6CFCF;
     margin:0px;
     text-align:center;
     font-family: 'Hammersmith One', sans-serif;
