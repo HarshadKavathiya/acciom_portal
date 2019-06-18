@@ -1,0 +1,175 @@
+<div class="main">
+<app-navbarlogout></app-navbarlogout>
+<!-- <h4 class="users">Users</h4>
+<mat-form-field>
+    <mat-label>List of users</mat-label>
+    <mat-select>
+        <mat-option *ngFor="let i of users" (click)="selectradio0(i)">
+            USER {{i}}
+        </mat-option>
+    </mat-select>
+</mat-form-field> -->
+
+
+
+<div class="error-NoSuite" *ngIf=noofsuites><h3>No suites uploaded by the user</h3></div>
+<div class="main1" *ngIf=show2>
+    <mat-card class="card">
+        <div class="list">
+            <ul class="list-db" *ngFor="let i of suite_list">
+                
+                <li>
+                    <mat-radio-button value="{{ i.test_suite_id }}" (change)="selectradio(i.test_suite_id,i.test_suite_name)">{{i.excel_name}}</mat-radio-button><br>
+                </li>
+                <li>{{i.test_suite_id}}</li>
+               <div *ngIf="i.test_suite_name !='Quality Suite'">
+                <li>{{i.test_suite_name}}</li></div>
+               <div *ngIf="i.test_suite_name =='Quality Suite'">
+                <li>{{i.test_suite_name}}{{i.test_suite_id}}</li></div>
+                <li>{{i.user_name[0].user_first_name}}</li>
+                <li>{{i.user_name[0].user_last_name}}</li>
+            
+            </ul>
+        </div>
+    </mat-card>
+   
+</div>
+
+
+
+<div *ngIf=show3>
+    <mat-icon class="clearicon" (click)="goback()">clear</mat-icon>
+    <div class="suitename"><h2>Test Suite: {{test_suite_name}}</h2></div>
+    <div class="testcase" *ngIf=notestcase><h3>No testcases are selected by user</h3></div>
+    <div *ngIf=table1>
+     <button class="btn3" mat-raised-button color="primary" [disabled]="!disable1" (click)="Submit1()">
+                    Save
+     </button>
+     <button mat-raised-button color="primary" [disabled]="show6" (click)="Create()" class="suitename">
+            Clone
+</button>
+<button mat-raised-button color="primary" [disabled]="show5" (click)="Suitename()">
+        Create Suite
+</button>
+     
+    <table class="table" >
+        <tr>
+            <th><mat-checkbox [(ngModel)]="checked" (change)="checkall()">select all</mat-checkbox><br>Test Case Id </th>
+            <th>Test Class</th>
+            <th>Description</th>
+            <th>Source Connection</th>
+            <th>Target Connection</th>
+            <th>Source Table</th>
+            <th>Target Table</th>
+            <th>Column</th>
+            <th>Source Query</th>
+            <th>Target Query</th>
+            
+            <th *ngIf=show4>Source DB ID</th>
+            <th *ngIf=show4>Target DB ID</th>
+        </tr>
+
+        <tr *ngFor="let i of suite_detail; let k = index ">
+                
+            <td><mat-checkbox [ngModel]="checked" (click)="checkone(i.test_case_id)">{{i.test_case_id}}</mat-checkbox></td>
+           
+
+            <td (click)="edittd(k,1)">
+                <div *ngIf=!show[k][1]>{{i.test_name}}</div>
+                <div *ngIf=show[k][1] class="inp">
+                <input (blur)="toggleInput(k,1)" type="text" value={{i.test_name}} (keyup)="editCell1($event.target.value,i)">
+                </div>
+
+            </td>
+            <td (click)="edittd(k,2)">
+                <div *ngIf=!show[k][2]>{{i.test_id}}</div>
+                <div *ngIf=show[k][2]>
+                <input  (blur)="toggleInput(k,2)" type="text" value={{i.test_id}} (keyup)="editCell2($event.target.value,i)"> 
+                </div>
+           </td>
+
+            <td  (click)="edittd(k,3)">
+                   <!-- <div *ngIf=showsrcconname1>{{i.src_db_id[0].connection_name}}</div> -->
+                   <!-- <div *ngIf=showsrcconname2>{{srcconname}}</div> -->
+                   <!-- {{i.src_db_id[0].connection_name}} -->
+              <mat-form-field style="width:100%">
+                    <mat-label>{{i.src_db_id[0].connection_name}}</mat-label>
+                    <mat-select  (selectionChange)="get_srctestcaseid(i.test_case_id)">
+                        <mat-option  *ngFor="let i of all_connections; let x=index" [value]=i (click)="selectradio_src(i)">
+                                <div *ngIf="x===0; else notShow">
+                                        *Add new connection
+                                  </div>
+                                  <ng-template #notShow>
+                                        <p>
+                                            connection{{x}}
+                                            </p>
+                                      </ng-template>
+                        </mat-option>
+                    </mat-select>
+              </mat-form-field> 
+            </td>
+
+            <td (click)="edittd(k,4)">
+                   <!-- <div *ngIf=showsrcconname1> {{i.target_db_id[0].connection_name}}</div> -->
+                   <!-- <div *ngIf=showsrcconname2>{{targetconname}}</div> -->
+                   <!-- {{i.target_db_id[0].connection_name}} -->
+                <mat-form-field style="width:100%">
+                    <mat-label>{{i.target_db_id[0].connection_name}}</mat-label>
+                    <mat-select (selectionChange)="get_targettestcaseid(i.test_case_id)">
+                        <mat-option *ngFor="let i of all_connections; let x=index" [(value)]="all_connections[x]"(click)="selectradio_target(i)">
+                            
+                                      <div *ngIf="x===0; else notShow">
+                                            *Add new connection
+                                      </div>
+                                      <ng-template #notShow>
+                                            <p>
+                                                connection{{x}}
+                                                </p>
+                                          </ng-template>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td> 
+            <td (click)="edittd(k,5)">
+                <div *ngIf=!show[k][5]>{{i.sourcetable}}</div>
+                <div *ngIf=show[k][5]>
+                <input  (blur)="toggleInput(k,5)" type="text" value={{i.sourcetable}} (keyup)="editCell5($event.target.value,i)">
+                </div>
+            </td>
+            <td (click)="edittd(k,6)">
+                <div *ngIf=!show[k][6]>{{i.targettable}}</div>
+                <div *ngIf=show[k][6]>
+                <input  (blur)="toggleInput(k,6)" type="text" value={{i.targettable}} (keyup)="editCell6($event.target.value,i)">
+                </div>
+            </td>
+            <td (click)="edittd(k,7)">
+                <div *ngIf=!show[k][7]>{{i.targetcolumn}}</div>
+                <div *ngIf=show[k][7]>
+                <input  (blur)="toggleInput(k,7)" type="text" value={{i.targetcolumn}} (keyup)="editCell7($event.target.value,i)">
+                </div>
+            </td>
+            <td (click)="edittd(k,8)">
+                <div *ngIf=!show[k][8]>{{i.test_case_detail.query.sourceqry}}</div>
+                <div *ngIf=show[k][8]>
+                <textarea  (blur)="toggleInput(k,8)" type="text" value={{i.test_case_detail.query.sourceqry}} (keyup)="editCell8($event.target.value,i)"></textarea>
+                </div>
+            </td>
+            <td (click)="edittd(k,9)">
+                <div *ngIf=!show[k][9]>{{i.test_case_detail.query.targetqry}}</div>
+                <div *ngIf=show[k][9]>
+                <textarea (blur)="toggleInput(k,9)" type="text" value={{i.test_case_detail.query.targetqry}} (keyup)="editCell9($event.target.value,i)"></textarea>
+                </div>
+            </td>
+            
+            
+           
+        
+            <td *ngIf=show4>{{i.src_db_id[0].db_id}}</td>
+            <td *ngIf=show4>{{i.target_db_id[0].db_id}}</td>
+        </tr>
+    </table>
+    </div>
+</div>
+{{keys}}
+
+</div>
