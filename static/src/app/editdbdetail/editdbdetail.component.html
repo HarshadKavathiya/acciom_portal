@@ -1,5 +1,5 @@
 <app-navbarlogout></app-navbarlogout>
-<div class="body"> <button class="button-connect" (click)="viewconnection()" mat-button>View Connections</button></div>
+<!-- <div class="body"> <button class="button-connect" (click)="viewconnection()" mat-button>View Connections</button></div> -->
 
 <div class="body">
 <mat-card class="mat">
@@ -31,8 +31,10 @@
             <mat-error>Enter Password </mat-error>
         </mat-form-field>
         <div  class="btn-class">
-        <button class="btn1" mat-raised-button [disabled]="createForm.invalid" mat-raised-button (click)="check_connection()" color="warn">Check Connection </button>
-        <button class="btn2" mat-raised-button [disabled]="createForm.invalid" (click)="update_db_detail()" color="primary" >Update</button>
+            <button class="btn3" mat-raised-button  (click)="viewconnection()" color="warn" >Cancel</button>
+            <button class="btn2" mat-raised-button [disabled]="createForm.invalid"  (click)="check_connection()" color="primary">Check Connection</button>
+            <button class="btn2" mat-raised-button [disabled]="createForm.invalid" (click)="update_db_detail()" color="primary" >Update</button>
+            
         </div>
     </form>
 </mat-card>

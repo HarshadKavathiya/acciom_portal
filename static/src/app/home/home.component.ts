@@ -251,10 +251,12 @@ if (this.selectedAll){
     this.resfinal=(XLSX.utils.sheet_to_json(this.sheet,{raw:true}))
     for(var i=0;i<this.resfinal.length;i++)
     {
+      console.log(this.resfinal[i]['Description'])
       this.temp_db_detailarr.push(this.resfinal[i]['DB Details']) //TO DO:HARD CODED.['Test Class']
-      this.all_cases.push({'id':i,'name':this.resfinal[i]['Test Class'],'selected':false}) //TO DO:HARD CODED.['Test Class']
+      this.all_cases.push({'id':i,'name':this.resfinal[i]['Test Class'],'selected':false, 'description':this.resfinal[i]['Description']}) //TO DO:HARD CODED.['Test Class']
       this.temp_table_detail.push(this.resfinal[i]['Source Table:Target Table'])
       this.temp_column_detail.push(this.resfinal[i]['Columns'])
+      console.log(this.all_cases)
     }
    // below func validate the 1st column all row
   if(!this.validate_case_name(this.all_cases)){

@@ -220,6 +220,7 @@ export class UploadserviceService {
     return this.http.post<any>(`${this.url}/check-connection`,form)
   }
   get_all_connections(suite_id){
+    console.log(suite_id)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
     let headers =new HttpHeaders({
@@ -239,17 +240,21 @@ export class UploadserviceService {
       "db_id":connection_id
     },{headers: headers})
   }
-  update_case_details(case_id, src_table, target_table, src_qry, target_qry){
+  update_case_details(case_id,src_db_id,target_db_id, src_table, target_table, src_qry, target_qry,column){
+    console.log(column)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
     }) 
     return this.http.put<any>(`${this.url}/edit-test-case/${case_id}`,{
+      "src_db_id":src_db_id,
+      "target_db_id":target_db_id,
       "src_table":src_table,
       "target_table":target_table,
       "src_query":src_qry,
-      "target_query":target_qry
+      "target_query":target_qry,
+      "column":column
     },{headers: headers})
   }
 }

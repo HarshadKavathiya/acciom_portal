@@ -40,6 +40,7 @@
 
   .result-card{
     width:458px;
+    /* width:100%; */
    
     height:auto;
     /* border:2px solid black; */
@@ -47,7 +48,8 @@
 
   .cright{
     text-align: center;
-    margin: 0px;
+    margin-right : 10px;
+
 }
 
 .testcase{

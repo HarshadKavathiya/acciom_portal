@@ -93,17 +93,18 @@ class TestSuites(Resource):
                     pass
                 else:
                     if ":" in columndata:
-                        x = temp_test[i + 4][j].split(":")
+                        removecolumnspace = temp_test[i + 4][j].replace(" ",
+                                                                        "")
+                        x = removecolumnspace.split(";")
                         z = []
                         for m in x:
-                            y = m.split(";")
-                            z.append(y)
-                        column = {}
-                        for n in range(len(z[0])):
-                            column[z[0][n]] = z[1][n]
-
+                            p = m.split(":")
+                            for q in p:
+                                column[p[0]] = p[1]
                     else:
-                        columnlist = temp_test[i + 4][j].split(";")
+                        removecolumnspace = temp_test[i + 4][j].replace(" ",
+                                                                        "")
+                        columnlist = removecolumnspace.split(";")
                         column = {}
                         for k in range(len(columnlist)):
                             column[columnlist[k]] = columnlist[k]
@@ -127,6 +128,7 @@ class TestSuites(Resource):
                         query["targetqry"] = q
 
                 jsondict = {"column": column, "table": table, "query": query}
+                print("141", jsondict)
 
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],

@@ -213,6 +213,7 @@ class TestSuite(db.Model):
                 tables.append(key)
                 tables.append(b[key])
             return {
+                'test_suite_id': x.test_suite_id,
                 'test_case_id': x.test_case_id,
                 'test_name': x.test_name,
                 'test_id': x.test_id,
