@@ -34,6 +34,7 @@ export interface DialogData {
   show_src_table:boolean;
   show_dest_table:boolean;
   len_null:number;
+  src_db_id:number;
   
 }
 export interface DialogDataCaseDetail {
@@ -58,6 +59,7 @@ export interface DialogManageConnection{
 }
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { $ } from 'protractor';
+import { ShowHideDirective } from '@angular/flex-layout';
 @Component({
   selector: 'app-startup',
   templateUrl: './startup.component.html',
@@ -106,8 +108,8 @@ export class StartupComponent implements OnInit {
   target_table:String;
   src_db_type:String;
   des_db_type:String;
-  src_column:String
-  des_column:String;
+  // src_column:String
+  column:String;
   src_qry:String;
   des_qry:String;
   len:number;
@@ -116,11 +118,15 @@ export class StartupComponent implements OnInit {
   show_src_table:boolean;
   source_count:number;
   target_count:number;
+  src_db_id:number;
+  target_db_id:number;
   src_to_dest_count:number;
   dest_to_src_count:number;
   all_connection=[];
+  all_connections=[];
   all_cases=[];
   len_null:number;
+  
   constructor( private router:Router,
     private fileUploadService:UploadserviceService,
     private spinnerService: Ng4LoadingSpinnerService,
@@ -152,6 +158,7 @@ export class StartupComponent implements OnInit {
   Initialize(){
     this.id=localStorage.getItem('id')
     this.fileUploadService.getSuiteById(this.id).subscribe(data => {
+      console.log(data)
       if(data.success){
         this.stilload=false;    
       this.all_test_suite=data.suites.user
@@ -276,35 +283,62 @@ export class StartupComponent implements OnInit {
     })
   }
 
-getcasedetails(case_id,case_name){
+getcasedetails(case_id,case_name,test_suite_id){ 
+  this.fileUploadService.get_all_connections(test_suite_id).subscribe(data=>{
+    // for(let i=0;i<data.all_cases.length;i++){
+    //   this.all_cases.push({'case_id':data.all_cases[i][0], 'case_name':data.all_cases[i][1],'checked':false})
+    // }
+    console.log(data.all_connections)
+    this.all_connections=data.all_connections
+    console.log(this.all_connections)
+  })
+
+
+
+
   event.stopPropagation();
   this.fileUploadService.getcasedetails(case_id).subscribe(data=>{
+    console.log(data)
+    var strcolumn=JSON.stringify(data.res.column)
+    var removequotes=strcolumn.split('"').join('')
+    console.log(removequotes)
+    var removebraces = removequotes.replace(/[{()}]/g, '');
+    console.log(removebraces)
+    var removecomma = removebraces.replace(/,/g ,";")
+    console.log(removecomma)
+
 
 this.src_db_name=data.res.src_db_name
 this.des_db_name=data.res.des_db_name
 this.src_table=data.res.src_table
 this.target_table=data.res.target_table
-this.src_db_type=data.res.src_db_type
+// this.src_db_type=data.res.src_db_type
 this.des_db_type=data.res.des_db_type
-this.src_column=data.res.src_column
-this.des_column=data.res.des_column
+this.column=removecomma
+console.log(this.column)
+// this.des_column=data.res.des_column
 this.src_qry=data.res.src_qry
 this.des_qry=data.res.des_qry
+this.src_db_id=data.res.src_db_id
+this.target_db_id=data.res.target_db_id
 this.case_name=case_name
   this.showcaseresult(case_id,this.src_db_name,this.des_db_name,this.src_table,this.target_table,this.src_db_type,
-    this.des_db_type, this.src_column, this.des_column, this.src_qry, this.des_qry,this.case_name)
+    this.des_db_type, this.column, this.src_qry, this.des_qry,this.case_name,this.src_db_id,this.target_db_id,this.all_connections)
   });
 }
-showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type, src_column,des_column, src_qry, des_qry,case_name){
+showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type,column, src_qry, des_qry,case_name,src_db_id,target_db_id,all_connections){
+
   const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, {    //break
     panelClass: 'my-class',
     width: '60%',
     height:'auto',
+  
     data : {case_id:case_id,src_db_name:src_db_name,des_db_name:des_db_name,
     src_table_name:src_table,des_table_name:target_table,
-    src_db_type:src_db_type,des_db_type:des_db_type,src_column:src_column,des_column:des_column,
-  src_qry:src_qry, des_qry:des_qry,casename:case_name}
+    src_db_type:src_db_type,des_db_type:des_db_type,column:column,
+  src_qry:src_qry, des_qry:des_qry,casename:case_name,src_db_id:src_db_id,target_db_id:target_db_id,all_connections}
   });
+  
   
   dialogRef.afterClosed().subscribe(result => {
    });
@@ -379,6 +413,7 @@ console.log(data)
 }
 
 showlog(test_name,src_table,target_table,case_log){
+  console.log(case_log)
   if (test_name =='CountCheck'){
     this.show_logdialog(test_name)
   }
@@ -394,6 +429,7 @@ showlog(test_name,src_table,target_table,case_log){
       for(var i=0;i<this.len;i++){
         var temp=[]
         temp=Object.values(eval(case_log.destination_log)[i])
+        console.log(temp)
         if(temp.some(this.isNull)){
           temp.forEach(function(item){
             var index = temp.indexOf(null)
@@ -404,6 +440,7 @@ showlog(test_name,src_table,target_table,case_log){
         this.value_src_nullcheck.push(temp)
     } 
     console.log(this.value_src_nullcheck)
+   
   }
 }
   else if (test_name == "DuplicateCheck"){
@@ -507,8 +544,10 @@ showlog(test_name,src_table,target_table,case_log){
        console.log(typeof(case_log.source_log))
        var t = JSON.parse(case_log.source_log)
        case_log.source_log=t
+       console.log(case_log.source_log)
        var t = JSON.parse(case_log.destination_log)
        case_log.destination_log=t
+       console.log(case_log.destination_log)
        this.countcheck=true
      this.nullcheck=true
      this.datavalidation=true
@@ -557,6 +596,8 @@ export class DialogOverviewExampleDialogstartup {
 export class DialogOverviewExampleDialogCaseDetail {
 card:boolean=true;
 form:boolean=false;
+src_db_id:number;
+target_db_id:number;
 createForm:FormGroup;
 
   constructor(
@@ -567,6 +608,7 @@ createForm:FormGroup;
       this.createForm=fb.group({
         src_name:[''],
         target_table:[''],
+        column:[''],
         src_query:[''],
         target_query:['']
       });
@@ -583,9 +625,20 @@ createForm:FormGroup;
     this.card=true;
     this.form=false;
   }
-  Update(src_table, target_table, src_qry, target_qry, case_id){
-    console.log(src_table.value, target_table.value, src_qry.value, target_qry.value, case_id)
-    this.fileUploadService.update_case_details(case_id,src_table.value, target_table.value, src_qry.value, target_qry.value).subscribe(result=>{
+  selectsrcdb(i){
+  this.src_db_id=i
+  console.log(this.src_db_id)
+
+
+  }
+  selecttargetdb(i){
+    this.target_db_id=i
+    
+  }
+  Update(src_table, target_table, src_qry, target_qry,column, case_id){
+    console.log(column.value)
+    console.log(src_table.value, target_table.value, src_qry.value, target_qry.value, case_id,this.src_db_id,this.target_db_id)
+    this.fileUploadService.update_case_details(case_id,this.src_db_id,this.target_db_id,src_table.value, target_table.value, src_qry.value, target_qry.value ,column.value).subscribe(result=>{
       Swal("success",result.message,"success")
     })
   }

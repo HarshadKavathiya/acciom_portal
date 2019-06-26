@@ -40,6 +40,19 @@
   text-align: justify;
   color: #2f2f2f;
 }
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+}
+.td1{
+    background-color: yellow;
+}
+.td2{
+    background-color: transparent; 
+}
+
+
     .test-result{
         font-family: 'OpenSans-Light', sans-serif;
   font-size: 18px;
@@ -208,10 +221,20 @@ opacity: 0.9;
             </div>
             <div class="test-result1">Total Null Records {{data.len_null}}</div>
             <div class="test-result">Null Values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
+            
             <table border=1 style="border-collapse: collapse">
+                
                     <tr  *ngFor="let each_row of data.value_src_nullcheck">
-                     <td  *ngFor= "let z of each_row">
-                            <div>{{z}}</div>
+                        
+                        
+                     <td  *ngFor= "let z of each_row" >
+                        
+                         
+                            <div *ngIf="z=='None'">
+                                <div style=background-color:yellow;>Null</div>
+                            </div>
+                            <div *ngIf="z!='None'">{{z}}</div>
+                        
                             </td>
                             </tr>
             </table>
@@ -335,15 +358,27 @@ opacity: 0.9;
                         </table>
             </div>
         <div class="test-result">Source and Target Schema do not Match</div>
+        
             <table cellspacing=12 class="table1">
                 <tr class="tableheader">
                 <th>Source Table</th>
-                <th>Target Table </th>
+                <th style="margin-left:40px">Target Table </th>
                 </tr>   
-<tr class="tabledata" *ngFor="let i of data.source_log; let k = index ">                
-    <td > {{data.source_log[k]}}</td>
-    <td >{{data.destination_log[k]}}</td>
-</tr>
+     <tr  [ngClass]="{ 'td1': data.source_log[k][0]==data.destination_log[k][0], 'td2': data.source_log[k][0]!=data.destination_log[k][0] }" class="tabledata" *ngFor="let i of data.source_log; let k = index ">  
+         
+     
+         <td > {{data.source_log[k]}}</td>
+         <td  >{{data.destination_log[k]}}</td>
+    
+     <!-- <div  class="grid" *ngIf="data.source_log[k][0]==data.destination_log[k][0] ">
+       <td  style=background-color:yellow;margin-left:4px;> {{data.source_log[k]}}</td>
+       <td   style=background-color:yellow;margin-left:34px;>{{data.destination_log[k]}}</td>
+    </div>  
+     <div  class="grid" *ngIf="data.source_log[k][0]!=data.destination_log[k][0]">        
+        <td style=margin-left:4px;> {{data.source_log[k]}}</td>
+        <td style=margin-left:34px;>{{data.destination_log[k]}}</td>
+    </div>  -->
+    </tr>
 
 </table>
     </div>

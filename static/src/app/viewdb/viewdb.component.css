@@ -76,6 +76,37 @@ height: 3rem;
     flex:1 1 100px;
 }
 .list-db div:nth-of-type(5){
+    flex:1 1 100px;
+}
+.list-db div:nth-of-type(6){
     flex:1 1 50px;
 } 
 
+
+.grid{
+    display: grid;
+    
+    grid-template-columns: 1fr 4fr 3fr 3fr 4fr 2fr  2fr ;
+}
+#a{
+    justify-self: center;
+}
+#b{
+    justify-self: center;
+}
+#c{
+    justify-self: center;
+}
+#d{
+    justify-self: end;
+}
+
+#e{
+    justify-self: center;
+}
+#f{
+    justify-self: end;
+}
+#g{
+    justify-self: center;
+}

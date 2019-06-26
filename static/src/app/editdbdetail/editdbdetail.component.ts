@@ -65,5 +65,8 @@ export class EditdbdetailComponent implements OnInit {
       Swal("error","Connection could not be Established")
     })
   }
+  goback(){
+    this.router.navigate(['/Viewdb'])
+  }
 
 }

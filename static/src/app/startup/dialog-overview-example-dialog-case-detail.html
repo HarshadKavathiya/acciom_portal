@@ -95,13 +95,13 @@ font-size: 22px;
   </div>
     <div mat-dialog-content class="display-detail">
   <table style="width:100%">
-    <tr>  <div> <td class="td1"><span class="bold-text">Source DB Name:</span></td>
-      <td class="td2"></td>
-      <td class="td3">{{data.src_db_name}}</td></div>
-    </tr>
-      <tr>  <div> <td  class="td1"><span class="bold-text">Target DB Name:</span></td>
+      <tr>  <div> <td class="td1"><span class="bold-text">Source Connection:</span></td>
         <td></td>
-        <td class="td3">{{data.des_db_name}}</td></div>
+        <td class="td3">{{data.src_db_id}}</td></div>
+      </tr>
+      <tr>  <div> <td class="td1"><span class="bold-text">Target Connection:</span></td>
+        <td></td>
+        <td class="td3">{{data.target_db_id}}</td></div>
       </tr>
       <tr>  <div> <td class="td1"><span class="bold-text">Source Table:</span></td>
         <td></td>
@@ -111,24 +111,16 @@ font-size: 22px;
           <td></td>
           <td class="td3">{{data.des_table_name}}</td></div>
         </tr>
-          <tr>  <div> <td class="td1"><span class="bold-text">Source DB:</span></td>
-            <td></td>
-            <td class="td3">{{data.src_db_type}}</td></div></tr>
-            <tr>  <div> <td class="td1"><span class="bold-text">Target DB:</span></td>
-              <td></td>
-              <td class="td3">{{data.des_db_type}}</td></div></tr>
-              <tr>  <div> <td class="td1"><span class="bold-text">Source Column:</span></td>
-                <td></td>
-                <td class="td3">{{data.src_column}}</td></div></tr>
-                <tr>  <div> <td class="td1"><span class="bold-text">Target Column:</span></td>
+                <tr>  <div> <td class="td1"><span class="bold-text">Column:</span></td>
                   <td></td>
-                  <td class="td3">{{data.des_column}}</td></div></tr>
+                  <td class="td3">{{data.column}}</td></div></tr>
                   <tr>  <div> <td class="td1"><span class="bold-text">Source Query:</span></td>
                     <td></td>
                     <td class="td3">{{data.src_qry}}</td></div></tr>
                     <tr>  <div> <td class="td1"><span class="bold-text">Target Query:</span></td>
                       <td></td>
                       <td class="td3">{{data.des_qry}}</td></div></tr>
+                      
    
   
   </table>
@@ -142,7 +134,24 @@ font-size: 22px;
       keyboard_backspace
       </i>View Details</button></div>
   </div>
+
   <form class="form-edit" [formGroup]="createForm">
+      Source Connection:<mat-form-field>
+          <mat-label>{{data.src_db_id}}</mat-label>
+          <mat-select>
+            <mat-option  *ngFor="let i of data.all_connections; let x=index" [(value)]="data.all_connections[x]" (click)="selectsrcdb(i[0])">
+              {{i[1]}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      Target Connection:<mat-form-field>
+            <mat-label>{{data.target_db_id}}</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let i of data.all_connections; let x=index" [(value)]="data.all_connections[x]" (click)="selecttargetdb(i[0])">
+                {{i[1]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
     <mat-form-field class="example-full-width">
             <input type="text" autocomplete="off" matInput
             value="{{data.src_table_name}}"
@@ -156,19 +165,26 @@ font-size: 22px;
     <mat-error>Enter Correct Table Name</mat-error>
 </mat-form-field>
 <mat-form-field class="example-full-width">
-    <textarea rows=4 type="text" autocomplete="off"
+  <input type="text" 
+  value="{{data.column}}"
+  autocomplete="off" matInput placeholder="Column" formControlName="column" #column>
+  <mat-error>Enter Correct Column</mat-error>
+</mat-form-field>
+<mat-form-field class="example-full-width">
+    <input rows=4 type="text" autocomplete="off"
     value="{{data.src_qry}}"
-    matInput placeholder=" Source  Query" formControlName="src_query" #src_qry> </textarea>
+    matInput placeholder=" Source  Query" formControlName="src_query" #src_qry>
     <mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
 
 <mat-form-field class="example-full-width">
-    <textarea rows=4 type="text" autocomplete="off"
+    <input rows=4 type="text" autocomplete="off"
     value="{{data.des_qry}}"
-    matInput placeholder=" Target Query" formControlName="target_query" #target_qry> </textarea>
+    matInput placeholder=" Target Query" formControlName="target_query" #target_qry>
     <mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
-<button mat-raised-button [disabled]="createForm.invalid" (click)="Update(src_table, target_table, src_qry, target_qry,data.case_id)" color="primary" >Update</button>
+{{all_connection}}
+<button mat-raised-button  [disabled]="createForm.invalid"  (click)="Update(src_table, target_table, src_qry, target_qry,column,data.case_id)" color="primary" >Update</button>
 
 </form>
 </mat-card>
