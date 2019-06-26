@@ -59,11 +59,14 @@ def null_check(target_cursor, target_table, column, test_queries):
         all_results = []
 
         for row in target_cursor:
+            print("62",row)
             all_results.append(list(map(str, row)))
 
         if all_results:
             all_results.insert(0, col_list)
+            print(all_results)
             a = json.dumps(all_results)
+
 
             return ({"res": 0, "src_value": None,
                      "des_value": a})

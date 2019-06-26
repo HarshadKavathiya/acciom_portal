@@ -24,6 +24,7 @@ class DbDetails(Resource):
             current_user = get_jwt_identity()
             db_password = DbDetail.encrypt(data['password'])
             print(db_password)
+            print(data['connection_name'])
             new_db = DbDetail(
                 connection_name=data['connection_name'],
                 user_id=current_user,

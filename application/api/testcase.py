@@ -134,6 +134,7 @@ class EditTestCase(Resource):
     def get(self, case_id):
         newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
+
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
         src_target_table = split_table(obj.test_case_detail)
@@ -141,11 +142,18 @@ class EditTestCase(Resource):
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
         Source_Detail = db_details_without_password(src_db_id.db_id)
         Target_Detail = db_details_without_password(des_db_id.db_id)
+        src_db_id = obj.src_db_id
+        obj1 = DbDetail.query.filter_by(db_id=src_db_id).one()
+        print(obj1.connection_name)
+        target_db_id = obj.target_db_id
+        obj2 = DbDetail.query.filter_by(db_id=target_db_id).one()
+        print(obj2.connection_name)
         if tabledetails['column'] is not {}:
             column = tabledetails['column']
-            keys = []
-            for key in column:
-                keys.append(key)
+            print(column)
+            # keys = []
+            # for key in column:
+            #     keys.append(key)
         if tabledetails['query'] == {}:
             src_qry = ''
             des_qry = ''
@@ -170,20 +178,23 @@ class EditTestCase(Resource):
                 src_qry = 'None'
                 des_qry = queries["targetqry"]
 
+
         payload = {"test_case_id": obj.test_case_id,
                    "test_name": obj.test_name,
                    "test_status": obj.test_status,
                    "src_table": src_target_table['src_table'],
                    "target_table": src_target_table['target_table'],
                    "test_queries": tabledetails['query'],
-                   "src_column": 'None',
-                   "des_column": keys,
+                   # "src_column": 'None',
+                   "column": column,
                    "src_db_name": Source_Detail['db_name'],
                    "des_db_name": Target_Detail['db_name'],
                    "src_db_type": Source_Detail['db_type'],
                    "des_db_type": Target_Detail['db_type'],
                    "src_qry": src_qry,
-                   "des_qry": des_qry}
+                   "des_qry": des_qry,
+                   "src_db_id":obj1.connection_name,
+                   "target_db_id":obj2.connection_name}
 
         return {"success": True, "res": payload}
 
@@ -195,13 +206,48 @@ class EditTestCase(Resource):
         parser.add_argument('target_table')
         parser.add_argument('src_query')
         parser.add_argument('target_query')
+        parser.add_argument('column')
+        parser.add_argument('src_db_id')
+        parser.add_argument('target_db_id')
         data = parser.parse_args()
+        print(data["src_db_id"])
+        print(data["target_db_id"])
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
+        if data["src_db_id"]==None:
+            obj.src_db_id=obj.src_db_id
+        else:
+            obj.src_db_id=data["src_db_id"]
+        if data["target_db_id"]==None:
+            obj.target_db_id=obj.target_db_id
+        else:
+            obj.target_db_id=data["target_db_id"]
+
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
+        if data["column"] == "None" or data["column"] == "":
+            tabledetails["column"]={}
+        else:
+           removecolumnspaces=data["column"].replace(" ","")
+           if ";" and ":" in removecolumnspaces:
+            tabledetails["column"]={}
+            x=removecolumnspaces.split(";")
+            for i in x:
+                if ":" in i:
+                    y=i.split(":")
+                    tabledetails["column"][y[0]]=y[1]
+                else:
+                    tabledetails["column"][i]=i
+           elif ";" in data["column"]:
+              removecolumnspaces = data["column"].replace(" ", "")
+              p=removecolumnspaces.split(";")
+              for q in p:
+                  tabledetails["column"][q]=q
+           else:
+            tabledetails["column"]={}
+            removecolumnspaces = data["column"].replace(" ", "")
+            tabledetails["column"][removecolumnspaces]=removecolumnspaces
 
         table = tabledetails["table"]
-
         for key in table:
             print(key)
         print(data['src_table'])
@@ -217,5 +263,6 @@ class EditTestCase(Resource):
             queries['targetqry'] = data['target_query']
         obj.test_case_detail = json.dumps(tabledetails)
         app.logger.debug(json.dumps(tabledetails))
+
         obj.save_to_db()
         return {"success": True, "message": "Succesfully Changed Values"}
