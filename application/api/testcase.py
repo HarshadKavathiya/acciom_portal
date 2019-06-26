@@ -11,8 +11,8 @@ from flask_restful import reqparse
 
 from application.common.Response import error, success
 from application.helper.runner_class import run_by_case_id, split_table
-from application.models.user import TestSuite, SparkJob, \
-    TestCaseLog, TestCase, DbDetail
+from application.models.user import (TestSuite, SparkJob, TestCaseLog,
+                                     TestCase, DbDetail)
 from index import db
 
 
@@ -46,6 +46,7 @@ class TestCaseJob(Resource):
                     test_suite_id=data['suite_id']).first()
                 for each_test in test_suite.test_case:
                     run_by_case_id(each_test.test_case_id)
+                # status = execute_suite_by_id(data['suite_id'])
                 return success(
                     {"success": True,
                      "message": "Job Submitted Succesfully for Suite id {0}".format(
