@@ -12,8 +12,8 @@ var transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
   auth: {
-    user: 'khazitest@gmail.com',
-    pass: 'khaziwallis'
+    user: 'acciom123@gmail.com',
+    pass: 'Password@123'
   }
 }));
 
@@ -25,9 +25,9 @@ function sendMail(cb) {
 
 
     var options = {
-        from: 'khazitest@gmail.com',
-        replyTo: 'khazitest@gmail.com',
-        to: 'khaziwallis@gmail.com',
+        from: 'acciom123@gmail.com',
+        replyTo: 'acciom123@gmail.com',
+        to: 'khazitest@gmail.com',
         subject: subject,
         html: text
     };
