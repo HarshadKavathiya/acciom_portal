@@ -40,6 +40,12 @@
   text-align: justify;
   color: #2f2f2f;
 }
+.td1{
+    background-color: yellow;
+}
+.td2{
+    background-color: transparent; 
+}
     .test-result{
         font-family: 'OpenSans-Light', sans-serif;
   font-size: 18px;
@@ -210,9 +216,13 @@ opacity: 0.9;
             <div class="test-result">Null Values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
             <table border=1 style="border-collapse: collapse">
                     <tr  *ngFor="let each_row of data.value_src_nullcheck">
-                     <td  *ngFor= "let z of each_row">
-                            <div>{{z}}</div>
-                            </td>
+                            <td  *ngFor= "let z of each_row" >
+                                    <div *ngIf="z=='None'">
+                                        <div style=background-color:yellow;>Null</div>
+                                    </div>
+                                    <div *ngIf="z!='None'">{{z}}</div>
+        
+                                    </td>
                             </tr>
             </table>
         </div>
@@ -340,13 +350,13 @@ opacity: 0.9;
                 <th>Source Table</th>
                 <th>Target Table </th>
                 </tr>   
-<tr class="tabledata" *ngFor="let i of data.source_log; let k = index ">                
-    <td > {{data.source_log[k]}}</td>
-    <td >{{data.destination_log[k]}}</td>
-</tr>
+                <tr  [ngClass]="{ 'td1': data.source_log[k][0]==data.destination_log[k][0], 'td2': data.source_log[k][0]!=data.destination_log[k][0] }" class="tabledata" *ngFor="let i of data.source_log; let k = index ">  
+                        <td > {{data.source_log[k]}}</td>
+                        <td  >{{data.destination_log[k]}}</td>
+                 </tr>
 
-</table>
-    </div>
+            </table>
+        </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
             <div class="test-heading">DDL Check</div> 
             <div class="result">
