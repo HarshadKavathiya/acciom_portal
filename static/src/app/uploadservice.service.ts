@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Observable } from "rxjs";
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from '../environments/environment'
 
 
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -14,7 +15,7 @@ export class UploadserviceService {
   user: any;
   newtoken:any
   
-  url= '/api';
+  url= environment.APIUrl + '/api';
 
   constructor(private http:HttpClient) { }
   inputFile:File
