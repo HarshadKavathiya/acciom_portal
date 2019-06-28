@@ -104,3 +104,7 @@ venv.bak/
 static/node_modules
 logs
 .idea
+
+# ui ignores
+acciom-ui/node_modules
+acciom-ui/build
