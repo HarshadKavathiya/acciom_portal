@@ -1,10 +1,14 @@
 import React from 'react';
+import { logoutService } from '../../services';
+
 
 class Dashboard extends React.Component {
     render () {
-        return (
+        logoutService();
+        //redirect to login page.
+        return(
             <div>
-                Am from Logout
+                Successful logout.
             </div>
         );
     }

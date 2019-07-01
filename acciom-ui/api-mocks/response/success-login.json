@@ -1,0 +1,8 @@
+{
+    "message": "success@gmail.com ",
+    "uid": 1,
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjE5ODM2NDcsIm5iZiI6MTU2MTk4MzY0NywianRpIjoiMGFmNmVjMmYtMzg5YS00MzY3LTkyZjktZDM1YzE2YWU5ZjhlIiwiZXhwIjoxNTYyODQ3NjQ3LCJpZGVudGl0eSI6NiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.H-t4SOEbR32Dr9Mj1Oq5bTd2wZ3j4avOT0BD4sa8-Ys",
+    "success": true,
+    "user": "success@gmail.com",
+    "name": "success"
+}

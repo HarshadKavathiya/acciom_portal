@@ -38,7 +38,7 @@ const plotNav = window.addEventListener('WebComponentsReady', function() {
           margin-bottom: 3px;
           width: 20px;
         }
-        .link a, #logout a {
+        .link a, #logout a, span {
           color: #ccc;
           cursor: pointer;
           font-size: 0.7em;
@@ -64,35 +64,37 @@ const plotNav = window.addEventListener('WebComponentsReady', function() {
           height: 20px;
           width: 20px;
         }
+        #logout:hover {
+          color: #960909;
+        }
+        .link-text:hover {
+          color: #2d6a6b;
+        }
       </style>
       <nav class="plot-nav">
-        <img src="./assets/favicon.ico" class="app-icon"/>
+        <div>
+          <img src="./assets/favicon.ico" class="app-icon"/>
+          <span style="color:#960909;font-size:20px;"> AccionLabs </span>
+        </div>
         <div class="flex-fill"></div>
         <div class="link">
-          <div>
-            <img src="./assets/reports.png" class="app-icon"/>
-            <a class="link-text" href="/dashboard">Dashboard</a>
-          </div>
+          <img src="./assets/reports.png" class="app-icon"/>
+          <a class="link-text" href="/dashboard">Dashboard</a>
         </div>
         <div class="link">
-          <div>
-            <img src="./assets/reports.png" class="app-icon"/>
-            <a class="link-text" href="/reports">Reports</a>
-          </div>
-          
+          <img src="./assets/reports.png" class="app-icon"/>
+          <a class="link-text" href="/reports">Reports</a>
         </div>
         <div class="link"><!-- class="link-active" -->
-          <div>
-            <img src="./assets/reports.png" class="app-icon"/>
-            <a class="link-text" href="/admin">Admin</a>
-          </div>
+          <img src="./assets/reports.png" class="app-icon"/>
+          <a class="link-text" href="/admin">Admin</a>
         </div>
         <div class="divider"></div>
         <div class="link">
-          <a class="link-text" href="/logout">User: Khazi</a>
+          <span>User: <strong>Khazi</strong></span>
         </div>
         <div class="link">
-          <a class="link-text" href="/logout">Logout</a>
+          <a id="logout" class="link-text" href="/logout"><h3>Logout</h3></a>
         </div>
       </nav>
     `;
@@ -104,6 +106,7 @@ const plotNav = window.addEventListener('WebComponentsReady', function() {
   
       constructor() {
         super();
+        console.log(this.getAttribute('data'));
         this.attachShadow({ mode: 'open' }).innerHTML = template;
       }
     }
