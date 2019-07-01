@@ -9,16 +9,7 @@ class Routing extends React.Component {
         let token = localStorage.getItem('token');
         return token ? true : false;
     }
-    setToken () {
-        let token = localStorage.getItem('token');
-        if (token) {
-
-        } else {
-            localStorage.setItem('token', Math.random());
-        }
-    }
     render () {
-        //this.setToken();// need to comment after completing login functionality
         if (this.isLoggedin()) {
             return (
                 <div className="content">
