@@ -257,4 +257,12 @@ export class UploadserviceService {
       "column":column
     },{headers: headers})
   }
+  getToken(){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/get-token`,{headers: headers})
+  }  
 }

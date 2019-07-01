@@ -144,8 +144,8 @@ def run_by_case_id(test_case_id):
     :return: just run the utils case.
     """
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
-    run_test(test_case)
-    return True
+    res = run_test(test_case)
+    return {"status": True, "result": res}
 
 
 def run_test(case_id):
@@ -155,7 +155,6 @@ def run_test(case_id):
     """
     save_test_status(case_id, 3)
     case_log = save_case_log(case_id.test_case_id, None, None, None, None)
-
     if case_id.test_status == 3:
         if case_id.test_name == 'CountCheck':  # 1st Test
             src_Detail = db_details(case_id.src_db_id)
@@ -283,7 +282,6 @@ def run_test(case_id):
                     "srcqry " + src_qry + "targetqry " + target_qry)
 
                 table_name = split_table(case_id.test_case_detail)
-
                 datavalidation(src_Detail['db_name'],
                                table_name['src_table'],
                                src_Detail['db_type'].lower(),
@@ -314,7 +312,7 @@ def run_test(case_id):
             # case_log.error_log = result['err_value']
             case_log.save_to_db()
 
-    return True
+    return {"status": True, "test_case_log_id": case_log.test_case_log_id}
 
 # ToNote:
 # status = {0: "new", 1: "pass", 2: "fail", 3: "in progress", 4: "error"}

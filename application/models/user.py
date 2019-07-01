@@ -348,8 +348,6 @@ class TestCaseLog(db.Model):
                 if x.test_cases.test_name == 'NullCheck' or \
                         x.test_cases.test_name == 'DuplicateCheck':
                     dest = json.loads(x.des_execution_log)
-                    print(dest)
-                    print(dest)
                     dest = dest[:10]
                     src = x.src_execution_log
                 elif x.test_cases.test_name == 'Datavalidation':

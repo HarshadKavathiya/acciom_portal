@@ -33,6 +33,7 @@
     "file-saver": "^2.0.1",
     "hammerjs": "^2.0.8",
     "ng4-loading-spinner": "^1.2.3",
+    "ngx-clipboard": "^12.1.2",
     "ngx-pagination": "^3.2.1",
     "pretty-checkbox": "^3.0.3",
     "rxjs": "~6.3.3",

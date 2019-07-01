@@ -38,5 +38,9 @@ export class NavbarlogoutComponent implements OnInit {
   view_connection(){
     this.router.navigate(['Viewdb'])
   }
+  accesstoken(){
+    this.router.navigate(['accesstoken'])
+
+  }
 
 }

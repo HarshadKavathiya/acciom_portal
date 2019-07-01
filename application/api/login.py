@@ -247,3 +247,30 @@ class VerifyAccount(Resource):
             db.session.commit()
             return success({"message": "User is Verified", "success": True,
                             "token": token})
+
+
+class GetToken(Resource):
+    @jwt_required
+    def get(self):
+        try:
+            expires = datetime.timedelta(days=100)
+            current_user_id = get_jwt_identity()
+            # parser = reqparse.RequestParser()
+            # parser.add_argument('password',
+            #                     help='This field cannot be blank',
+            #                     required=True)
+            current_user = db.session.query(User).get(current_user_id)
+            # data = parser.parse_args()
+            # if User.verify_hash(data['password'], current_user.password):
+            # TODO: Security for the token.
+            access_token = create_access_token(
+                identity=current_user.user_id,
+                expires_delta=expires)
+            # else:
+            #     raise InvalidInput("Password Not Correct")
+
+            payload = {'access_token': access_token,
+                       'success': True}
+        except InvalidInput as e:
+            return input_error({"success": False, "message": str(e)})
+        return success(payload)

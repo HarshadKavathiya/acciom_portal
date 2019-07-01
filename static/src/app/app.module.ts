@@ -58,6 +58,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { ViewdbComponent } from './viewdb/viewdb.component';
 import {MatListModule} from '@angular/material/list';
 import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
+import { AccessTokenComponent } from './access-token/access-token.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -84,6 +86,7 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     AfterverifyComponent,
     ViewdbComponent,
     EditdbdetailComponent,
+    AccessTokenComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,6 +117,7 @@ import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
     FlexLayoutModule,
     MultiselectDropdownModule,
     MatProgressSpinnerModule,
+    ClipboardModule,
     Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [UploadserviceService,CanDeactivateGuard,ExcelService],

@@ -664,6 +664,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+ngx-window-token
+MIT
+
+ngx-clipboard
+MIT
+
 zone.js
 MIT
 The MIT License
