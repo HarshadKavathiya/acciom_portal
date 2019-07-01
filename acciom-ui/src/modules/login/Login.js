@@ -1,12 +1,15 @@
 import React from 'react';
 import { loginService } from '../../services';
 
+import { Redirect } from "react-router-dom";
+
 class Login extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            isAuth: false
         };
     }
 
@@ -28,9 +31,13 @@ class Login extends React.Component {
             this.state.password
         ).then(
             (reponse) => {
-                alert('success login');
                 localStorage.setItem('token', reponse.data['access_token']);
                 localStorage.setItem('isAuth', reponse.data['access_token']);
+                this.setState({
+                    email: 'g@gmail.com',
+                    password: 'dsfff',
+                    isAuth: true
+                });
             },
             (error) => {
                 alert('error logging', error);
@@ -40,31 +47,35 @@ class Login extends React.Component {
         });
     }
     render () {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <label>Email</label>
-                <input
-                    name="email"
-                    id="email"
-                    type="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                />
+        if (this.state.isAuth) {
+            return <Redirect to='/' />
+        } else {
+            return (
+                <form onSubmit={this.handleSubmit}>
+                    <label>Email</label>
+                    <input
+                        name="email"
+                        id="email"
+                        type="email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                    />
 
-                <label>Password</label>
-                <input
-                    name="password"
-                    id="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    type="password"/>
-                <button
-                    disabled={!this.validateForm()}
-                    type="submit">
-                    Login
-                </button>
-            </form>
-        );
+                    <label>Password</label>
+                    <input
+                        name="password"
+                        id="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                        type="password"/>
+                    <button
+                        disabled={!this.validateForm()}
+                        type="submit">
+                        Login
+                    </button>
+                </form>
+            );
+        }
     }
 };
 
