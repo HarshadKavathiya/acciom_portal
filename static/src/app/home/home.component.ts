@@ -330,7 +330,7 @@ if (this.selectedAll){
  }
  validate_db_detail(db_Detail)
  {  
-      var valid_dbtypes=['mysql','sqlserver','postgres']
+      var valid_dbtypes=['mysql','sqlserver','postgres','oracle']
       var valid_keys=['sourcedbtype', 'sourceserver',
       'sourcedb','sourceuser','targetdbtype','targetdb','targetserver','targetuser']
       let status=true;

@@ -8,6 +8,7 @@ def qry_generator(columns, target_table):
     :param target_table: table name
     :return: custom query for duplication check
     '''
+
     sub_startquery = ""
     sub_endquery = ""
     for each_col in range(len(columns)):
@@ -26,19 +27,26 @@ def qry_generator(columns, target_table):
     custom_query = "SELECT " + sub_startquery + \
                    ",COUNT(*) " \
                    "FROM {0} ".format(target_table) + \
-                   "GROUP BY " + sub_endquery + " HAVING COUNT(*) >1;"
-    print(custom_query)
+                   "GROUP BY " + sub_endquery + " HAVING COUNT(*) >1"
+    # custom_query = "SELECT " + sub_startquery +",COUNT(*) FROM {0} ".format(target_table) + "GROUP BY " + sub_startquery +" HAVING COUNT(*)>1"
     return custom_query
 
 
-def duplication(target_cursor, target_table, column_name, test_queries):
+def duplication(target_cursor, target_table, column_name, test_queries,
+                db_type):
     col_list = []
     newlst = []
     try:
-        target_cursor.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS"
-            " WHERE table_name='{0}'".format(
+        if db_type == 'oracle':
+            target_cursor.execute("SELECT column_name FROM "
+                                  "user_tab_cols"
+                                  " WHERE table_name=UPPER('{0}')".format(
                 target_table))
+        else:
+            target_cursor.execute(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS"
+                " WHERE table_name='{0}'".format(
+                    target_table))
         for col in target_cursor:
             for each_col in col:
                 col_list.append(each_col)
@@ -54,9 +62,10 @@ def duplication(target_cursor, target_table, column_name, test_queries):
             target_query = test_queries["targetqry"]
             newlst.append(target_query)
             custom_query = newlst[0]
-
         target_cursor.execute(custom_query)
+
         all_results = []
+
         for row in target_cursor:
             all_results.append(list(map(str, row)))
         import json

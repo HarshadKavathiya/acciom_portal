@@ -1,11 +1,10 @@
 import time
-from multiprocessing import Process, Queue
 
 from flask import render_template
 from flask_mail import Message, Mail
 
 from application.helper.runner_class import run_by_case_id
-from application.models.user import TestSuite, TestCaseLog
+from application.models.user import TestSuite, TestCaseLog, TestCase
 from index import app
 from index import db
 
@@ -14,6 +13,7 @@ mail = Mail(app)
 
 # app.config('EMAIL_ON_SUITE_EXECUTION', True)
 # app.config('PARALLEL_SUITE_EXECUTION', True)
+
 
 def check_status(case_log_id_list):
     if not start_test(case_log_id_list):
@@ -34,27 +34,31 @@ def start_test(case_log_id_list):
     return True
 
 
-def return_result(case_log_id_list):
+def return_result(case_log_id_list, email, suite_id):
+    Test_Name = []
+    Test_Description = []
+    Test_src_table = []
+    Test_target_table = []
+    Test_status = []
+
+    print(case_log_id_list, email)
     while not check_status(case_log_id_list):
         time.sleep(10)
-    # for each_log in case_log_id_list:
-    #     testcase_log = TestCaseLog.query.filter_by(
-    #         test_case_log_id=each_log).first()
-
-    src_count_countcheck = []
-    dest_count_countcheck = []
-    null_check_counts = []
-    src_count_datavalidation = []
-    dest_count_datavalidation = []
-    src_to_dest = []
-    dest_to_src = []
+    suite = TestSuite.query.filter_by(test_suite_id=suite_id).first()
+    print(suite)
+    for each_test in suite.test_case:
+        case = TestCase.query.filter_by(test_case_id=each_test).first()
+        Test_Name.append(case.test_name)
+        Test_Description.append(case.test_id)
+        Test_status.append(case.test_status)
+    print(Test_status, Test_Name, Test_Description)
 
     payload = {}
     payload = {"status": True, "message": "send Mail"}
     print(payload)
     msg = Message('Test Suite Response After Execution',
                   sender=("Acciom", app.config.get('MAIL_USERNAME')),
-                  recipients=['akhil.bhardwaj@accionlabs.com'])
+                  recipients=[email])
 
     msg.html = render_template(
         'email.html')
@@ -69,18 +73,5 @@ def execute_suite_by_id(suite_id, email):
         res = run_by_case_id(each_test.test_case_id)
         case_log_id_list.append(res['result']['test_case_log_id'])
     print("After Executing Test all logs:", case_log_id_list)
-    # return_result(case_log_id_list)
-    # return_result(case_log_id_list, email)
-    queue = Queue()
-    p = Process(target=return_result,
-                args=(queue, case_log_id_list))
-    p.start()
-
-    #  send mail
-    # queue = Queue()
-    # p = Process(target=check_status, args=(queue, test_suite))
-    # p.start()
-    # p.join()  # this blocks until the process terminates
-    # result = queue.get()
-    # print("Email sent")
-    # Add logic to send mail and completion of suite
+    # return_result(case_log_id_list
+    return_result(case_log_id_list, email, suite_id)

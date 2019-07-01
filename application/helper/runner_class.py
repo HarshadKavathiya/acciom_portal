@@ -205,7 +205,7 @@ def run_test(case_id):
             result = duplication(target_cursor,
                                  table_name['target_table'],
                                  column,
-                                 query)
+                                 query, target_Detail['db_type'])
         if case_id.test_name == 'Datavalidation':
             table_name = split_table(case_id.test_case_detail)
             spark_job = SparkJob()
@@ -235,7 +235,8 @@ def run_test(case_id):
             result = ddl_check(source_cursor,
                                target_cursor,
                                table_name['src_table'],
-                               table_name['target_table'])
+                               table_name['target_table'],
+                               src_Detail['db_type'], target_Detail['db_type'])
 
         if case_id.test_name == 'Datavalidation-link':
             query = get_query(case_id.test_case_detail)

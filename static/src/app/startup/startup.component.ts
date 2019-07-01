@@ -284,7 +284,7 @@ export class StartupComponent implements OnInit {
  }
 
 getcasedetails(case_id,case_name,test_suite_id){ 
-  console.log(test_suite_id)
+ console.log(test_suite_id)
  this.fileUploadService.get_all_connections(test_suite_id).subscribe(data=>{
  // for(let i=0;i<data.all_cases.length;i++){
  // this.all_cases.push({'case_id':data.all_cases[i][0], 'case_name':data.all_cases[i][1],'checked':false})
@@ -327,7 +327,6 @@ this.case_name=case_name
  });
 }
 showcaseresult(case_id, src_db_name,des_db_name,src_table,target_table,src_db_type,des_db_type,column, src_qry, des_qry,case_name,src_db_id,target_db_id,all_connections){
-
  const dialogRef = this.dialog.open(DialogOverviewExampleDialogCaseDetail, { //break
  panelClass: 'my-class',
  width: '60%',
