@@ -304,7 +304,7 @@ if (this.selectedAll){
  }
  validate_db_detail(db_Detail)
  {  
-      var valid_dbtypes=['mysql','sqlserver','postgres']
+      var valid_dbtypes=['mysql','sqlserver','postgres','oracle']
       var valid_keys=['sourcedbtype', 'sourceserver',
       'sourcedb','sourceuser','targetdbtype','targetdb','targetserver','targetuser']
       let status=true;
@@ -344,6 +344,8 @@ if (this.selectedAll){
       let new_temp_Arr=[];
       let final_temp_Arr=[]
       let status=true;
+      console.log("hi")
+    
 
         for(let i=0;i<table_Arr.length;i++)
         {

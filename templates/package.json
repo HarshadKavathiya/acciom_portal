@@ -1,0 +1,10 @@
+{
+    "name": "emailsender",
+    "version": "0.0.0",
+    "dependencies": {
+        "ejs": "^2.6.2",
+        "fs": "0.0.1-security",
+        "nodemailer": "^6.2.1",
+        "nodemailer-smtp-transport": "^2.7.4"
+    }
+}

@@ -97,6 +97,8 @@ def db_details(db_id):
     db_id (foreign Key)
     """
     db_obj = DbDetail.query.filter_by(db_id=db_id).first()
+
+
     x = db_obj.db_password.encode()
     decrypted = DbDetail.decrypt(x)
     newpassword = bytes.decode(decrypted)
@@ -177,7 +179,7 @@ def run_test(case_id):
             query = get_query(case_id.test_case_detail)
             column = get_column(case_id.test_case_detail)
             result = null_check(target_cursor, table_name['target_table'],
-                                column, query)
+                                column, query,target_Detail['db_type'])
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
             target_Detail = db_details(case_id.target_db_id)
@@ -192,7 +194,7 @@ def run_test(case_id):
             result = duplication(target_cursor,
                                  table_name['target_table'],
                                  column,
-                                 query)
+                                 query,target_Detail['db_type'])
         if case_id.test_name == 'Datavalidation':
             table_name = split_table(case_id.test_case_detail)
             spark_job = SparkJob()
@@ -222,7 +224,7 @@ def run_test(case_id):
             result = ddl_check(source_cursor,
                                target_cursor,
                                table_name['src_table'],
-                               table_name['target_table'])
+                               table_name['target_table'],src_Detail['db_type'],target_Detail['db_type'])
 
         if result['res'] == 1:
             save_test_status(case_id, 1)  # TestCase object.

@@ -45,5 +45,4 @@ def count_check(source_cursor, target_cursor, source_table,
     except Exception as e:
         app.logger.error(e)
         return {"res": 2, "src_value": str(e), "des_value": str(e)}
-
     return payload

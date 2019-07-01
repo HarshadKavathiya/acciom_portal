@@ -12,6 +12,7 @@ def qry_generator(columns, target_table):
     :param target_table: table name
     :return: gives a custom query based for null check based on params.
     '''
+
     sub_query = ""
     for each_col in columns:
         if sub_query == "":
@@ -22,7 +23,7 @@ def qry_generator(columns, target_table):
     return sub_query
 
 
-def null_check(target_cursor, target_table, column, test_queries):
+def null_check(target_cursor, target_table, column, test_queries,db_type):
     '''
 
     :param target_cursor: as name tells
@@ -35,7 +36,12 @@ def null_check(target_cursor, target_table, column, test_queries):
         col_list = []
         newlst = []
         app.logger.debug(column)
-        target_cursor.execute(
+        if db_type == 'oracle':
+            target_cursor.execute("SELECT column_name FROM "
+                                  "user_tab_cols"
+                                  " WHERE table_name=UPPER('{0}')".format(target_table))
+        else:
+          target_cursor.execute(
             "SELECT COLUMN_NAME FROM "
             "information_schema.COLUMNS"
             " WHERE table_name='{0}'".format(target_table))

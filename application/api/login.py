@@ -86,6 +86,7 @@ class Login(Resource):
                                 required=True)
 
             data = parser.parse_args()
+            print("89",data["email"])
             current_user = User.query.filter_by(email=data['email']).first()
             expires = datetime.timedelta(hours=240)
             # TODO: MORE COMPLEX USER OBJECT  TOKEN CREATION.

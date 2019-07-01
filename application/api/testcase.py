@@ -1,4 +1,5 @@
 import ast
+import datetime
 import json
 
 from flasgger import swag_from
@@ -10,8 +11,8 @@ from flask_restful import reqparse
 
 from application.common.Response import error, success
 from application.helper.runner_class import run_by_case_id, split_table
-from application.models.user import TestSuite, SparkJob, \
-    TestCaseLog, TestCase, DbDetail
+from application.models.user import (TestSuite, SparkJob, TestCaseLog,
+                                     TestCase, DbDetail)
 from index import db
 
 
@@ -45,6 +46,7 @@ class TestCaseJob(Resource):
                     test_suite_id=data['suite_id']).first()
                 for each_test in test_suite.test_case:
                     run_by_case_id(each_test.test_case_id)
+                # status = execute_suite_by_id(data['suite_id'])
                 return success(
                     {"success": True,
                      "message": "Job Submitted Succesfully for Suite id {0}".format(
@@ -62,14 +64,16 @@ class TestCaseJob(Resource):
 
 class TestCaseSparkJob(Resource):
     def post(self, spark_job_id):
+        print("Data validation Job ends at = ", str(datetime.datetime.now()))
+        app.logger.info(
+            "Data validation Job ends at = {}".format(
+                datetime.datetime.now()))
         dict1 = request.data.decode('utf-8', 'ignore')
         res = ast.literal_eval(dict1)
-        print("line 43", res['result']['src_to_dest'])
-        result = json.dumps(res['result']['src_to_dest'])
-        print(result)
-        print(type(result))
+        result_src = json.dumps(res['result']['src_to_dest'])
         result_des = json.dumps(res['result']['dest_to_src'])
-        print(type(result_des))
+        src_count = res['src_result_count']
+        target_count = res["target_result_count"]
         result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         case_log = TestCaseLog.query.filter_by(
@@ -80,17 +84,36 @@ class TestCaseSparkJob(Resource):
             case = TestCase.query.filter_by(
                 test_case_id=case_log.test_case_id).first()
             case.test_status = 1
+            src_result = {}
+            des_result = {}
+            src_result['src_count'] = res['src_count']
+            src_result['src_to_dest_count'] = src_count
+            src_result['result'] = 'none'
+            case_log.src_execution_log = str(src_result)
+            des_result['tar_count'] = res['dest_count']
+            des_result['dest_to_src_count'] = target_count
+            des_result['result'] = 'none'
+            case_log.des_execution_log = str(des_result)
+            case_log.save_to_db()
             case.save_to_db()
 
         elif result_count != 0:
-            if result == '[]':
-                result = 'none'
+            if result_src == '[]':
+                result_src = 'none'
             elif result_des == '[]':
                 result_des = 'none'
             case_log.execution_status = 2
             case_log.save_to_db()
-            case_log.src_execution_log = str(result)
-            case_log.des_execution_log = str(result_des)
+            src_result = {}
+            des_result = {}
+            src_result['src_count'] = res['src_count']
+            src_result['src_to_dest_count'] = src_count
+            src_result['result'] = str(result_src)
+            des_result['tar_count'] = res['dest_count']
+            des_result['dest_to_src_count'] = target_count
+            des_result['result'] = str(result_des)
+            case_log.src_execution_log = str(src_result)
+            case_log.des_execution_log = str(des_result)
             case_log.save_to_db()
             case = TestCase.query.filter_by(
                 test_case_id=case_log.test_case_id).first()
@@ -112,6 +135,7 @@ class EditTestCase(Resource):
     def get(self, case_id):
         newlst = []
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
+
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
         src_target_table = split_table(obj.test_case_detail)
@@ -119,11 +143,18 @@ class EditTestCase(Resource):
         des_db_id = DbDetail.query.filter_by(db_id=obj.target_db_id).first()
         Source_Detail = db_details_without_password(src_db_id.db_id)
         Target_Detail = db_details_without_password(des_db_id.db_id)
+        src_db_id = obj.src_db_id
+        obj1 = DbDetail.query.filter_by(db_id=src_db_id).one()
+        print(obj1.connection_name)
+        target_db_id = obj.target_db_id
+        obj2 = DbDetail.query.filter_by(db_id=target_db_id).one()
+        print(obj2.connection_name)
         if tabledetails['column'] is not {}:
             column = tabledetails['column']
-            keys = []
-            for key in column:
-                keys.append(key)
+            print(column)
+            # keys = []
+            # for key in column:
+            #     keys.append(key)
         if tabledetails['query'] == {}:
             src_qry = ''
             des_qry = ''
@@ -131,7 +162,14 @@ class EditTestCase(Resource):
             queries = tabledetails["query"]
             print(queries)
             if obj.test_name == 'CountCheck':
-                src_query = queries["srcqry"]
+                src_query = queries["sourceqry"]
+                target_query = queries["targetqry"]
+                newlst.append(src_query)
+                newlst.append(target_query)
+                src_qry = newlst[0]
+                des_qry = newlst[1]
+            elif obj.test_name == 'Datavalidation':
+                src_query = queries["sourceqry"]
                 target_query = queries["targetqry"]
                 newlst.append(src_query)
                 newlst.append(target_query)
@@ -147,14 +185,16 @@ class EditTestCase(Resource):
                    "src_table": src_target_table['src_table'],
                    "target_table": src_target_table['target_table'],
                    "test_queries": tabledetails['query'],
-                   "src_column": 'None',
-                   "des_column": keys,
+                   # "src_column": 'None',
+                   "column": column,
                    "src_db_name": Source_Detail['db_name'],
                    "des_db_name": Target_Detail['db_name'],
                    "src_db_type": Source_Detail['db_type'],
                    "des_db_type": Target_Detail['db_type'],
                    "src_qry": src_qry,
-                   "des_qry": des_qry}
+                   "des_qry": des_qry,
+                   "src_db_id": obj1.connection_name,
+                   "target_db_id": obj2.connection_name}
 
         return {"success": True, "res": payload}
 
@@ -166,14 +206,47 @@ class EditTestCase(Resource):
         parser.add_argument('target_table')
         parser.add_argument('src_query')
         parser.add_argument('target_query')
+        parser.add_argument('column')
+        parser.add_argument('src_db_id')
+        parser.add_argument('target_db_id')
         data = parser.parse_args()
+        print(data)
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
+        if data["src_db_id"] == None:
+            obj.src_db_id = obj.src_db_id
+        else:
+            obj.src_db_id = data["src_db_id"]
+        if data["target_db_id"] == None:
+            obj.target_db_id = obj.target_db_id
+        else:
+            obj.target_db_id = data["target_db_id"]
+
         tabledetail = obj.test_case_detail
         tabledetails = ast.literal_eval(tabledetail)
-        print("tabledetails", tabledetails)
+        if data["column"] == "None" or data["column"] == "":
+            tabledetails["column"] = {}
+        else:
+            removecolumnspaces = data["column"].replace(" ", "")
+            if ";" and ":" in removecolumnspaces:
+                tabledetails["column"] = {}
+                x = removecolumnspaces.split(";")
+                for i in x:
+                    if ":" in i:
+                        y = i.split(":")
+                        tabledetails["column"][y[0]] = y[1]
+                    else:
+                        tabledetails["column"][i] = i
+            elif ";" in data["column"]:
+                removecolumnspaces = data["column"].replace(" ", "")
+                p = removecolumnspaces.split(";")
+                for q in p:
+                    tabledetails["column"][q] = q
+            else:
+                tabledetails["column"] = {}
+                removecolumnspaces = data["column"].replace(" ", "")
+                tabledetails["column"][removecolumnspaces] = removecolumnspaces
 
         table = tabledetails["table"]
-
         for key in table:
             print(key)
         print(data['src_table'])
@@ -188,5 +261,7 @@ class EditTestCase(Resource):
             queries['sourceqry'] = data['src_query']
             queries['targetqry'] = data['target_query']
         obj.test_case_detail = json.dumps(tabledetails)
+        app.logger.debug(json.dumps(tabledetails))
+
         obj.save_to_db()
         return {"success": True, "message": "Succesfully Changed Values"}
