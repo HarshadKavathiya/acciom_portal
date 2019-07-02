@@ -56,8 +56,18 @@ class TestCaseJob(Resource):
                 # p.start()
                 # p.join()  # this blocks until the process terminates
                 # return_result(test_suite.test_suite_id)
+                case_log_id_list = []
+                for each_test in test_suite.test_case:
+                    res = run_by_case_id(each_test.test_case_id)
+                    case_log_id_list.append(res['result']['test_case_log_id'])
 
                 execute_suite_by_id(test_suite.test_suite_id, user.email)
+
+                # p.join()
+                # p1 = Process(target=return_result, args=(
+                #     case_log_id_list, user.email, test_suite.test_suite_id))
+                # p1.start()
+                # execute_suite_by_id(test_suite.test_suite_id, user.email)
                 return success(
                     {"success": True,
                      "message": "Job Submitted Succesfully for Suite id {0}".format(

@@ -23,7 +23,7 @@
           >
           <div>
 
-            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections</button>
+            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections SuiteId:{{ i.test_suite_id}}</button>
           </div>
             <div class="paneldesc"> 
               {{i.excel_name}}&nbsp;&nbsp;<div class="bold">Uploaded at:</div> {{ i.created | date:'medium'}}
