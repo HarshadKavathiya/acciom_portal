@@ -23,9 +23,11 @@ export class AccessTokenComponent implements OnInit {
     })
   }
   copyToken(inputElement){
+    console.log(inputElement)
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
+
   }
 
   copyInputMessage(inputElement){

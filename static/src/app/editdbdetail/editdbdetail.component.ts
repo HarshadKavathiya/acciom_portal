@@ -47,11 +47,11 @@ export class EditdbdetailComponent implements OnInit {
     this.fileUploadService.update_db_details(this.db_id,this.createForm.value).subscribe(data => {
       console.log(data)
       if(data.success){
-      Swal("success","successfully Updated Details","success")
+      Swal("Success","Successfully Updated Details","success")
       this.router.navigate(['Viewdb'])
       }  
    },err=>{
-      Swal("error","Something went wrong","error")
+      Swal("error","Unable to create Connection","error")
    });
   }
   check_connection(){
