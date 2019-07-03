@@ -580,7 +580,7 @@ export class DialogOverviewExampleDialogstartup {
  @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
  onNoClick(): void {this.dialogRef.close();}
  onexport(case_log_id){
- return `/api/export/${case_log_id}`
+ return `http://0.0.0.0:5000/api/export/${case_log_id}`
 }}
 //<------------------------------------------------>
 @Component({

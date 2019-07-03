@@ -190,7 +190,7 @@ def run_test(case_id):
             print(query)
             column = get_column(case_id.test_case_detail)
             result = null_check(target_cursor, table_name['target_table'],
-                                column, query)
+                                column, query, target_Detail['db_type'])
 
         if case_id.test_name == 'DuplicateCheck':  # 3 Test
             target_Detail = db_details(case_id.target_db_id)

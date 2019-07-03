@@ -174,13 +174,37 @@ class ExportTestLog(Resource):
         response = []
         if test_case.test_name == 'Datavalidation':
             data = ast.literal_eval(case_log.src_execution_log)
+            print("data", data)
+            data1 = ast.literal_eval(case_log.des_execution_log)
+            print("data1", data1)
 
-            dict_key = ast.literal_eval(data[0])
-            key_list = [key for key in dict_key.keys()]
+            dict_key1 = ast.literal_eval(data["result"])
+            print("dict_key", dict_key1)
+            dict_key3 = ast.literal_eval(data1["result"])
+            print("dict_key3", dict_key3)
+
+            response.append(['Source Table'])
+            for i in dict_key1:
+                dict_key2 = ast.literal_eval(i)
+                key_list = [key for key in dict_key2.keys()]
             response.append(key_list)
-            for i in range(len(data)):
-                value_list = [x for x in ast.literal_eval(data[i]).values()]
+            for i in dict_key1:
+                dict_key2 = ast.literal_eval(i)
+                value_list = [x for x in dict_key2.values()]
                 response.append(value_list)
+
+            response.append(['Target Table'])
+            for i in dict_key3:
+                dict_key4 = ast.literal_eval(i)
+                key_list = [key for key in dict_key4.keys()]
+            response.append(key_list)
+            for i in dict_key3:
+                dict_key4 = ast.literal_eval(i)
+                value_list = [x for x in dict_key4.values()]
+                response.append(value_list)
+
+            print("response", response)
+
             response = json.dumps(response)
         elif test_case.test_name == 'CountCheck':
             src_response = case_log.src_execution_log

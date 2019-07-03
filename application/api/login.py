@@ -187,7 +187,7 @@ def send_reset_email(user):
     msg = Message('Password Reset Request',
                   sender=app.config.get('MAIL_USERNAME'),
                   recipients=[user.email])
-    msg.body = app.config.get('END_POINT_DEV') + app.config.get(
+    msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_RESET_PASSWORD_PATH') + token
     # api.url_for(ResetPassword, token=token, _external=True)
     mail.send(msg)
@@ -231,7 +231,7 @@ def send_mail_to_verify(user):
     msg = Message('Verify User Registration',
                   sender=app.config.get('MAIL_USERNAME'),
                   recipients=[user.email])
-    msg.body = app.config.get('END_POINT_DEV') + app.config.get(
+    msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_AFTER_VERIFY') + token
     mail.send(msg)
 

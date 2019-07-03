@@ -1,5 +1,4 @@
 import time
-from multiprocessing import Process
 
 from flask import render_template
 from flask_mail import Message, Mail
@@ -48,10 +47,7 @@ def return_result(case_log_id_list, email, suite_id):
     suite = TestSuite.query.filter_by(test_suite_id=suite_id).first()
     print(suite)
     for each_test in suite.test_case:
-        src_table = ''
-        dest_table = ''
         print(each_test)
-        # case = TestCase.query.filter_by(test_case_id=each_test).first()
         Test_Name.append(each_test.test_name)
         Test_Description.append(each_test.test_id)
         Test_status.append(each_test.test_status)
@@ -79,7 +75,8 @@ def return_result(case_log_id_list, email, suite_id):
     msg.html = render_template(
         'email.html', content=render_list,
         zip_content=zip(Test_Name, Test_Description, Test_src_table,
-                        Test_target_table, Test_status))
+                        Test_target_table, Test_status),
+        suite_name=suite.test_suite_name, suite_id=suite.test_suite_id)
     mail.send(msg)
 
 
@@ -91,13 +88,4 @@ def execute_suite_by_id(suite_id, email):
         res = run_by_case_id(each_test.test_case_id)
         case_log_id_list.append(res['result']['test_case_log_id'])
     print("After Executing Test all logs:", case_log_id_list)
-    p = Process(target=return_result, args=(case_log_id_list, email, suite_id))
-    p.start()
-    p.join()
-    return True
-
-    # return_result(case_log_id_list, email, suite_id)
-
-#
-# def return_result(case_log_id_list, email, suite_id):
-#     return True
+    return_result(case_log_id_list, email, suite_id)

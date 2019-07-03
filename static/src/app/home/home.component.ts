@@ -102,7 +102,6 @@ link.remove();
 OnClick(v) {
   console.log(this.suitename)
   this.spinnerService.show();
-
     this.MyModel=null;
   this.show=false;
    this.show1=false;
