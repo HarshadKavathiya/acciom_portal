@@ -118,7 +118,7 @@ OnClick(v) {
     this.filevalue=null;
     this.disable=true;
     this.disable2=true;
-    Swal("Success","Succesfully Uploaded the file","success")
+    Swal("Success","Succesfully Uploaded Quality Suite","success")
     this.all_cases=[];
     this.initialisecases();
     this.response=this.name;

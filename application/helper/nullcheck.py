@@ -1,3 +1,5 @@
+# from logger import set_up_logging
+# logger = set_up_logging()
 import json
 
 from flask import current_app as app
@@ -31,16 +33,10 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
         col_list = []
         newlst = []
         app.logger.debug(column)
-        if db_type == 'oracle':
-            target_cursor.execute("SELECT column_name FROM "
-                                  "user_tab_cols"
-                                  " WHERE table_name=UPPER('{0}')".format(
-                target_table))
-        else:
-            target_cursor.execute(
-                "SELECT COLUMN_NAME FROM "
-                "information_schema.COLUMNS"
-                " WHERE table_name='{0}'".format(target_table))
+        target_cursor.execute(
+            "SELECT COLUMN_NAME FROM "
+            "information_schema.COLUMNS"
+            " WHERE table_name='{0}'".format(target_table))
 
         for col in target_cursor:
             for each_col in col:

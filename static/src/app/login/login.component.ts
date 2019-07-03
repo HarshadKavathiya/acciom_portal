@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 {
   this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
     if(data.success==true){
-      Swal("Success",data.message,"success")
+      // Swal("Success",data.message,"success")
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }

@@ -185,7 +185,7 @@ class ResetPasswordInput(Resource):
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
-                  sender=app.config.get('MAIL_USERNAME'),
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
     msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_RESET_PASSWORD_PATH') + token
@@ -229,7 +229,7 @@ def verify_user(email):
 def send_mail_to_verify(user):
     token = user.get_reset_token()
     msg = Message('Verify User Registration',
-                  sender=app.config.get('MAIL_USERNAME'),
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
     msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_AFTER_VERIFY') + token
