@@ -62,7 +62,7 @@ class Register(Resource):
             new_user.save_to_db()
             send_mail_to_verify(new_user)
             return success(
-                {'message': 'user {} was created'.format(data['email']),
+                {'message': 'User {} was created'.format(data['email']),
                  'success': True})
 
         except SQLAlchemyError as e:
