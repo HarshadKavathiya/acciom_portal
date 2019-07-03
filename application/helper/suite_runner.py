@@ -87,5 +87,6 @@ def execute_suite_by_id(suite_id, email):
     for each_test in test_suite.test_case:
         res = run_by_case_id(each_test.test_case_id)
         case_log_id_list.append(res['result']['test_case_log_id'])
+
     print("After Executing Test all logs:", case_log_id_list)
     return_result(case_log_id_list, email, suite_id)

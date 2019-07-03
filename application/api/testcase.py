@@ -1,6 +1,7 @@
 import ast
 import datetime
 import json
+from multiprocessing import Process
 
 from flasgger import swag_from
 from flask import current_app as app
@@ -48,14 +49,14 @@ class TestCaseJob(Resource):
                 test_suite = TestSuite.query.filter_by(
                     test_suite_id=data['suite_id']).first()
                 print(test_suite.test_suite_id)
-                case_log_id_list = []
-                for each_test in test_suite.test_case:
-                    res = run_by_case_id(each_test.test_case_id)
-                    case_log_id_list.append(res['result']['test_case_log_id'])
-                # p = Process(target=execute_suite_by_id,
-                #           args=(test_suite.test_suite_id, user.email))
-                # p.start()
-                execute_suite_by_id(test_suite.test_suite_id, user.email)
+                # case_log_id_list = []
+                # for each_test in test_suite.test_case:
+                #     res = run_by_case_id(each_test.test_case_id)
+                #     case_log_id_list.append(res['result']['test_case_log_id'])
+                p = Process(target=execute_suite_by_id,
+                            args=(test_suite.test_suite_id, user.email))
+                p.start()
+                # execute_suite_by_id(test_suite.test_suite_id, user.email)
                 return success(
                     {"success": True,
                      "message": "Job Submitted Succesfully for Suite id {0}".format(
