@@ -70,9 +70,9 @@ class TestSuites(Resource):
         print(len(test_case_list))
         i = 0
         for j in range(ws.max_row - 1):
-            print("73", temp_test1[j])
-            print('74', test_case_list)
-            print(temp_test1[j] in test_case_list)
+            # print("73", temp_test1[j])
+            # print('74', test_case_list)
+            # print(temp_test1[j] in test_case_list)
             if temp_test1[j] in test_case_list:
                 test_case_list.remove(temp_test1[j])
                 db_list = split_db(temp_test[i + 2][j])
@@ -128,7 +128,7 @@ class TestSuites(Resource):
                         query["targetqry"] = q
 
                 jsondict = {"column": column, "table": table, "query": query}
-                print("141", jsondict)
+                # print("141", jsondict)
 
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],
@@ -138,6 +138,8 @@ class TestSuites(Resource):
                                 src_db_id=src_db_id,
                                 target_db_id=target_db_id)
                 temp.save_to_db()
+
+        print("execute value", data['exvalue'])
         if int(data['exvalue']) == 1:
             test_suite = TestSuite.query.filter_by(
                 test_suite_id=temp.test_suite_id).first()

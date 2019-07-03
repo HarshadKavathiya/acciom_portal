@@ -1,8 +1,8 @@
 import pymysql
 
 db_name = "acciom_db";
-user_name = "acciom_user";
-password = "acciom_password";
+user_name = "Acciom_user";
+password = "Acciomuser";
 host = "localhost"
 
 delete_table_list = ["sparkjob", "test_case_log", "test_case",

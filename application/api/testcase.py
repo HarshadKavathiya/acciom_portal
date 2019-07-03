@@ -53,7 +53,7 @@ class TestCaseJob(Resource):
                     res = run_by_case_id(each_test.test_case_id)
                     case_log_id_list.append(res['result']['test_case_log_id'])
                 # p = Process(target=execute_suite_by_id,
-                #             args=(test_suite.test_suite_id, user.email))
+                #           args=(test_suite.test_suite_id, user.email))
                 # p.start()
                 execute_suite_by_id(test_suite.test_suite_id, user.email)
                 return success(
