@@ -50,9 +50,9 @@
             <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
                 Result Status
             </th>
-            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
-                Result Description
-            </th>
+            <!--            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">-->
+            <!--                Result Description-->
+            <!--            </th>-->
         </tr>
         {% if content['Test_Name']|length > 1 %}
         {% for test_class,description,src_table, dest_table,result in
@@ -91,14 +91,14 @@
                 {% elif result == 2 %}
                 <strong style="color:red">Fail</strong>
                 {% else %}
-                <strong style="color:red"> Error</strong>
+                <strong style="color:orange"> Error</strong>
                 {% endif %}
             </td>
 
-            <td align="center"
-                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
-                Successfully Run
-            </td>
+            <!--            <td align="center"-->
+            <!--                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">-->
+            <!--                Successfully Run-->
+            <!--            </td>-->
         </tr>
         {% endfor %}
         {% else %}
@@ -129,10 +129,10 @@
                 style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6;color:green">
                 <strong>{{ content['Test_status'][0] }}</strong>
             </td>
-            <td align="center"
-                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
-                Successfully Run
-            </td>
+            <!--            <td align="center"-->
+            <!--                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">-->
+            <!--                Successfully Run-->
+            <!--            </td>-->
         </tr>
         {% endif %}
 
