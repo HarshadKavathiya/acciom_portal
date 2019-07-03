@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from flask import render_template
@@ -68,15 +69,17 @@ def return_result(case_log_id_list, email, suite_id):
     payload = {}
     payload = {"status": True, "message": "send Mail"}
     print(payload)
-    msg = Message('Test Suite Response After Execution',
+    msg = Message('Quality Suite Result',
                   sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[email])
-
+    current_time = datetime.datetime.now()
+    current_time.strftime("%c")
     msg.html = render_template(
         'email.html', content=render_list,
         zip_content=zip(Test_Name, Test_Description, Test_src_table,
                         Test_target_table, Test_status),
-        suite_name=suite.test_suite_name, suite_id=suite.test_suite_id)
+        suite_name=suite.test_suite_name, suite_id=suite.test_suite_id,
+        executed_at=str(current_time.strftime("%c")))
     mail.send(msg)
 
 
