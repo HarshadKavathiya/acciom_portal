@@ -62,7 +62,7 @@ class Register(Resource):
             new_user.save_to_db()
             send_mail_to_verify(new_user)
             return success(
-                {'message': 'user {} was created'.format(data['email']),
+                {'message': 'User {} was created'.format(data['email']),
                  'success': True})
 
         except SQLAlchemyError as e:
@@ -185,7 +185,7 @@ class ResetPasswordInput(Resource):
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
-                  sender=app.config.get('MAIL_USERNAME'),
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
     msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_RESET_PASSWORD_PATH') + token
@@ -229,7 +229,7 @@ def verify_user(email):
 def send_mail_to_verify(user):
     token = user.get_reset_token()
     msg = Message('Verify User Registration',
-                  sender=app.config.get('MAIL_USERNAME'),
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
     msg.body = app.config.get('END_POINT_PROD') + app.config.get(
         'UI_AFTER_VERIFY') + token
