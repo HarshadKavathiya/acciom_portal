@@ -171,16 +171,16 @@ autocomplete="off" matInput placeholder="Column" formControlName="column" #colum
 <mat-error>Enter Correct Column</mat-error>
 </mat-form-field>
 <mat-form-field class="example-full-width">
-<input rows=4 type="text" autocomplete="off"
+<textarea rows=4 type="text" autocomplete="off"
 value="{{data.src_qry}}"
-matInput placeholder=" Source  Query" formControlName="src_query" #src_qry>
+matInput placeholder=" Source  Query" formControlName="src_query" #src_qry></textarea>
 <mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
 
 <mat-form-field class="example-full-width">
-<input rows=4 type="text" autocomplete="off"
+<textarea rows=4 type="text" autocomplete="off"
 value="{{data.des_qry}}"
-matInput placeholder=" Target Query" formControlName="target_query" #target_qry>
+matInput placeholder=" Target Query" formControlName="target_query" #target_qry> </textarea>
 <mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
 {{all_connection}}
