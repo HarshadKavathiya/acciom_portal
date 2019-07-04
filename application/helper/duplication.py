@@ -70,8 +70,46 @@ def duplication(target_cursor, target_table, column_name, test_queries,
             all_results.append(list(map(str, row)))
         import json
         if all_results:
-            all_results.insert(0, column_name)
-            res1 = json.dumps(all_results)
+            if (test_queries == {} or test_queries['targetqry'].isspace() or
+                    test_queries['targetqry'] == ""):
+                if column_name == []:
+                    col_list.append("Duplicate Occurance")
+                    all_results.insert(0, col_list)
+                    res1 = json.dumps(all_results)
+                else:
+                    column_name.append("Duplicate Occurance")
+                    all_results.insert(0, column_name)
+                    res1 = json.dumps(all_results)
+                    # if column give in excel
+            else:
+                if "select * from" in (test_queries["targetqry"].lower()):
+                      col_list.append("Duplicate Occurance")
+                      all_results.insert(0, col_list)
+                      res1 = json.dumps(all_results)
+                else:
+                    print("custom qry for cols.")
+                    qry = (test_queries["targetqry"]).lower()
+                    start = "by"
+                    end = "having"
+                    columns = qry[
+                              qry.index(start) + len(start):
+                              qry.index(end)]
+                    print("columns",columns)
+                    if "," in columns:
+                       column = columns.split(",")
+                       print("column",column)
+                       column.append("Duplicate Occurance")
+                       all_results.insert(0, column)
+                       res1 = json.dumps(all_results)
+
+                    else:
+                        col_list_custom = []
+                        print("column2",columns)
+                        col_list_custom.append(columns)
+                        col_list_custom.append("Duplicate Occurance")
+                        all_results.insert(0, col_list_custom)
+                        res1 = json.dumps(all_results)
+
 
             return {"res": 0, "src_value": "src_val_not required",
                     "des_value": res1}

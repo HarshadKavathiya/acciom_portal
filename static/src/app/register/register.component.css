@@ -78,6 +78,16 @@
       border-radius: 8px;
       background-color: #b72e34;
     }
+    .gobackbtn{
+      display: flex;
+      text-align: center;
+      
+      width: 90px;
+      height: 30px;
+      margin-right:auto;
+      border-radius: 8px;
+      background-color: #b72e34;
+    }
     .Log-in{
       
       font-family: "Avenir";
@@ -90,5 +100,9 @@
       text-align: justify;
       color: #f5f5f5;
     
+    }
+    .btn-class{
+      display: flex;
+      justify-content: space-evenly;
     }
     

@@ -23,10 +23,10 @@
           >
           <div>
 
-            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections SuiteId:{{ i.test_suite_id}}</button>
+            <button mat-button (click)="manage_connection(i.test_suite_id)" style="color:brown;">Manage Connections</button>
           </div>
             <div class="paneldesc"> 
-              {{i.excel_name}}&nbsp;&nbsp;<div class="bold">Uploaded at:</div> {{ i.created | date:'medium'}}
+              SuiteId:{{ i.test_suite_id}}&nbsp;&nbsp;&nbsp; {{i.excel_name}}&nbsp;&nbsp;&nbsp;<div class="bold">Uploaded at:</div> {{ i.created | date:'medium'}}
             </div>
             <div class="btn-container">   
               <button mat-button
