@@ -26,6 +26,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 import {LoginComponent } from './login/login.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material';
@@ -113,6 +114,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     MatExpansionModule,
     MatSidenavModule,
     MatTooltipModule,
+    MatSnackBarModule,
     NgxPaginationModule,
     FlexLayoutModule,
     MultiselectDropdownModule,

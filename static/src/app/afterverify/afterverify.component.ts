@@ -29,5 +29,8 @@ export class AfterverifyComponent implements OnInit {
           this.router.navigate(['login'])
         })
     }
+    tologin(){
+      this.router.navigate(['login'])
+    }
 
 }

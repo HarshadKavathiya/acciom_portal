@@ -1,6 +1,7 @@
 import datetime
 
 from flasgger import swag_from
+from flask import render_template
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
                                 get_raw_jwt, get_jwt_identity)
@@ -187,8 +188,11 @@ def send_reset_email(user):
     msg = Message('Password Reset Request',
                   sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
-    msg.body = app.config.get('END_POINT_PROD') + app.config.get(
-        'UI_RESET_PASSWORD_PATH') + token
+    msg_link = str(app.config.get('API_END_POINT') + app.config.get(
+        'UI_RESET_PASSWORD_PATH') + token)
+    msg.html = render_template("email_reset_password.html", links=msg_link,
+                               name=user.first_name, email=user.email,
+                               emailnoreplay='<noreplay@accionlabs.com>')
     # api.url_for(ResetPassword, token=token, _external=True)
     mail.send(msg)
 
@@ -228,11 +232,13 @@ def verify_user(email):
 
 def send_mail_to_verify(user):
     token = user.get_reset_token()
-    msg = Message('Verify User Registration',
+    msg = Message('Please verify your email address',
                   sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
-    msg.body = app.config.get('END_POINT_PROD') + app.config.get(
-        'UI_AFTER_VERIFY') + token
+    msg_link = str(app.config.get('API_END_POINT') + app.config.get(
+        'UI_AFTER_VERIFY') + token)
+    msg.html = render_template("email_verify.html", links=msg_link,
+                               name=user.first_name)
     mail.send(msg)
 
 
@@ -255,13 +261,7 @@ class GetToken(Resource):
         try:
             expires = datetime.timedelta(days=100)
             current_user_id = get_jwt_identity()
-            # parser = reqparse.RequestParser()
-            # parser.add_argument('password',
-            #                     help='This field cannot be blank',
-            #                     required=True)
             current_user = db.session.query(User).get(current_user_id)
-            # data = parser.parse_args()
-            # if User.verify_hash(data['password'], current_user.password):
             # TODO: Security for the token.
             access_token = create_access_token(
                 identity=current_user.user_id,

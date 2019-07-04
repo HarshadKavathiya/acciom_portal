@@ -627,6 +627,8 @@ THE SOFTWARE.
 
 @angular/material/tooltip
 
+@angular/material/snack-bar
+
 ngx-pagination
 MIT
 The MIT License (MIT)
