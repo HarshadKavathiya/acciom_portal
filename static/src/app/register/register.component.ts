@@ -42,10 +42,13 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['login'])
       }
     },err=>{
-      console.log(err.success)
-      Swal("error",err.error.message,"error")
-     
-     
+      console.log(err.error.message)
+      if(err.error.message == undefined ){
+        Swal("Error","Connectivity lost","error")
+      }
+      else{
+      Swal("Error",err.error.message,"error")
+      }
 
   });
 

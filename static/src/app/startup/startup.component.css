@@ -11,7 +11,7 @@
 }
 .droppanel{  
     margin-top:15px;
-    width:80%;
+    width:90%;
 }
 .dropdown{     /*outer matExpansion todo:padding 2 2 for maxwidth 600*/ 
     margin-bottom:15px;
@@ -34,9 +34,15 @@
     line-height: normal;
     letter-spacing: normal;
     color: #000000;
+    flex-basis: 40%;
 
 }
 .bold{
+    display: contents;
+    font-weight: bold;
+
+}
+.bold1{
     display: contents;
 }
 .btn-container{
@@ -69,6 +75,10 @@
 
 .mat-panel-header{
     padding:0rem;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
     /* height:auto !important; */
 }
 .mat-panel-header-inside{
@@ -113,9 +123,12 @@
     letter-spacing: normal;
     color: #686868;
 }   
+.btnplay-inside-new{
+margin-left: 46px;
+}
 .btnplay-inside{
-    margin: 0px;
-   
+    margin-left: 85px;
+
 }
 /* .btnplay-inside:hover{
     background-color: #4d4a4a
@@ -354,3 +367,4 @@ background-image: linear-gradient(to bottom right, #8df714, #65911e);
 .greenbg{
     background-color: #8df714
 }
+

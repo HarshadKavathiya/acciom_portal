@@ -238,7 +238,7 @@ def send_mail_to_verify(user):
     msg_link = str(app.config.get('API_END_POINT') + app.config.get(
         'UI_AFTER_VERIFY') + token)
     msg.html = render_template("email_verify.html", links=msg_link,
-                               name=user.first_name)
+                               name=user.first_name, email=user.email)
     mail.send(msg)
 
 

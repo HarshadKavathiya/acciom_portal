@@ -40,11 +40,14 @@ export class LoginComponent implements OnInit {
    console.log(err.success)
    if(err.error.message == 'Verify User'){
      console.log("go to some page")
-     //this.router.navigate(['Verifyuser'])
-  
   this.openSnack();
      
    }
+else if (err.error.message == undefined){
+  Swal("Error","Connectivity lost","error")
+
+}
+
    else{
    Swal("Error",err.error.message,"error")
    }
