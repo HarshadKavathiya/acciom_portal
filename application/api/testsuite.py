@@ -70,9 +70,9 @@ class TestSuites(Resource):
         print(len(test_case_list))
         i = 0
         for j in range(ws.max_row - 1):
-            # print("73", temp_test1[j])
-            # print('74', test_case_list)
-            # print(temp_test1[j] in test_case_list)
+            print("73", temp_test1[j])
+            print('74', test_case_list)
+            print(temp_test1[j] in test_case_list)
             if temp_test1[j] in test_case_list:
                 test_case_list.remove(temp_test1[j])
                 db_list = split_db(temp_test[i + 2][j])
@@ -93,18 +93,17 @@ class TestSuites(Resource):
                     pass
                 else:
                     if ":" in columndata:
-                        removecolumnspace = temp_test[i + 4][j].replace(" ",
-                                                                        "")
-                        x = removecolumnspace.split(";")
+                        x = temp_test[i + 4][j].split(":")
                         z = []
                         for m in x:
-                            p = m.split(":")
-                            for q in p:
-                                column[p[0]] = p[1]
+                            y = m.split(";")
+                            z.append(y)
+                        column = {}
+                        for n in range(len(z[0])):
+                            column[z[0][n]] = z[1][n]
+
                     else:
-                        removecolumnspace = temp_test[i + 4][j].replace(" ",
-                                                                        "")
-                        columnlist = removecolumnspace.split(";")
+                        columnlist = temp_test[i + 4][j].split(";")
                         column = {}
                         for k in range(len(columnlist)):
                             column[columnlist[k]] = columnlist[k]
@@ -120,17 +119,14 @@ class TestSuites(Resource):
                     if ";" in p:
                         query_split = p.split(";")
                         final = [a.split(":") for a in query_split]
-                        query["sourceqry"] = final[0][1] if 'srcqry' in final[
-                            0] else ""
-                        query["targetqry"] = final[1][1] if 'targetqry' in \
-                                                            final[1] else ""
-
+                        # Added logic to avoid index error if only srcqry is given
+                        query["sourceqry"] = final[0][1] if 'srcqry' in final[0] else ""
+                        query["targetqry"] = final[1][1] if 'targetqry' in final[1] else ""
                     else:
                         q = p.strip("targetqry:")
                         query["targetqry"] = q
 
                 jsondict = {"column": column, "table": table, "query": query}
-                # print("141", jsondict)
 
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],
@@ -140,8 +136,6 @@ class TestSuites(Resource):
                                 src_db_id=src_db_id,
                                 target_db_id=target_db_id)
                 temp.save_to_db()
-
-        print("execute value", data['exvalue'])
         if int(data['exvalue']) == 1:
             test_suite = TestSuite.query.filter_by(
                 test_suite_id=temp.test_suite_id).first()
@@ -178,37 +172,13 @@ class ExportTestLog(Resource):
         response = []
         if test_case.test_name == 'Datavalidation':
             data = ast.literal_eval(case_log.src_execution_log)
-            print("data", data)
-            data1 = ast.literal_eval(case_log.des_execution_log)
-            print("data1", data1)
 
-            dict_key1 = ast.literal_eval(data["result"])
-            print("dict_key", dict_key1)
-            dict_key3 = ast.literal_eval(data1["result"])
-            print("dict_key3", dict_key3)
-
-            response.append(['Source Table'])
-            for i in dict_key1:
-                dict_key2 = ast.literal_eval(i)
-                key_list = [key for key in dict_key2.keys()]
+            dict_key = ast.literal_eval(data[0])
+            key_list = [key for key in dict_key.keys()]
             response.append(key_list)
-            for i in dict_key1:
-                dict_key2 = ast.literal_eval(i)
-                value_list = [x for x in dict_key2.values()]
+            for i in range(len(data)):
+                value_list = [x for x in ast.literal_eval(data[i]).values()]
                 response.append(value_list)
-
-            response.append(['Target Table'])
-            for i in dict_key3:
-                dict_key4 = ast.literal_eval(i)
-                key_list = [key for key in dict_key4.keys()]
-            response.append(key_list)
-            for i in dict_key3:
-                dict_key4 = ast.literal_eval(i)
-                value_list = [x for x in dict_key4.values()]
-                response.append(value_list)
-
-            print("response", response)
-
             response = json.dumps(response)
         elif test_case.test_name == 'CountCheck':
             src_response = case_log.src_execution_log
