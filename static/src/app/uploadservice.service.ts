@@ -64,7 +64,14 @@ export class UploadserviceService {
     this.user = null;
     localStorage.clear();
   }
+  expandPanel(status, e){
+    console.log(status)
+    if (status == 0 ){
 
+      e.stopPropagation(); // Preventing event bubbling
+
+    }
+  }
   register(createForm){
     let headers = new HttpHeaders().set('Content-Type','application/json')
     return this.http.post<any>(`${this.url}/register`,createForm,{headers: headers})

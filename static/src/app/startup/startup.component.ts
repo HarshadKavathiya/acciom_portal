@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ExcelService} from '../services/excel.service';
 import { FormBuilder,FormGroup, Validators } from '@angular/forms'
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 export interface DialogData {
@@ -130,7 +131,7 @@ export class StartupComponent implements OnInit {
  constructor( private router:Router,
  private fileUploadService:UploadserviceService,
  private spinnerService: Ng4LoadingSpinnerService,
- public dialog: MatDialog) { }
+ public dialog: MatDialog, MatExpansionModule:MatExpansionModule) { }
 
 
  ngOnInit() {
@@ -195,6 +196,26 @@ export class StartupComponent implements OnInit {
  ToDB(){
  this.router.navigate(['db'])
  }
+ expandPanel(matExpansionPanel,case_id, event){
+
+    console.log(case_id)
+    if(case_id == 0){
+
+        matExpansionPanel.toggle();
+
+    }
+ }
+//     expandPanel1(matExpansionPanel,case_id, event){
+//   console.log(case_id)
+//     if(case_id == 0){
+
+//         matExpansionPanel.toggle();
+
+//     }
+//     }
+
+    
+ 
  manage_connection(suite_id){
  this.all_cases=[]
  this.all_connection=[]
@@ -246,13 +267,14 @@ export class StartupComponent implements OnInit {
  else{
  this.Initialize();
  this.starttimer();
- Swal("error","Something went wrong","error")
+ Swal("Error","Something went wrong","error")
 
  }
  },err=>{
  })
  }
- executeTestByCaseId(test_case_id,event:Event,z,x){
+ executeTestByCaseId(status,test_case_id,event:Event,z,x){
+     console.log(status)
  event.stopPropagation();
  this.playButtons2[x][z]=false
  this.show[x]=false;
@@ -270,7 +292,7 @@ export class StartupComponent implements OnInit {
  this.starttimer();
  }
  },err=>{
- Swal("error",err.error.msg,"error")
+ Swal("Error",err.error.msg,"error")
  let temp="Token has expired"
  if (temp == err.error.msg){
  clearInterval(this.times)
@@ -633,7 +655,7 @@ createForm:FormGroup;
  console.log(column.value)
  console.log(src_table.value, target_table.value, src_qry.value, target_qry.value, case_id,this.src_db_id,this.target_db_id)
  this.fileUploadService.update_case_details(case_id,this.src_db_id,this.target_db_id,src_table.value, target_table.value, src_qry.value, target_qry.value ,column.value).subscribe(result=>{
- Swal("success",result.message,"success")
+ Swal("Success",result.message,"success")
  })
  }
 
@@ -667,14 +689,14 @@ disable2=true;
  submit_connection(type){
  this.fileUploadService.select_connections(type,JSON.stringify(this.selectedValue),this.connection).subscribe(data=>{
  if(data.success){
- Swal("success",data.message,"success")
+ Swal("Success",data.message,"success")
  this.selectedValue=[]
  this.connection;
  this.dialogRef.close();
 
  }
  },err=>{
- Swal("error",err.error.message,"error")
+ Swal("Error",err.error.message,"error")
  })
 
  }

@@ -131,6 +131,8 @@ opacity: 0.9;
 <button mat-flat-button class="close-btn" (click)="onNoClick()">  <i  class="material-icons"> close
     </i></button>
 </div>
+<mat-dialog-content class="mat-typography">
+
 <div class="panel-body">
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.countcheck">
          <div class="test-heading">Count Check</div>
@@ -242,10 +244,10 @@ opacity: 0.9;
                         </table>
             </div>
             <div class="test-result">Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
-            <table>
-                    <tr> <th>Column Name(s) </th></tr>
+            <table border=1 style="border-collapse: collapse">
+                   
                     <tr *ngFor="let y of data.src_value_dataduplication" cellspacing=2>
-                            <td *ngFor= "let z of y" cellspacing=2>
+                            <td *ngFor= "let z of y" >
                         <div>{{z}}</div>
                         </td>
                         </tr>
@@ -340,8 +342,8 @@ opacity: 0.9;
                 <th>Target Table </th>
                 </tr>   
                 <tr  [ngClass]="{ 'td1': data.source_log[k][0]==data.destination_log[k][0], 'td2': data.source_log[k][0]!=data.destination_log[k][0] }" class="tabledata" *ngFor="let i of data.source_log; let k = index ">  
-                        <td > {{data.source_log[k]}}</td>
-                        <td  >{{data.destination_log[k]}}</td>
+                        <td> {{data.source_log[k]}}</td>
+                        <td >{{data.destination_log[k]}}</td>
                  </tr>
 
             </table>
@@ -360,6 +362,7 @@ opacity: 0.9;
         <div class="test-result">Source and Target Schema are Same</div>
     </div>
 </div>
+</mat-dialog-content>
 <div mat-dialog-actions class="close">
         <a mat-flat-button  
         class="export-btn" *ngIf="data.execution_status !== 1"

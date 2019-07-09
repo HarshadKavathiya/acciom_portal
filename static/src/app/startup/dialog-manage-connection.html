@@ -55,21 +55,17 @@
         <div 
             
         *ngFor="let case of data.test_case">
-            <div class="pretty p-default p-round p-thick">     
             <input value="{{ case.case_id }}" type="checkbox" 
             [(ngModel)]="case.selected"
             (change)="selectBadge($event, case.case_id)"/>
-            <div class="state p-success">
             <label style="
   font-family: 'OpenSans-Light',sans-serif;
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
   color: #2f2f2f;">{{case.case_name}}</label>
-            </div> 
         </div> 
 
-        </div>
         </div>
         <button mat-raised-button (click)="submit_connection('source')">Submit</button>
     </div>
@@ -89,22 +85,18 @@
         </mat-select>
         </mat-form-field>
         <div *ngIf="show1">
-                <div 
-                    
+                <div   
                 *ngFor="let case of data.test_case">
-                    <div class="pretty p-default p-round p-thick">     
                     <input value="{{ case.case_id }}" type="checkbox" 
                     [(ngModel)]="case.selected"
                     (change)="selectBadge($event, case.case_id)"/>
-                    <div class="state p-primary-o">
                     <label style="
           font-family: 'OpenSans-Light',sans-serif;
           font-stretch: normal;
           line-height: normal;
           letter-spacing: normal;
           color: #2f2f2f;">{{case.case_name}}</label>
-                    </div> 
-                </div> 
+                 
         
                 </div>
                 </div>

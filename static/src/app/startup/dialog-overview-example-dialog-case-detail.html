@@ -69,9 +69,7 @@ flex-direction:column;
 flex-wrap:wrap;
 justify-content:center;
 }
-/* .td2{
-width:15%;
-} */
+
 .td3{
 width:60%;
 }
@@ -83,9 +81,12 @@ font-size: 22px;
 
   </style>
 </head>
+
 <div mat-dialog-content align="end" >
 <button mat-button class="close-btn" (click)="onNoClick()"> <i class="material-icons">close</i></button>
 </div>
+<mat-dialog-content class="mat-typography">
+
 <mat-card *ngIf="card">
 <div class="heading-grp">
 <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
@@ -165,9 +166,9 @@ autocomplete="off" matInput placeholder="Target Table" formControlName="target_t
 <mat-error>Enter Correct Table Name</mat-error>
 </mat-form-field>
 <mat-form-field class="example-full-width">
-<input type="text" 
+<textarea rows=1 type="text" 
 value="{{data.column}}"
-autocomplete="off" matInput placeholder="Column" formControlName="column" #column>
+autocomplete="off" matInput placeholder="Column" formControlName="column" #column></textarea>
 <mat-error>Enter Correct Column</mat-error>
 </mat-form-field>
 <mat-form-field class="example-full-width">
@@ -188,3 +189,4 @@ matInput placeholder=" Target Query" formControlName="target_query" #target_qry>
 
 </form>
 </mat-card>
+</mat-dialog-content>
