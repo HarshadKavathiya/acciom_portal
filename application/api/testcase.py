@@ -6,15 +6,15 @@ from multiprocessing import Process
 from flasgger import swag_from
 from flask import current_app as app
 from flask import request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource
 from flask_restful import reqparse
 
-from application.common.Response import error, success
-from application.helper.runner_class import run_by_case_id, split_table
-from application.helper.suite_runner import execute_suite_by_id
-from application.models.user import TestSuite, SparkJob, \
-    TestCaseLog, TestCase, DbDetail, User
+from application.common.Response import (error, success)
+from application.helper.runner_class import (run_by_case_id, split_table)
+from application.helper.suite_runner import suite_level_send_mail
+from application.models.user import (TestSuite, SparkJob, TestCaseLog,
+                                     TestCase, DbDetail, User)
 from index import db
 
 
@@ -49,14 +49,16 @@ class TestCaseJob(Resource):
                 test_suite = TestSuite.query.filter_by(
                     test_suite_id=data['suite_id']).first()
                 print(test_suite.test_suite_id)
-                # case_log_id_list = []
-                # for each_test in test_suite.test_case:
-                #     res = run_by_case_id(each_test.test_case_id)
-                #     case_log_id_list.append(res['result']['test_case_log_id'])
-                p = Process(target=execute_suite_by_id,
-                            args=(test_suite.test_suite_id, user.email))
+                case_log_id_list = []
+                for each_test in test_suite.test_case:
+                    res = run_by_case_id(each_test.test_case_id)
+                    case_log_id_list.append(res['result']['test_case_log_id'])
+                p = Process(target=suite_level_send_mail,
+                            args=(case_log_id_list, user.email,
+                                  test_suite.test_suite_id))
                 p.start()
-                # execute_suite_by_id(test_suite.test_suite_id, user.email)
+                print(case_log_id_list, user.email,
+                      test_suite.test_suite_id)
                 return success(
                     {"success": True,
                      "message": "Job Submitted Succesfully for Suite id {0}".format(
