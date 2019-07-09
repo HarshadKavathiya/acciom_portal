@@ -186,30 +186,34 @@ class ExportTestLog(Resource):
             data1 = ast.literal_eval(case_log.des_execution_log)
             print("data1", data1)
 
-            dict_key1 = ast.literal_eval(data["result"])
-            print("dict_key", dict_key1)
-            dict_key3 = ast.literal_eval(data1["result"])
-            print("dict_key3", dict_key3)
+            if data["result"] != 'none':
+                dict_key1 = ast.literal_eval(data["result"])
+                print("dict_key", dict_key1)
+                response.append(['Source Table'])
+                for i in dict_key1:
+                    dict_key2 = ast.literal_eval(i)
+                    key_list = [key for key in dict_key2.keys()]
+                response.append(key_list)
+                for i in dict_key1:
+                    dict_key2 = ast.literal_eval(i)
+                    value_list = [x for x in dict_key2.values()]
+                    response.append(value_list)
 
-            response.append(['Source Table'])
-            for i in dict_key1:
-                dict_key2 = ast.literal_eval(i)
-                key_list = [key for key in dict_key2.keys()]
-            response.append(key_list)
-            for i in dict_key1:
-                dict_key2 = ast.literal_eval(i)
-                value_list = [x for x in dict_key2.values()]
-                response.append(value_list)
 
-            response.append(['Target Table'])
-            for i in dict_key3:
-                dict_key4 = ast.literal_eval(i)
-                key_list = [key for key in dict_key4.keys()]
-            response.append(key_list)
-            for i in dict_key3:
-                dict_key4 = ast.literal_eval(i)
-                value_list = [x for x in dict_key4.values()]
-                response.append(value_list)
+            if data1["result"] != 'none':
+                dict_key3 = ast.literal_eval(data1["result"])
+                print("dict_key3", dict_key3)
+                response.append(['Target Table'])
+                for i in dict_key3:
+                    dict_key4 = ast.literal_eval(i)
+                    key_list = [key for key in dict_key4.keys()]
+                response.append(key_list)
+                for i in dict_key3:
+                    dict_key4 = ast.literal_eval(i)
+                    value_list = [x for x in dict_key4.values()]
+                    response.append(value_list)
+
+
 
             print("response", response)
 
@@ -242,7 +246,6 @@ class ExportTestLog(Resource):
                      "spreadsheetml.sheet",
             headers={"Content-disposition": "attachment; "
                                             "filename=export123.xlsx"})
-
 
 class ConnectionDetails(Resource):
     '''

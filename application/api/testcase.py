@@ -234,7 +234,7 @@ class EditTestCase(Resource):
         parser.add_argument('src_db_id')
         parser.add_argument('target_db_id')
         data = parser.parse_args()
-        print(data)
+        print("data",data)
         obj = TestCase.query.filter_by(test_case_id=case_id).one()
         if data["src_db_id"] == None:
             obj.src_db_id = obj.src_db_id
@@ -261,6 +261,7 @@ class EditTestCase(Resource):
                     else:
                         tabledetails["column"][i] = i
             elif ";" in data["column"]:
+                tabledetails["column"] = {}
                 removecolumnspaces = data["column"].replace(" ", "")
                 p = removecolumnspaces.split(";")
                 for q in p:
@@ -272,8 +273,8 @@ class EditTestCase(Resource):
 
         table = tabledetails["table"]
         for key in table:
-            print(key)
-        print(data['src_table'])
+            print("key",key)
+
         table[data['src_table']] = key
         del table[key]
         table[data['src_table']] = data['target_table']
