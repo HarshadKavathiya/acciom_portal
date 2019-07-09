@@ -4,7 +4,6 @@ import time
 from flask import render_template
 from flask_mail import Message, Mail
 
-from application.helper.runner_class import run_by_case_id
 from application.models.user import TestSuite, TestCaseLog
 from index import app
 from index import db
@@ -26,7 +25,7 @@ def check_status(case_log_id_list):
 def start_test(case_log_id_list):
     for each_log in case_log_id_list:
         print(case_log_id_list)
-        db.session.rollback()
+        db.session.commit()
         testcase_log_id = TestCaseLog.query.filter_by(
             test_case_log_id=each_log).first()
         if testcase_log_id.execution_status == 3:
@@ -35,7 +34,8 @@ def start_test(case_log_id_list):
     return True
 
 
-def return_result(case_log_id_list, email, suite_id):
+def suite_level_send_mail(case_log_id_list, email, suite_id):
+    time.sleep(10)
     Test_Name = []
     Test_Description = []
     Test_src_table = []
@@ -82,14 +82,13 @@ def return_result(case_log_id_list, email, suite_id):
         executed_at=str(current_time.strftime("%c")))
     mail.send(msg)
 
-
-def execute_suite_by_id(suite_id, email):
-    case_log_id_list = []
-    test_suite = TestSuite.query.filter_by(
-        test_suite_id=suite_id).first()
-    for each_test in test_suite.test_case:
-        res = run_by_case_id(each_test.test_case_id)
-        case_log_id_list.append(res['result']['test_case_log_id'])
-
-    print("After Executing Test all logs:", case_log_id_list)
-    return_result(case_log_id_list, email, suite_id)
+# def execute_suite_by_id(suite_id, email):
+#     case_log_id_list = []
+#     test_suite = TestSuite.query.filter_by(
+#         test_suite_id=suite_id).first()
+#     for each_test in test_suite.test_case:
+#         res = run_by_case_id(each_test.test_case_id)
+#         case_log_id_list.append(res['result']['test_case_log_id'])
+#
+#     print("After Executing Test all logs:", case_log_id_list)
+#     return_result(case_log_id_list, email, suite_id)
