@@ -276,8 +276,8 @@ def run_test(case_id):
                     src_qry = ""
                     target_qry = ""
                 else:
-                    src_qry = query['sourceqry']
-                    target_qry = query['targetqry']
+                    src_qry = query['sourceqry'] if 'sourceqry' in query else ""
+                    target_qry = query['targetqry'] if 'targetqry' in query else ""
 
                 app.logger.debug(
                     "srcqry " + src_qry + "targetqry " + target_qry)

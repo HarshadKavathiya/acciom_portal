@@ -120,11 +120,9 @@ class TestSuites(Resource):
                     if ";" in p:
                         query_split = p.split(";")
                         final = [a.split(":") for a in query_split]
-                        query["sourceqry"] = final[0][1] if 'srcqry' in final[
-                            0] else ""
-                        query["targetqry"] = final[1][1] if 'targetqry' in \
-                                                            final[1] else ""
-
+                        # Added logic to avoid index error if only srcqry is given
+                        query["sourceqry"] = final[0][1] if 'srcqry' in final[0] else ""
+                        query["targetqry"] = final[1][1] if 'targetqry' in final[1] else ""
                     else:
                         q = p.strip("targetqry:")
                         query["targetqry"] = q
