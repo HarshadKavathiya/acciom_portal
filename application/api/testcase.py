@@ -45,7 +45,6 @@ class TestCaseJob(Resource):
             parser.add_argument('suite_id', type=int)
             parser.add_argument('case_id', type=int)
             data = parser.parse_args()
-            print(data)
             if data['suite_id']:
                 test_suite = TestSuite.query.filter_by(
                     test_suite_id=data['suite_id']).first()
