@@ -241,7 +241,7 @@ class TestSuite(db.Model):
                                            x.test_case))
             }
 
-        db.session.rollback()
+        # db.session.commit()
         return {'user': list(map(lambda x: test_suite_to_json(x),
                                  TestSuite.query.filter_by(user_id=user_id)))}
 
