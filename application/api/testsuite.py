@@ -124,8 +124,14 @@ class TestSuites(Resource):
                         query["sourceqry"] = final[0][1] if 'srcqry' in final[0] else ""
                         query["targetqry"] = final[1][1] if 'targetqry' in final[1] else ""
                     else:
-                        q = p.strip("targetqry:")
-                        query["targetqry"] = q
+                        if "srcqry:" in p.lower():
+                            q = p.strip("srcqry:")
+                            query["sourceqry"] = q
+                            query['targetqry'] = ""
+                        else:
+                            q = p.strip("targetqry:")
+                            query["targetqry"] = q
+                            query['sourceqry'] = ""
 
                 jsondict = {"column": column, "table": table, "query": query}
                 # print("141", jsondict)
