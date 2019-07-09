@@ -80,57 +80,69 @@ class TestCaseSparkJob(Resource):
         app.logger.info(
             "Data validation Job ends at = {}".format(
                 datetime.datetime.now()))
-        dict1 = request.data.decode('utf-8', 'ignore')
-        res = ast.literal_eval(dict1)
-        result_src = json.dumps(res['result']['src_to_dest'])
-        result_des = json.dumps(res['result']['dest_to_src'])
-        src_count = res['src_result_count']
-        target_count = res["target_result_count"]
-        result_count = res['result_count']
         spark_job = SparkJob.query.filter_by(spark_job_id=spark_job_id).first()
         case_log = TestCaseLog.query.filter_by(
             test_case_log_id=spark_job.test_case_log_id).first()
-        if result_count == 0:
-            case_log.execution_status = 1
-            case_log.save_to_db()
-            case = TestCase.query.filter_by(
-                test_case_id=case_log.test_case_id).first()
-            case.test_status = 1
-            src_result = {}
-            des_result = {}
-            src_result['src_count'] = res['src_count']
-            src_result['src_to_dest_count'] = src_count
-            src_result['result'] = 'none'
-            case_log.src_execution_log = str(src_result)
-            des_result['tar_count'] = res['dest_count']
-            des_result['dest_to_src_count'] = target_count
-            des_result['result'] = 'none'
-            case_log.des_execution_log = str(des_result)
-            case_log.save_to_db()
-            case.save_to_db()
-
-        elif result_count != 0:
-            if result_src == '[]':
-                result_src = 'none'
-            elif result_des == '[]':
-                result_des = 'none'
+        dict1 = request.data.decode('utf-8', 'ignore')
+        res = ast.literal_eval(dict1)
+        # Added logic to show error in case of any exception
+        # Exception will be stored in error_log column in DB
+        if res['result'] == 'error':
+            case_log.error_log = res['exception']
             case_log.execution_status = 2
-            case_log.save_to_db()
-            src_result = {}
-            des_result = {}
-            src_result['src_count'] = res['src_count']
-            src_result['src_to_dest_count'] = src_count
-            src_result['result'] = str(result_src)
-            des_result['tar_count'] = res['dest_count']
-            des_result['dest_to_src_count'] = target_count
-            des_result['result'] = str(result_des)
-            case_log.src_execution_log = str(src_result)
-            case_log.des_execution_log = str(des_result)
-            case_log.save_to_db()
             case = TestCase.query.filter_by(
                 test_case_id=case_log.test_case_id).first()
             case.test_status = 2
+            case_log.save_to_db()
             case.save_to_db()
+        else:
+            result_src = json.dumps(res['result']['src_to_dest'])
+            result_des = json.dumps(res['result']['dest_to_src'])
+            src_count = res['src_result_count']
+            target_count = res["target_result_count"]
+            result_count = res['result_count']
+
+            if result_count == 0:
+                case_log.execution_status = 1
+                case_log.save_to_db()
+                case = TestCase.query.filter_by(
+                    test_case_id=case_log.test_case_id).first()
+                case.test_status = 1
+                src_result = {}
+                des_result = {}
+                src_result['src_count'] = res['src_count']
+                src_result['src_to_dest_count'] = src_count
+                src_result['result'] = 'none'
+                case_log.src_execution_log = str(src_result)
+                des_result['tar_count'] = res['dest_count']
+                des_result['dest_to_src_count'] = target_count
+                des_result['result'] = 'none'
+                case_log.des_execution_log = str(des_result)
+                case_log.save_to_db()
+                case.save_to_db()
+
+            elif result_count != 0:
+                if result_src == '[]':
+                    result_src = 'none'
+                elif result_des == '[]':
+                    result_des = 'none'
+                case_log.execution_status = 2
+                case_log.save_to_db()
+                src_result = {}
+                des_result = {}
+                src_result['src_count'] = res['src_count']
+                src_result['src_to_dest_count'] = src_count
+                src_result['result'] = str(result_src)
+                des_result['tar_count'] = res['dest_count']
+                des_result['dest_to_src_count'] = target_count
+                des_result['result'] = str(result_des)
+                case_log.src_execution_log = str(src_result)
+                case_log.des_execution_log = str(des_result)
+                case_log.save_to_db()
+                case = TestCase.query.filter_by(
+                    test_case_id=case_log.test_case_id).first()
+                case.test_status = 2
+                case.save_to_db()
 
 
 class EditTestCase(Resource):
