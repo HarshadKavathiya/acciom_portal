@@ -60,8 +60,8 @@ def get_connection_detail(db_detail):
             driver = "org.postgresql.Driver"
         elif db_detail["db_type"] == "oracle":
             # "url"------>"jdbc:oracle:thin:username/password@//hostname:portnumber/SID"
-            url = "jdbc:oracle:thin:{0}/{1}@//{2}".format(db_detail["username"], db_detail["password"],
-                                                          db_detail["hostname"])
+            url = "jdbc:oracle:thin:{0}/{1}@//{2}/{3}".format(db_detail["username"], db_detail["password"],
+                                                              db_detail["hostname"], db_detail["db_name"])
             driver = "oracle.jdbc.driver.OracleDriver"
         return url, driver
     except Exception as e:
