@@ -18,13 +18,15 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
             )
 
             for row in cursor:
+                row=[x.lower() for x in row]
                 data3.append(row)
             for i in data3:
-                if i[2] == "Y":
+                if i[2] == "y":
                     i = (i[0], i[1], "YES")
                 else:
                     i = (i[0], i[1], "NO")
                 data1.append(i)
+                print(data1)
         else:
             cursor = source_cursor
             cursor.execute(
@@ -33,7 +35,8 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
             )
 
             for row in cursor:
-                data1.append(row)
+                data1.append(tuple(row))
+
 
         if target_db_type == "oracle":
 
@@ -43,9 +46,10 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
                     target_table))
 
             for row in cursor1:
+                row = [x.lower() for x in row]
                 data4.append(row)
             for i in data4:
-                if i[2] == "Y":
+                if i[2] == "y":
                     i = (i[0], i[1], "YES")
                 else:
                     i = (i[0], i[1], "NO")
@@ -58,7 +62,8 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
                     target_table))
 
             for row in cursor1:
-                data2.append(row)
+                data2.append(tuple(row))
+
 
         set_1, set_2 = set(data1), set(data2)
         a = list(set_1 & set_2)
