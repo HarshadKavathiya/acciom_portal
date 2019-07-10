@@ -1,6 +1,7 @@
 import datetime
 import json
 import subprocess
+import ast
 
 from flask import current_app
 from flask import current_app as app
@@ -71,3 +72,26 @@ def datavalidation_link(cursor, query):
     except Exception as e:
         print(e)
         return {"res": 2, "src_value": None, "des_value": None}
+
+def process_response_for_none_record(dvresult):
+
+    print("dvresult",dvresult)
+    result=ast.literal_eval((dvresult))
+    keys = set()
+    for i in result:
+        dic=ast.literal_eval(i)
+        for key in dic.keys():
+            keys.add(key)
+
+    print(keys)
+    src_dic=[]
+    for i in result:
+        dic=ast.literal_eval(i)
+        fdic = {}
+        for each_key in keys:
+            fdic[each_key] = dic.get(each_key, None)
+
+        print("fdic",fdic)
+        src_dic.append(fdic)
+    print("src_dic",src_dic)
+    return src_dic
