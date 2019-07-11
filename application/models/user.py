@@ -13,10 +13,10 @@ from sqlalchemy.dialects.mysql import LONGTEXT, INTEGER
 
 from index import db, app
 
-BLOCK_SIZE = 16
-pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(
-    BLOCK_SIZE - len(s) % BLOCK_SIZE)
-unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+
+BS = 16
+pad = lambda s: bytes(s + (BS - len(s) % BS) * chr(BS - len(s) % BS), 'utf-8')
+unpad = lambda s: s[0:-ord(s[-1:])]
 password1 = 'mypassword'
 
 

@@ -74,16 +74,37 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                     test_queries['targetqry'] == ""):
                 if column_name == []:
                     col_list.append("Duplicate Occurance")
+                    print(all_results)
+                    for i in all_results:
+                        for x in range(0, len(i)):
+                            if i[x] == "None":
+                                i[x] = "Null"
+                            else:
+                                i[x] == i[x]
+                    print(all_results)
+
                     all_results.insert(0, col_list)
                     res1 = json.dumps(all_results)
                 else:
                     column_name.append("Duplicate Occurance")
+                    for i in all_results:
+                        for x in range(0, len(i)):
+                            if i[x] == "None":
+                                i[x] = "Null"
+                            else:
+                                i[x] == i[x]
                     all_results.insert(0, column_name)
                     res1 = json.dumps(all_results)
                     # if column give in excel
             else:
                 if "select * from" in (test_queries["targetqry"].lower()):
                       col_list.append("Duplicate Occurance")
+                      for i in all_results:
+                          for x in range(0, len(i)):
+                              if i[x] == "None":
+                                  i[x] = "Null"
+                              else:
+                                  i[x] == i[x]
                       all_results.insert(0, col_list)
                       res1 = json.dumps(all_results)
                 else:
@@ -99,6 +120,12 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                        column = columns.split(",")
                        print("column",column)
                        column.append("Duplicate Occurance")
+                       for i in all_results:
+                           for x in range(0, len(i)):
+                               if i[x] == "None":
+                                   i[x] = "Null"
+                               else:
+                                   i[x] == i[x]
                        all_results.insert(0, column)
                        res1 = json.dumps(all_results)
 
@@ -107,6 +134,12 @@ def duplication(target_cursor, target_table, column_name, test_queries,
                         print("column2",columns)
                         col_list_custom.append(columns)
                         col_list_custom.append("Duplicate Occurance")
+                        for i in all_results:
+                            for x in range(0, len(i)):
+                                if i[x] == "None":
+                                    i[x] = "Null"
+                                else:
+                                    i[x] == i[x]
                         all_results.insert(0, col_list_custom)
                         res1 = json.dumps(all_results)
 

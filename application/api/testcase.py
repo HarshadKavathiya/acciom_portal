@@ -261,6 +261,7 @@ class EditTestCase(Resource):
                     else:
                         tabledetails["column"][i] = i
             elif ";" in data["column"]:
+                tabledetails["column"] = {}
                 removecolumnspaces = data["column"].replace(" ", "")
                 p = removecolumnspaces.split(";")
                 for q in p:
@@ -272,8 +273,8 @@ class EditTestCase(Resource):
 
         table = tabledetails["table"]
         for key in table:
-            print(key)
-        print(data['src_table'])
+            print("key",key)
+
         table[data['src_table']] = key
         del table[key]
         table[data['src_table']] = data['target_table']
