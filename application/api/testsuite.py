@@ -232,7 +232,7 @@ class ExportTestLog(Resource):
         for each in response:
             ws.append(list(each))
 
-        with NamedTemporaryFile() as tmp:
+        with NamedTemporaryFile(delete=False) as tmp:
             wb.save(tmp.name)
             tmp.seek(0)
             stream = tmp.read()

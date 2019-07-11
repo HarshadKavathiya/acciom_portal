@@ -75,13 +75,14 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
                   recipients=[email])
     current_time = datetime.datetime.now()
     current_time.strftime("%c")
-    msg.html = render_template(
+    with app.app_context():
+        msg.html = render_template(
         'email.html', content=render_list,
         zip_content=zip(Test_Name, Test_Description, Test_src_table,
                         Test_target_table, Test_status),
         suite_name=suite.test_suite_name, suite_id=suite.test_suite_id,
         executed_at=str(current_time.strftime("%c")))
-    mail.send(msg)
+        mail.send(msg)
 
 # def execute_suite_by_id(suite_id, email):
 #     case_log_id_list = []

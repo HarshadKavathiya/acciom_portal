@@ -31,9 +31,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
                 "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM information_schema.columns WHERE table_name = '{}'".format(
                     source_table)
             )
-
+            data1 = []
             for row in cursor:
-                data1.append(row)
+                data1.append(tuple(row))
 
         if target_db_type == "oracle":
 
@@ -56,10 +56,9 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
             cursor1.execute(
                 "SELECT COLUMN_NAME, IS_NULLABLE,DATA_TYPE FROM information_schema.columns WHERE table_name = '{}'".format(
                     target_table))
-
+            data2 = []
             for row in cursor1:
-                data2.append(row)
-
+                data2.append(tuple(row))
         set_1, set_2 = set(data1), set(data2)
         a = list(set_1 & set_2)
         for item in a:
