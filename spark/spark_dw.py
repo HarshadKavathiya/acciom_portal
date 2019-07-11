@@ -278,8 +278,8 @@ if __name__ == '__main__':
                 print("TARGET count", df_dest_master.count())
 
                 data = {"result": result,
-                        "src_result_count": len(result["src_to_dest"]),
-                        "target_result_count": len(result["dest_to_src"]),
+                        "src_result_count": len(src_to_dest),
+                        "target_result_count": len(dest_to_src),
                         "result_count": len(result["src_to_dest"]) + len(
                             result["dest_to_src"]),
                         "src_count": src_count,
