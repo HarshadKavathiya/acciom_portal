@@ -1,3 +1,4 @@
+import cx_Oracle
 import psycopg2
 import pymysql
 import pyodbc
@@ -22,6 +23,10 @@ def source_db(src_db, src_db_type, src_host, src_db_username, src_db_password):
                                 database=src_db, user=src_db_username,
                                 password=src_db_password)
         return cnxn
+    elif src_db_type == 'oracle':
+        con = cx_Oracle.connect(
+            "{0}/{1}@{2}/{3}".format(src_db_username, src_db_password, src_host, src_db))
+        return con
 
 
 def dest_db(target_db, dest_db_type, dest_host,
@@ -45,3 +50,8 @@ def dest_db(target_db, dest_db_type, dest_host,
                                 user=dest_db_username,
                                 password=dest_db_password)
         return cnxn
+
+    elif dest_db_type == 'oracle':
+        con = cx_Oracle.connect(
+            "{0}/{1}@{2}/{3}".format(dest_db_username, dest_db_password, dest_host, target_db))
+        return con

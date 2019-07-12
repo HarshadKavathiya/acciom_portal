@@ -57,15 +57,22 @@ class TestSuites(Resource):
         sheet_index = wb.sheetnames.index(sheet)
         ws = wb.worksheets[sheet_index]
         temp_test1 = [str(i - 2) for i in range(2, ws.max_row + 1)]
+        # row+1 to avoid index out of range error
+        print(temp_test1)
         temp_test = []
         for i in range(0, ws.max_column):
             if (str(ws[1][i].value) != 'None'):
                 temp_test.append([str(ws[x][i].value)
                                   for x in range(2, ws.max_row)])
         data = parser.parse_args()
+        print(data['selectedcase'])
         test_case_list = str(data['selectedcase']).split(",")
+        print(len(test_case_list))
         i = 0
         for j in range(ws.max_row - 1):
+            # print("73", temp_test1[j])
+            # print('74', test_case_list)
+            # print(temp_test1[j] in test_case_list)
             if temp_test1[j] in test_case_list:
                 test_case_list.remove(temp_test1[j])
                 db_list = split_db(temp_test[i + 2][j])
@@ -86,17 +93,18 @@ class TestSuites(Resource):
                     pass
                 else:
                     if ":" in columndata:
-                        x = temp_test[i + 4][j].split(":")
+                        removecolumnspace = temp_test[i + 4][j].replace(" ",
+                                                                        "")
+                        x = removecolumnspace.split(";")
                         z = []
                         for m in x:
-                            y = m.split(";")
-                            z.append(y)
-                        column = {}
-                        for n in range(len(z[0])):
-                            column[z[0][n]] = z[1][n]
-
+                            p = m.split(":")
+                            for q in p:
+                                column[p[0]] = p[1]
                     else:
-                        columnlist = temp_test[i + 4][j].split(";")
+                        removecolumnspace = temp_test[i + 4][j].replace(" ",
+                                                                        "")
+                        columnlist = removecolumnspace.split(";")
                         column = {}
                         for k in range(len(columnlist)):
                             column[columnlist[k]] = columnlist[k]
@@ -112,14 +120,21 @@ class TestSuites(Resource):
                     if ";" in p:
                         query_split = p.split(";")
                         final = [a.split(":") for a in query_split]
-                        query["sourceqry"] = final[0][1]
-                        query["targetqry"] = final[1][1]
-
+                        # Added logic to avoid index error if only srcqry is given
+                        query["sourceqry"] = final[0][1] if 'srcqry' in final[0] else ""
+                        query["targetqry"] = final[1][1] if 'targetqry' in final[1] else ""
                     else:
-                        q = p.strip("targetqry:")
-                        query["targetqry"] = q
+                        if "srcqry:" in p.lower():
+                            q = p.strip("srcqry:")
+                            query["sourceqry"] = q
+                            query['targetqry'] = ""
+                        else:
+                            q = p.strip("targetqry:")
+                            query["targetqry"] = q
+                            query['sourceqry'] = ""
 
                 jsondict = {"column": column, "table": table, "query": query}
+                # print("141", jsondict)
 
                 temp = TestCase(test_suite_id=temp_file.test_suite_id,
                                 test_id=temp_test[i + 1][j],
@@ -129,6 +144,8 @@ class TestSuites(Resource):
                                 src_db_id=src_db_id,
                                 target_db_id=target_db_id)
                 temp.save_to_db()
+
+        print("execute value", data['exvalue'])
         if int(data['exvalue']) == 1:
             test_suite = TestSuite.query.filter_by(
                 test_suite_id=temp.test_suite_id).first()
@@ -165,14 +182,41 @@ class ExportTestLog(Resource):
         response = []
         if test_case.test_name == 'Datavalidation':
             data = ast.literal_eval(case_log.src_execution_log)
+            print("data", data)
+            data1 = ast.literal_eval(case_log.des_execution_log)
+            print("data1", data1)
 
-            dict_key = ast.literal_eval(data[0])
-            key_list = [key for key in dict_key.keys()]
-            response.append(key_list)
-            for i in range(len(data)):
-                value_list = []
-                value_list = [x for x in ast.literal_eval(data[i]).values()]
-                response.append(value_list)
+            if data["result"] != 'none':
+                dict_key1 = ast.literal_eval(data["result"])
+                print("dict_key", dict_key1)
+                response.append(['Source Table'])
+                for i in dict_key1:
+                    dict_key2 = ast.literal_eval(i)
+                    key_list = [key for key in dict_key2.keys()]
+                response.append(key_list)
+                for i in dict_key1:
+                    dict_key2 = ast.literal_eval(i)
+                    value_list = [x for x in dict_key2.values()]
+                    response.append(value_list)
+
+
+            if data1["result"] != 'none':
+                dict_key3 = ast.literal_eval(data1["result"])
+                print("dict_key3", dict_key3)
+                response.append(['Target Table'])
+                for i in dict_key3:
+                    dict_key4 = ast.literal_eval(i)
+                    key_list = [key for key in dict_key4.keys()]
+                response.append(key_list)
+                for i in dict_key3:
+                    dict_key4 = ast.literal_eval(i)
+                    value_list = [x for x in dict_key4.values()]
+                    response.append(value_list)
+
+
+
+            print("response", response)
+
             response = json.dumps(response)
         elif test_case.test_name == 'CountCheck':
             src_response = case_log.src_execution_log
@@ -203,7 +247,6 @@ class ExportTestLog(Resource):
             headers={"Content-disposition": "attachment; "
                                             "filename=export123.xlsx"})
 
-
 class ConnectionDetails(Resource):
     '''
     accepts suite_id of user and returns
@@ -214,17 +257,13 @@ class ConnectionDetails(Resource):
     @swag_from('/application/apidocs/connectiondetails.yml')
     def get(self, suite_id):
         try:
-            all_connection = []
-            all_case = []
             current_user = get_jwt_identity()
             db_obj = DbDetail.query.filter_by(user_id=current_user).all()
             suite_obj = TestSuite. \
                 query.filter_by(test_suite_id=suite_id).first()
-            for i in suite_obj.test_case:
-                pass
             all_case = [(i.test_case_id, i.test_name)
                         for i in suite_obj.test_case]
-            all_connection = [i.db_id for i in db_obj]
+            all_connection = [(i.db_id, i.connection_name) for i in db_obj]
             return {"all_connections": all_connection, "all_cases": all_case}
         except Exception as e:
             app.logger.error(str(e))

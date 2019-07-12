@@ -1,34 +1,35 @@
 .body{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+  }
+  .button-connect{
+    margin-top: 5px;
+    background-color:blue;
+    color:whitesmoke;
+    border-radius: 20px;
+  }
+  .heading{
+    
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 300;
+  }
+  .form{
+    min-width:400px;
+    
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .btn-class{
     display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .button-connect{
-      margin-top: 5px;
-      background-color:blue;
-      color:whitesmoke;
-      border-radius: 20px;
-    }
-    .heading{
-      
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 300;
-    }
-    .form{
-      min-width:400px;
-      
-      display:flex;
-      flex-direction:column;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-    .btn-class{
-      display: flex;
-      justify-content: space-evenly;
-    }
-    .btn-class button{
-      min-width:150px;
-    }
-    .btn1{
-      background-color: green
-    }
+    justify-content: space-evenly;
+  }
+  .btn-class button{
+    min-width:50px;
+  }
+  .btn1{
+    background-color: green
+  }

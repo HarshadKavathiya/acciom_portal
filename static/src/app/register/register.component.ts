@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
   signIn(){
     if(!this.createForm.valid || (this.createForm.controls.password.value != this.createForm.controls.cpassword.value))
     { 
-    alert("please enter correct passwords") 
+    alert("Please enter correct passwords") 
      return;
     }
   console.log(this.createForm.controls.email.value)
@@ -42,12 +42,18 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['login'])
       }
     },err=>{
-      console.log(err.success)
-      Swal("error",err.error.message,"error")
-     
-     
+      console.log(err.error.message)
+      if(err.error.message == undefined ){
+        Swal("Error","Connectivity lost","error")
+      }
+      else{
+      Swal("Error",err.error.message,"error")
+      }
 
   });
 
+}
+GoBack(){
+  this.router.navigate(['login'])
 }
 }

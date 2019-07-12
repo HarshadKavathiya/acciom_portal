@@ -22,10 +22,10 @@ def connection_check(db_type, db_hostname, db_username, db_password, db_name):
             database = db_name
             username = db_username
             password = db_password
-            cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}'
+            cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server}'
                                   ';SERVER=' + server +
                                   ';DATABASE=' + database +
-                                  ';UID=' + username + ';PWD=' + password)
+                                  ';UID=' + username + ';PWD=' + password + ';Trusted_Connection=yes;')
             cursor = cnxn.cursor()
             if cursor:
                 return success

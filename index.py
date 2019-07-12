@@ -17,7 +17,11 @@ levels = {"DEBUG": logging.DEBUG,
 
 
 def config_log(app):
-    handler = RotatingFileHandler(app.config['LOG_LOCATION'],
+    log_directory = app.config['LOG_LOCATION']
+    log_file_location = log_directory + 'acciom.log'
+    if not os.path.exists(log_directory):
+        os.makedirs(log_directory)
+    handler = RotatingFileHandler(log_file_location,
                                   maxBytes=10000,
                                   backupCount=1)
     handler.setFormatter(logging.Formatter(app.config['LOG_FORMAT']))

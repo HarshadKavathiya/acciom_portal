@@ -1,6 +1,7 @@
 import datetime
 
 from flasgger import swag_from
+from flask import render_template
 from flask_jwt_extended import (create_access_token,
                                 jwt_required,
                                 get_raw_jwt, get_jwt_identity)
@@ -62,7 +63,7 @@ class Register(Resource):
             new_user.save_to_db()
             send_mail_to_verify(new_user)
             return success(
-                {'message': 'user {} was created'.format(data['email']),
+                {'message': 'User {} was created'.format(data['email']),
                  'success': True})
 
         except SQLAlchemyError as e:
@@ -103,7 +104,7 @@ class Login(Resource):
                         expires_delta=expires)
                     payload = {
                         'message':
-                            'logged in as {} '.format(current_user.email),
+                            'Logged in as {} '.format(current_user.email),
                         'uid': current_user.user_id,
                         'access_token': access_token,
                         'success': True,
@@ -111,7 +112,8 @@ class Login(Resource):
                         'name': current_user.first_name}
             else:
                 raise InvalidInput(
-                    "Credentials Does Not Match".format(data['email']))
+                    "Please enter valid Username and Password".format(
+                        data['email']))
 
         except InvalidInput as e:
             return input_error({"success": False, "message": str(e)})
@@ -184,10 +186,13 @@ class ResetPasswordInput(Resource):
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
-                  sender=app.config.get('MAIL_USERNAME'),
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
-    msg.body = app.config.get('API_END_POINT') + app.config.get(
-        'UI_RESET_PASSWORD_PATH') + token
+    msg_link = str(app.config.get('API_END_POINT') + app.config.get(
+        'UI_RESET_PASSWORD_PATH') + token)
+    msg.html = render_template("email_reset_password.html", links=msg_link,
+                               name=user.first_name, email=user.email,
+                               emailnoreplay='<noreplay@accionlabs.com>')
     # api.url_for(ResetPassword, token=token, _external=True)
     mail.send(msg)
 
@@ -227,11 +232,13 @@ def verify_user(email):
 
 def send_mail_to_verify(user):
     token = user.get_reset_token()
-    msg = Message('verify User Request',
-                  sender=app.config.get('MAIL_USERNAME'),
+    msg = Message('Please verify your email address',
+                  sender=("Acciom", app.config.get('MAIL_USERNAME')),
                   recipients=[user.email])
-    msg.body = app.config.get('API_END_POINT') + app.config.get(
-        'UI_AFTER_VERIFY') + token
+    msg_link = str(app.config.get('API_END_POINT') + app.config.get(
+        'UI_AFTER_VERIFY') + token)
+    msg.html = render_template("email_verify.html", links=msg_link,
+                               name=user.first_name, email=user.email)
     mail.send(msg)
 
 
@@ -246,3 +253,24 @@ class VerifyAccount(Resource):
             db.session.commit()
             return success({"message": "User is Verified", "success": True,
                             "token": token})
+
+
+class GetToken(Resource):
+    @jwt_required
+    def get(self):
+        try:
+            expires = datetime.timedelta(days=100)
+            current_user_id = get_jwt_identity()
+            current_user = db.session.query(User).get(current_user_id)
+            # TODO: Security for the token.
+            access_token = create_access_token(
+                identity=current_user.user_id,
+                expires_delta=expires)
+            # else:
+            #     raise InvalidInput("Password Not Correct")
+
+            payload = {'access_token': access_token,
+                       'success': True}
+        except InvalidInput as e:
+            return input_error({"success": False, "message": str(e)})
+        return success(payload)

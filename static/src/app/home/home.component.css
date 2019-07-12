@@ -39,7 +39,8 @@
   }
 
   .result-card{
-    width:458px;
+    width:750px;
+    /* width:100%; */
    
     height:auto;
     /* border:2px solid black; */
@@ -47,7 +48,8 @@
 
   .cright{
     text-align: center;
-    margin: 0px;
+    margin-right : 10px;
+
 }
 
 .testcase{
@@ -132,7 +134,7 @@ background-color: #ffffff;
 }
 .for-form{
   /* border:2px solid black;  */
-  width: auto;
+  width: 550px;
   /* border-radius:24px; */
 }
 .closebtn{

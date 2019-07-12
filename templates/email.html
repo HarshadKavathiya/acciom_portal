@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <META content="text/html; charset=utf-8" http-equiv="Content-Type">
+</head>
+<body style="padding: 0 2em;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;">
+
+<div style="padding:0 2em;font-family:Arial,sans-serif;color:#024457;background:#f2f2f2">
+    <div>
+        <h1>
+            Acciom Quality Suite Results
+        </h1>
+        <div>
+            Suite Name: <strong>{{suite_name}}</strong>
+        </div>
+        <div>
+            Suite ID: <strong>{{suite_id}}</strong>
+        </div>
+        <div>
+            Completed : <strong>{{executed_at}}</strong>
+        </div>
+    </div>
+
+    <table style="margin: 1em 0;
+        width: 100%;
+        overflow: hidden;
+        background: #FFF;
+        border-radius: 10px;
+        border: 1px solid #167F92;
+        display: table;
+        border-collapse: separate;
+        border-spacing: 2px;
+        border-color: grey;" table>
+        <tbody>
+        <tr style="border:1px solid #d9e4e6">
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                SR No
+            </th>
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                Test Class
+            </th>
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                Description
+            </th>
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                Source Table
+            </th>
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                Target Table
+            </th>
+            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">
+                Result Status
+            </th>
+            <!--            <th style="border:1px solid #fff;background-color:#b72e34;color:#fff;padding:1em">-->
+            <!--                Result Description-->
+            <!--            </th>-->
+        </tr>
+        {% if content['Test_Name']|length > 1 %}
+        {% for test_class,description,src_table, dest_table,result in
+        zip_content
+        %}
+        <tr style="border:1px solid #d9e4e6;background-color:#eaf3f3">
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{loop.index}}
+            </td>
+
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{ test_class }}
+            </td>
+
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{description}}
+            </td>
+
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{ src_table }}
+            </td>
+
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{ dest_table }}
+            </td>
+
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6;color:green">
+                {% if result == 1 %}
+                <strong style="color:green">Pass</strong>
+                {% elif result == 2 %}
+                <strong style="color:red">Fail</strong>
+                {% else %}
+                <strong style="color:orange"> Error</strong>
+                {% endif %}
+            </td>
+
+            <!--            <td align="center"-->
+            <!--                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">-->
+            <!--                Successfully Run-->
+            <!--            </td>-->
+        </tr>
+        {% endfor %}
+        {% else %}
+        <h1>Came in else</h1>
+
+        <tr style="border:1px solid #d9e4e6;background-color:#eaf3f3">
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                1
+            </td>
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{ content['Test_Name'][0] }}
+            </td>
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                {{ content['Test_Description'][0] }}
+            </td>
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                src_inventory
+            </td>
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">
+                dest_inventory
+            </td>
+            <td align="center"
+                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6;color:green">
+                <strong>{{ content['Test_status'][0] }}</strong>
+            </td>
+            <!--            <td align="center"-->
+            <!--                style="padding:1em;display:block;word-wrap:break-word;max-width:7em;display:table-cell;text-align:center;border-right:1px solid #d9e4e6">-->
+            <!--                Successfully Run-->
+            <!--            </td>-->
+        </tr>
+        {% endif %}
+
+        </tbody>
+    </table>
+</div>
+
+<!--<div>-->
+<!--    {% if content['Test_Name']|length > 1 %}-->
+
+<!--    {% for key in content['Test_Name'] %}-->
+<!--    <li>{{ key }}</li>-->
+<!--    {% endfor %}-->
+<!--    {% else %}-->
+<!--    <p>Only 1 eleemnt</p>-->
+<!--    {% endif %}-->
+
+<!--</div>-->
+
+</body>
+</html>

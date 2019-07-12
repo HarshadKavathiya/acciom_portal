@@ -1,7 +1,7 @@
 <app-navbarlogout></app-navbarlogout>
 <mat-card class="card">
   <div class="droppanel">
-    <mat-accordion *ngFor="let i of all_test_suite  ;let x = index">
+    <mat-accordion *ngFor="let i of all_test_suite;let x = index">
       <mat-expansion-panel class="dropdown" 
         (opened)="suitestatusopen(x)"
         (closed)="suitestatusclose(x)"
@@ -21,12 +21,14 @@
           <mat-panel-description 
             class="panel-desc-outer"
           >
-          <div>
+          <div style="flex-basis: 10%">
 
-            <button mat-button (click)="manage_connection(i.test_suite_id)">Manage Connections</button>
+            <button mat-button (click)="manage_connection(i.test_suite_id)" style="color:brown;">Manage Connections</button>
           </div>
             <div class="paneldesc"> 
-              {{i.excel_name}},<div class="bold">Uploaded At:</div> {{ i.created | date:'medium'}}
+               <div class="bold">SuiteID:{{ i.test_suite_id}} </div> &nbsp;
+            <!-- {{i.excel_name}} -->
+            <div class="bold1">Uploaded at:</div> {{ i.created | date:'medium'}}
             </div>
             <div class="btn-container">   
               <button mat-button
@@ -42,7 +44,6 @@
                 </div>
               </button> 
             </div>
-
           </mat-panel-description>
         </mat-expansion-panel-header>
             <!-- test_case_list from backend -->
@@ -51,10 +52,15 @@
           <mat-accordion  >
             <mat-expansion-panel
               class="dropdownInside"
-              [disabled]="each_test.test_status===0">
-              <mat-expansion-panel-header class="mat-panel-header-inside">
+              hideToggle="false"
+              (closed)="true"
+              [disabled]="each_test.test_status===0"
+         >
+              <mat-expansion-panel-header  
+             
+              class="mat-panel-header-inside">
                 <table style="width:100%">
-                  <tr>
+                  <tr class="grid">
                     <td style="
                       font-family: 'OpenSans',sans-serif;
                       font-size: 18px;
@@ -68,7 +74,7 @@
                       {{ each_test.test_id }}
                     </td> 
                     <td style="width:20%">
-                        <button  mat-button (click)="getcasedetails(each_test.test_case_id, each_test.test_name)">
+                        <button  mat-button (click)="getcasedetails(each_test.test_case_id, each_test.test_name,each_test.test_suite_id)">
                             View</button>
                     </td>
                     <td style="width:10%">
@@ -95,67 +101,84 @@
                             {{each_test.test_name}}
                         </b> 
                     </td>
-                    <td style=" display: flex;
-                    justify-content:flex-end;">
+                    <td  >
                         <button
                             [disabled]="!playButtons2[x][z] || !show2[x]"  
                             (change)="ngOnChanges(x)"
                             mat-button
-                            (click)="executeTestByCaseId(each_test.test_case_id,$event,z,x)" 
+                            [ngStyle]="{'margin-left': each_test.test_status==0 ? '80px' : '85px' }"
+                            class="btnplay-inside"
+                            (click)="executeTestByCaseId(each_test.test_status,each_test.test_case_id,$event,z,x)" 
                             color="black" 
-                            class="btnplay-inside"> 
-                            <div *ngIf="playButtons2[x][z]"><img  src="assets/images/Play1.png"/></div>
+                            > 
+                            <div 
+                            *ngIf="playButtons2[x][z]"><img  src="assets/images/Play1.png"/></div>
 
                             <div *ngIf="!playButtons2[x][z]">
                                 <i  class="material-icons"> pause
                                 </i>   
                             </div>
+                            <div></div>
                         </button>
                     </td>
-                  </tr>
-                    
+                  </tr>  
                 </table>
               </mat-expansion-panel-header>
                   <table  class="t1" cellspacing=22>
                     <tr class="tableheading">
                       <th>Run ID</th> <!-- Run Id-->
-                      <th>Execution_status</th>
+                      <th>Execution Status</th>
                       <th>Executed At</th>
                       <th>Log</th>
                     </tr>
                     <tr class="rowforesult" *ngFor="let case_log of each_test.test_case_log; let run_id=index ">
                       <td>{{run_id+1}}
                       </td>
+
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
                       *ngIf="case_log.test_execution_status== 0">New
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 1" >Pass
+                      *ngIf="case_log.test_execution_status== 1" 
+                      matTooltip="Test Case passed"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Pass
                       </td>
+                      
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 2" >Fail
+                      *ngIf="case_log.test_execution_status== 2"
+                       matTooltip="Test Case failed"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Fail
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 4">Error
+                      *ngIf="case_log.test_execution_status== 4"
+                       matTooltip="Due to a technical issue, unable to execute the test case"
+                       aria-label="Button that displays a tooltip when focused or hovered over">Error
                       </td>
+
                       <td class="tableheader-test-execution"
                       [ngStyle]="{'background-color':getcolor(4)}"
-                      *ngIf="case_log.test_execution_status == null">Error
+                      *ngIf="case_log.test_execution_status == null"
+                       matTooltip="Due to a technical issue, unable to execute the test case"
+                      aria-label="Button that displays a tooltip when focused or hovered over">Error
                       </td>
+
                       <td class="tableheader-test-execution" 
                       [ngStyle]="{'background-color':getcolor(case_log.test_execution_status)}"
-                      *ngIf="case_log.test_execution_status== 3">Waiting</td>
+                      *ngIf="case_log.test_execution_status== 3" matTooltip=" Test Case is executing"
+                      aria-label="Button that displays a tooltip when focused or hovered over" >In Progress</td>
+                      
                       <td> <div class="tableheader-test-date">{{ case_log.executed_at | date:'short' }}</div> </td>
                       <td><button  mat-button (click)="getlog(each_test.test_name,each_test.table_src,each_test.table_target,case_log)"><i class="material-icons">
                         dehaze
                         </i></button></td>
                       </tr>
                     </table>
-
               </mat-expansion-panel>
             </mat-accordion>
           </div>

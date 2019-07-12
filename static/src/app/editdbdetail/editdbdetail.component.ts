@@ -35,7 +35,7 @@ export class EditdbdetailComponent implements OnInit {
         this.createForm.get('name').setValue(this.db_detail.db_name);
         this.createForm.get('hostname').setValue(this.db_detail.db_hostname);
         this.createForm.get('username').setValue(this.db_detail.db_username);
-        this.createForm.get('password').setValue(this.db_detail.db_password);
+        // this.createForm.get('password').setValue(this.db_detail.db_password);
       })
     })
   }
@@ -47,22 +47,22 @@ export class EditdbdetailComponent implements OnInit {
     this.fileUploadService.update_db_details(this.db_id,this.createForm.value).subscribe(data => {
       console.log(data)
       if(data.success){
-      Swal("success","Succesfully Updated Details","success")
+      Swal("Success","Successfully Updated Details","success")
       this.router.navigate(['Viewdb'])
       }  
    },err=>{
-      Swal("error","Something went wrong","error")
+      Swal("Error","Unable to create Connection","error")
    });
   }
   check_connection(){
     console.log(this.createForm.value)
-    Swal("success","connection can be created for this")
+    Swal("Success","Connection can be Established")
     this.fileUploadService.check_connection(this.createForm.value).subscribe(data=>{
       console.log(data)
     },err=>{
       console.log("came here")
       console.log(err.error.message)
-      Swal("error","Connection could not be Created for this details")
+      Swal("Error","Connection could not be Established")
     })
   }
 

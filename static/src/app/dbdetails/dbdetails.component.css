@@ -22,3 +22,17 @@ display: flex;
   flex-wrap:wrap;
   justify-content:center;
 }
+.Button-class{
+  display: flex;
+  flex-direction: row;  
+  justify-content: flex-start
+}
+.Button-class div :nth-of-type(1){
+  flex-basis: 50%;
+  margin-right: 20px;
+
+}
+.Button-class div :nth-of-type(2){
+  flex-basis: 50%;
+  
+}

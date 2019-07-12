@@ -1,0 +1,30 @@
+<app-navbarlogout></app-navbarlogout>
+<div class="flex">
+<div class="Heading">
+    Personal Access Tokens
+</div>
+<div>
+<button mat-raised-button style="background-color: #EFF2F6" (click)="generateToken()" class="Btn">Generate Token </button>
+</div>
+</div>
+
+<hr>
+
+<div *ngIf="show" class="alert1">
+    <span  class="closebtn1" onclick="this.parentElement.style.display='none';">&times;</span> 
+    Make sure to copy your new personal access token now. You won’t be able to see it again!
+  </div>
+
+<div *ngIf="show" class="alert">
+    <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+    <!-- <input type="text" value="hi"   style="width:400px" #token1> -->
+    <input type="text" value={{token}} style="width: 400px;
+    border: none;
+    background-color: #EAFFEB;
+    cursor: pointer;"  #userinput>
+    <button mat-button  matTooltip="Copy Text"
+    (click)="copyToken(userinput)" ><i class="material-icons">
+        file_copy
+        </i></button>
+
+</div >

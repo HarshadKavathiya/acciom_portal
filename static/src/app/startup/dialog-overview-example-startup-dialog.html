@@ -10,9 +10,7 @@
   letter-spacing: normal;
   text-align: justify;
   color: #2f2f2f;
-  
-  margin-bottom: 25px;
-
+  /* margin-bottom: 15px; */
     }
     .table1{
         border: solid 1px #979797;
@@ -40,6 +38,12 @@
   text-align: justify;
   color: #2f2f2f;
 }
+.td1{
+    background-color: yellow;
+}
+.td2{
+    background-color: transparent; 
+}
     .test-result{
         font-family: 'OpenSans-Light', sans-serif;
   font-size: 18px;
@@ -53,7 +57,20 @@
   margin-right: 10px;
   margin-bottom:10px;
   margin-top:5px;
-
+    }
+    .test-result1{
+        font-family: 'OpenSans-Light', sans-serif;
+  font-size: 24px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  margin-right: 10px;
+  margin-bottom:10px;
+  margin-top:5px;
     }
 .close-btn{
 background-color: #ffffff;
@@ -62,7 +79,6 @@ opacity: 0.9;
   color:black;
 }
 @media screen and (max-width:600px){
-
 }
     .export-btn{
         width: 150px;
@@ -77,31 +93,37 @@ opacity: 0.9;
   letter-spacing: normal;
   text-align: justify;
   color: #ffffff;
-
   border-radius: 24px;
   width:auto;
     }
     .result{
         display:flex;
         justify-content: flex-start;
+        flex-direction: column;
     }
-
    .panel-body {
        background-color: #ffffff;
-        max-height: 390px;
+        max-height: auto;
         overflow:initial;
             
     }
     .panel-body1{
-        max-height: 250px;
+        max-height: auto;
             overflow: scroll;
     }
 .close{
     float:right;
-
+}
+.tablerow{
+    display: flex;
+    flex-direction: row;
 }
 .bold-text{
     font-weight: bold;
+}
+#Src_Count, #Dest_Count{
+    display: inline;
+    margin-right:15px;
 }
     </style>
 </head>
@@ -109,19 +131,21 @@ opacity: 0.9;
 <button mat-flat-button class="close-btn" (click)="onNoClick()">  <i  class="material-icons"> close
     </i></button>
 </div>
+<mat-dialog-content class="mat-typography">
+
 <div class="panel-body">
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.countcheck">
          <div class="test-heading">Count Check</div>
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow" >
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
                                 </tr>
                         </table> 
                 </div>
-            <div class="test-result">Source and Target records count does not match</div>
+            <div class="test-result">Source and Target Record Count do not Match</div>
             <table  cellspacing=12 class="table1" >
                     <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
                         <th>Target Table-{{ data.target_table }}</th>
@@ -135,14 +159,14 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
                                     <td><img src="assets/images/003-verification-symbol.png"/>
                                     </tr>
                             </table>
                      </div>
 
-            <div class="test-result">Both Source and Target records count matches</div>
+            <div class="test-result">Source and Target Record Count Matches</div>
             <table  cellspacing=12 class="table1" >
                     <tr class="tableheader"><th>Source Table-{{ data.src_table }}</th>
                         <th>Target Table-{{ data.target_table }}</th>
@@ -160,8 +184,8 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
                                     <td><img src="assets/images/003-verification-symbol.png"/>
                                     </tr>
                             </table>                    
@@ -171,22 +195,25 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                               <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
                                 </tr>
                         </table>
 
                
             </div>
-            <div class="test-result">Null values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
-            <table border=1>
-                    <!-- <tr> <th>Target</th></tr>
-                    <tr><td>{{data.destination_log}}</td></tr> -->
-                    <tr *ngFor="let y of data.value_src_nullcheck" cellspacing=2>
-                     <td *ngFor= "let z of y" cellspacing=2>
-                            <div>{{z}}</div>
-                            </td>
+            <div class="test-result1">Total Null Records {{data.len_null}}</div>
+            <div class="test-result">Null Values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
+            <table border=1 style="border-collapse: collapse">
+                    <tr  *ngFor="let each_row of data.value_src_nullcheck">
+                            <td  *ngFor= "let z of each_row" >
+                                    <div *ngIf="z=='None'">
+                                        <div style=background-color:yellow;>Null</div>
+                                    </div>
+                                    <div *ngIf="z!='None'">{{z}}</div>
+        
+                                    </td>
                             </tr>
             </table>
         </div>
@@ -198,29 +225,29 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 1">
             <div>
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Pass</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Pass</td>
                                 <td><img src="assets/images/003-verification-symbol.png"/>
                                 </tr>
                         </table>
                 
             </div>
-            <div class="test-result">No Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
+            <div class="test-result">No Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
         </div>
         <div *ngIf="data.execution_status === 2">
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
                                 </tr>
                         </table>
             </div>
-            <div class="test-result">Duplicate records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
-            <table>
-                    <tr> <th>Target Table </th></tr>
+            <div class="test-result">Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
+            <table border=1 style="border-collapse: collapse">
+                   
                     <tr *ngFor="let y of data.src_value_dataduplication" cellspacing=2>
-                            <td *ngFor= "let z of y" cellspacing=2>
+                            <td *ngFor= "let z of y" >
                         <div>{{z}}</div>
                         </td>
                         </tr>
@@ -233,19 +260,23 @@ opacity: 0.9;
         <div *ngIf="data.execution_status === 2">
                 <div class="result">
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Fail</td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Fail</td>
                                     <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
-                                    </tr>
-                            </table>     
-                 <!-- <div class="test-result">Result:Fail</div>
-                 <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
+                                </tr>
+                            </table> 
+                    <div class="test-result">            
+                    <div id="Dest_Count">Source Count : {{data.source_count}}</div>
+                    <div id="Src_Count">Target Count : {{data.target_count}}</div>   
+
+                    <div> Number of Mismatch Records found in Source : {{data.src_to_dest_count}}</div>
+                    <div> Number of Mismatch Records found in Target : {{data.dest_to_src_count}}</div>
 
                 </div>
+                </div>
         </div>
-        <!-- <div *ngIf="data.show_src_table"> -->
-        <div class="test-result">Target Rows mismatch with Source</div>
-        <table class="table1">
+        <div  *ngIf="data.show_src_table" class="test-result" >Mismatch found in Source</div>
+        <table   *ngIf="data.show_src_table" class="table1">
             <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_src">
                     <div>{{i}}</div></th>
@@ -255,11 +286,10 @@ opacity: 0.9;
                 <div>{{z}}</div></td>
             </tr>
         </table>
-    <!-- </div> -->
     <!-- <div *ngIf="data.show_dest_table"> -->
-        <div class="test-result">Source Rows mismatch with Target</div>
+        <div *ngIf="data.show_dest_table" class="test-result">Mismatch found in Target</div>
 
-        <table class="table1">
+        <table *ngIf="data.show_dest_table" class="table1">
             <tr cellspacing=2 class="tableheader">
                 <th *ngFor="let i of data.key_dest">
                     <div>{{i}}</div></th>
@@ -273,66 +303,68 @@ opacity: 0.9;
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.datavalidation_pass">
             <div class="test-heading">Data Validation</div>
-
         <div *ngIf="data.execution_status === 1">
                 <div class="result">
+                    <div>
                         <table>
-                                <tr>
-                                    <td class="test-result">Result: Pass</td>
-                                    <td><img src="assets/images/003-verification-symbol.png"/> </td>
+                                <tr class="tablerow">
+                                    <td class="test-result1">Result: Pass</td>
+                                    <td><img  src="assets/images/003-verification-symbol.png"/> </td>
                                 </tr>
-                            </table> 
+                            </table>
+                        </div> 
+                            <div class="test-result">            
+                                <div id="Dest_Count">Source Count : {{data.source_count}}</div>
+                                 <div id="Src_Count">Target Count : {{data.target_count}}</div>   
+                                <div> Number of Mismatch found in Source : {{data.src_to_dest_count}}</div>
+                                <div> Number of Mismatch found in Target : {{data.dest_to_src_count}}</div>
+            
+                            </div>
             </div>
-            <div class="test-result">Both Source and Target Data matches</div>
+            <div class="test-result">Source and Target Data are Same</div>
         </div>
     </div>
     <div mat-dialog-content  class="panel-body1"  *ngIf="!data.ddlcheck">
             <div class="test-heading">DDL Check</div> 
             <div class="result">
-                    <table>
-                            <tr>
-                                <td class="test-result">Result: Fail</td>
+ <table>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png" />
                                 </td>
                             </tr>
                         </table>
-             <!-- <div class="test-result">Result:Fail</div>
-             <img src="assets/images/001-cross-delete-black-circular-button.png" /> -->
-
             </div>
-        <div class="test-result">Both Source and Target schema doesn’t matches</div>
+        <div class="test-result">Source and Target Schema do not Match</div>
             <table cellspacing=12 class="table1">
                 <tr class="tableheader">
                 <th>Source Table</th>
                 <th>Target Table </th>
-                </tr>
-                <tr class="tabledata">
-                    <td>{{data.source_log}}</td>
-                    <td>{{data.destination_log}}</td>
-                </tr>
+                </tr>   
+                <tr  [ngClass]="{ 'td1': data.source_log[k][0]==data.destination_log[k][0], 'td2': data.source_log[k][0]!=data.destination_log[k][0] }" class="tabledata" *ngFor="let i of data.source_log; let k = index ">  
+                        <td> {{data.source_log[k]}}</td>
+                        <td >{{data.destination_log[k]}}</td>
+                 </tr>
+
             </table>
-    </div>
+        </div>
     <div mat-dialog-content  *ngIf="!data.ddlcheck_pass">
             <div class="test-heading">DDL Check</div> 
             <div class="result">
                     <table>
-                            <tr>
-                                <td class="test-result">Result: Pass</td>
+                            <tr class="tablerow">
+                                <td class="test-result1">Result: Pass</td>
                                 <td><img src="assets/images/003-verification-symbol.png"/>
                                 </td>
                             </tr>
-                        </table>
-             <!-- <div class="test-result">Result:Pass</div>
-             <img src="assets/images/003-verification-symbol.png"/> -->
-
+                    </table>
             </div>
-        <div class="test-result">Both Source and Target Data matches</div>
+        <div class="test-result">Source and Target Schema are Same</div>
     </div>
 </div>
+</mat-dialog-content>
 <div mat-dialog-actions class="close">
         <a mat-flat-button  
         class="export-btn" *ngIf="data.execution_status !== 1"
         href="{{onexport(data.case_log_id)}}" >Export </a>
-
     </div>
-

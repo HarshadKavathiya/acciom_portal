@@ -34,14 +34,21 @@ export class DbdetailsComponent implements OnInit {
     this.fileUploadService.StoreDB(this.createForm.value).subscribe(data => {
       console.log(data)
       if(data.success){
-      Swal("success","Succesfully Updated Details","success")
+      Swal("Success","Succesfully Updated Details","success")
+      this.router.navigate(['Viewdb'])
+
       }  
    },err=>{
-      Swal("error","Something went wrong","error")
+      Swal("Error","Something went wrong","error")
    });
   }
   viewconnection(){
     this.router.navigate(['Viewdb'])
+  }
+  Cancel(){
+    this.router.navigate(['Viewdb'])
+
+
   }
 
 }

@@ -16,6 +16,7 @@ import { VerifyuserComponent } from './verifyuser/verifyuser.component';
 import { AfterverifyComponent } from './afterverify/afterverify.component';
 import { ViewdbComponent } from './viewdb/viewdb.component';
 import { EditdbdetailComponent } from './editdbdetail/editdbdetail.component';
+import { AccessTokenComponent } from './access-token/access-token.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'/startup', pathMatch:'full'},
@@ -32,6 +33,8 @@ const routes: Routes = [
   {path:'reset-password/:token',component:UpdatepasswordComponent},
   {path:'Verifyuser',component:VerifyuserComponent},
   {path:'verified/:token',component:AfterverifyComponent},
+  {path:'accesstoken',component:AccessTokenComponent},
+
   {
     path:'Viewdb',component:ViewdbComponent},
     {path:'editdb/:db_id',component:EditdbdetailComponent},

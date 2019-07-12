@@ -1,4 +1,4 @@
-import { Component, OnInit,Inject,ViewChild,ElementRef } from '@angular/core';
+import { Component, OnInit,Inject,ViewChild,ElementRef, EventEmitter } from '@angular/core';
 import {UploadserviceService} from '../uploadservice.service';
 import * as XLSX from 'xlsx';
 import { Router, ActivatedRoute, Params } from "@angular/router";
@@ -10,6 +10,7 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 export interface DialogData {
   suitename: string;
+  Suite_own_name:string;
 }
 @Component({
   selector: 'app-home',
@@ -63,6 +64,7 @@ export class HomeComponent implements OnInit  {
   temp_column_detail=[]
   arr_db_each_detail=[]
   all_db_detail_value=[]
+  Suite_own_name:String;
   url='/home/akhil/acciom_portal/static/src/assets/test_cases.xlsx';
   column_dict=[{0:'Test Case ID'}, {1:'Details'},{ 2:'Columns'},
     {3:'Table Source:Target'}, {4:'Test Class'},
@@ -98,8 +100,8 @@ link.click();
 link.remove();
   }
 OnClick(v) {
+  console.log(this.suitename)
   this.spinnerService.show();
-
     this.MyModel=null;
   this.show=false;
    this.show1=false;
@@ -116,7 +118,7 @@ OnClick(v) {
     this.filevalue=null;
     this.disable=true;
     this.disable2=true;
-    Swal("Success","Succesfully Uploaded the file","success")
+    Swal("Success","Succesfully Uploaded Quality Suite","success")
     this.all_cases=[];
     this.initialisecases();
     this.response=this.name;
@@ -145,6 +147,9 @@ OnClick(v) {
   
   }
 
+  pass_suite_name(){
+    console.log("passed")
+  }
 
   filereadit(event){
     this.selectedValue =[]
@@ -198,6 +203,7 @@ this.selectedAll = totalSelected === this.all_cases.length;
 return true;
  }
  selectradio(x){
+   this.Suite_own_name=x;
     this.disable=false;
      this.selectedradio=x
  }
@@ -244,10 +250,12 @@ if (this.selectedAll){
     this.resfinal=(XLSX.utils.sheet_to_json(this.sheet,{raw:true}))
     for(var i=0;i<this.resfinal.length;i++)
     {
+      console.log(this.resfinal[i]['Description'])
       this.temp_db_detailarr.push(this.resfinal[i]['DB Details']) //TO DO:HARD CODED.['Test Class']
-      this.all_cases.push({'id':i,'name':this.resfinal[i]['Test Class'],'selected':false}) //TO DO:HARD CODED.['Test Class']
+      this.all_cases.push({'id':i,'name':this.resfinal[i]['Test Class'],'selected':false, 'description':this.resfinal[i]['Description']}) //TO DO:HARD CODED.['Test Class']
       this.temp_table_detail.push(this.resfinal[i]['Source Table:Target Table'])
       this.temp_column_detail.push(this.resfinal[i]['Columns'])
+      console.log(this.all_cases)
     }
    // below func validate the 1st column all row
   if(!this.validate_case_name(this.all_cases)){
@@ -267,12 +275,29 @@ if (this.selectedAll){
  }
     this.prog=75;                                        
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {   
-      width: '250px',
-      data : {suitename :this.suitename}
+      width: '350px',
+      data : {suitename :this.suitename, Suite_own_name:this.Suite_own_name}
       
     });
+
+    // dialogRef.componentInstance.onAdd.subscribe(result => {
+      
+    //   console.log("282")
+    //   console.log(this.Suite_own_name)
+    //   this.suitename=this.Suite_own_name
+    // });
+
     dialogRef.afterClosed().subscribe(result => {
-     this.suitename = result
+      console.log('290')
+      console.log(result)
+      if(result.event == 'close'){
+        console.log("came here292")
+        this.suitename=this.Suite_own_name
+      }
+      else{
+        console.log("came here 297")
+        this.suitename = result
+      }
     });
  }
  clearAll(msg){
@@ -289,7 +314,7 @@ if (this.selectedAll){
  {
       var status=true;
       var standard_cases=['CountCheck','Datavalidation','DuplicateCheck',
-      'NullCheck','DDLCheck']
+      'NullCheck','DDLCheck','Datavalidation-link']
       for(let i=0;i<case_name.length;i++){
           if(standard_cases.includes(case_name[i].name) && case_name[i] != undefined)
           {
@@ -304,7 +329,7 @@ if (this.selectedAll){
  }
  validate_db_detail(db_Detail)
  {  
-      var valid_dbtypes=['mysql','sqlserver','postgres']
+      var valid_dbtypes=['mysql','sqlserver','postgres','oracle']
       var valid_keys=['sourcedbtype', 'sourceserver',
       'sourcedb','sourceuser','targetdbtype','targetdb','targetserver','targetuser']
       let status=true;
@@ -378,14 +403,27 @@ if (this.selectedAll){
   templateUrl: 'dialog-overview-example-dialog.html',
 })
 export class DialogOverviewExampleDialog {
+suite_own_name:string;
+onAdd = new EventEmitter();
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({event:'two'});
   }
+  // submit(){
+  // this.onAdd.emit();
+  // this.dialogRef.close();
+
+  // }
+submit(){
+   this.dialogRef.close({'event':'close'});
+
+}
+
+  
 }
 
 

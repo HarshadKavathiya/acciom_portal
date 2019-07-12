@@ -59,19 +59,22 @@ export class UploadserviceService {
     return !!localStorage.getItem('id_token'); 
 
   }
-
-
   logout(){
     this.authToken = null;
     this.user = null;
     localStorage.clear();
   }
+  expandPanel(status, e){
+    console.log(status)
+    if (status == 0 ){
 
+      e.stopPropagation(); // Preventing event bubbling
+
+    }
+  }
   register(createForm){
-
     let headers = new HttpHeaders().set('Content-Type','application/json')
     return this.http.post<any>(`${this.url}/register`,createForm,{headers: headers})
-
   }
 
   StoreDB(createForm){
@@ -113,7 +116,6 @@ export class UploadserviceService {
   getSuiteById(id){
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
-    console.log(this.newtoken)
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
       
@@ -225,6 +227,7 @@ export class UploadserviceService {
     return this.http.post<any>(`${this.url}/check-connection`,form)
   }
   get_all_connections(suite_id){
+    console.log(suite_id)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
     let headers =new HttpHeaders({
@@ -244,17 +247,29 @@ export class UploadserviceService {
       "db_id":connection_id
     },{headers: headers})
   }
-  update_case_details(case_id, src_table, target_table, src_qry, target_qry){
+  update_case_details(case_id,src_db_id,target_db_id, src_table, target_table, src_qry, target_qry,column){
+    console.log(column)
     this.loadToken()
     this.newtoken='Bearer'+" "+this.authToken
     let headers =new HttpHeaders({
       'Authorization':this.newtoken,
     }) 
     return this.http.put<any>(`${this.url}/edit-test-case/${case_id}`,{
+      "src_db_id":src_db_id,
+      "target_db_id":target_db_id,
       "src_table":src_table,
       "target_table":target_table,
       "src_query":src_qry,
-      "target_query":target_qry
+      "target_query":target_qry,
+      "column":column
     },{headers: headers})
   }
+  getToken(){
+    this.loadToken()
+    this.newtoken='Bearer'+" "+this.authToken
+    let headers =new HttpHeaders({
+      'Authorization':this.newtoken,
+    }) 
+    return this.http.get<any>(`${this.url}/get-token`,{headers: headers})
+  }  
 }

@@ -3,6 +3,7 @@ import { FormBuilder,FormGroup, Validators } from '@angular/forms'
 import {UploadserviceService} from '../uploadservice.service';
 import { Routes, RouterModule, Router } from '@angular/router';
 import Swal from 'sweetalert2'
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   createForm:FormGroup; 
 
   constructor(private fb:FormBuilder,private fileUploadService:UploadserviceService,
-    private router:Router) {
+    private router:Router, private _snackBar: MatSnackBar) {
     this.createForm=fb.group({
       email:['',[Validators.email,Validators.required]],
       password:['',Validators.required]
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit {
 {
   this.fileUploadService.authenticateUser(this.createForm.value).subscribe((data) => {
     if(data.success==true){
-      Swal("success",data.message,"success")
+      // Swal("Success",data.message,"success")
     this.fileUploadService.storeUserData(data.access_token, data.user,data.uid,data.refresh_token,data.name);
      this.router.navigate(['startup']); 
     }
@@ -39,20 +40,40 @@ export class LoginComponent implements OnInit {
    console.log(err.success)
    if(err.error.message == 'Verify User'){
      console.log("go to some page")
+  this.openSnack();
      
-     this.router.navigate(['Verifyuser'])
    }
+else if (err.error.message == undefined){
+  Swal("Error","Connectivity lost","error")
+
+}
+
    else{
-   Swal("error",err.error.message,"error")
+   Swal("Error",err.error.message,"error")
    }
   });
 
 
 }
+
+
+
 forgot_password(){
   this.router.navigate(['forgot-password']);
 }
 signup(){
   this.router.navigate(['register'])
 }
+
+ openSnack(){
+    this._snackBar.open('User Not verified! an email has been sent to your mail to verify ', 'Close', {
+          duration: 19000,
+          panelClass: ['blue-snackbar'],
+          verticalPosition: 'top'
+
+        })
+      }
+  
+  
+
 }

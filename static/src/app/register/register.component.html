@@ -29,7 +29,11 @@
             <mat-form-field class="example-full-width-lname">
                 <input matInput  type="password"  placeholder=" Confirm Password" formControlName="cpassword">
                 </mat-form-field>
-            <button mat-raised-button (click)="signIn()" [disabled]='!createForm.valid' class="loginbtn" ><div class="Log-in">Signup</div></button>
+                <div  class="btn-class">
+                    <button mat-raised-button (click)="GoBack()" class="gobackbtn" ><div class="Log-in">Cancel</div></button>
+                    <button mat-raised-button (click)="signIn()" [disabled]='!createForm.valid' class="loginbtn" ><div class="Log-in">Signup</div></button>
+                </div>
+            
             
         </form>
 

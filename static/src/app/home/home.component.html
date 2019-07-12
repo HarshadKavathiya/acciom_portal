@@ -20,7 +20,7 @@
             </div>
             <div mat-button (click)="file.click()" class="Upload-File-Box"> 
                 <div  class="Upload-File-Box-content">
-                    Upload Your File Here
+                    Upload Test Suite
                 </div>
             </div>
             <div>
@@ -33,8 +33,8 @@
     </mat-card>
 
     <div *ngIf="show">
-        <mat-card class="result-card">
-            <h2>Select The Page:</h2>
+        <div class="result-card">
+            <h2>Select Suite:</h2>
             <div *ngFor="let page of Pages">
                 <mat-radio-button  value="{{ page }}"
                 (change)="selectradio(page)">{{page}}</mat-radio-button><br><br>
@@ -44,26 +44,28 @@
                 mat-raised-button [disabled]="disable"  (click)="Next(selectedradio)">
                 <div class="btn-content">Next</div>
             </button>
-        </mat-card>
+        </div>
 
     </div>
     <!-- <mat-spinner></mat-spinner> -->
 
     <div *ngIf="show1">
-        <mat-card class="result-card">
+        <div class="result-card">
             <p class="result">{{ msg }}</p>
-            <table *ngIf="show1" class="cright" cellspacing=12>
+            <table *ngIf="show1" class="cright" cellspacing=22>
                 <div *ngIf="afterupload">
                     <tr class="afterupload-showtestcase">
-                        <th>TestCase</th>
+                        <th >Test Case</th>
+                        <th>Test Class</th>
                         <th>Check</th>
-                        <th>Select All</th>
+                        <th>SelectAll</th>
                         <input id="checkid" type="checkbox" (change)="selectAll()" [checked]="selectedAll" > 
                     </tr>
                     <tr *ngFor=" let case of all_cases" class="cright">
 
-                        <td >{{ case.name }}</td>
-                        <td>  
+                        <td style="text-align:left" >{{case.description}}</td>
+                        <td style="text-align:left">  {{case.name}}</td>
+                        <td> 
                             <input  
                             value="{{ case.id }}" 
                             [(ngModel)]="case.selected"  type="checkbox" (change)="selectBadge($event, case.id)">
@@ -80,7 +82,7 @@
                 <h4>Test Cases To be Tested</h4>
                 </div>
             </table>
-        </mat-card>
+        </div>
     </div>
         
 </div>     

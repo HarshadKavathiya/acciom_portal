@@ -13,3 +13,17 @@ body{
 }
 .mat-button-focus-overlay { background-color: transparent!important; }
 
+.blue-snackbar{
+   background-color: rgb(182, 41, 66);
+    color:whitesmoke;
+    font-family: "Avenir";
+
+
+
+  }
+  .blue-snackbar button {
+    background-color: black;
+    color: whitesmoke;
+    font-family: "Avenir";
+
+  }

@@ -1,79 +1,77 @@
 <head>
-        <style type="text/css">
+  <style type="text/css">
 
 .display-detail{
-    display: flex;
-    flex-direction: column;
-    font-family: 'OpenSans-Light',sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: justify;
-  color: #2f2f2f;
+display: flex;
+flex-direction: column;
+font-family: 'OpenSans-Light',sans-serif;
+font-size: 16px;
+font-style: normal;
+font-stretch: normal;
+line-height: normal;
+letter-spacing: normal;
+text-align: justify;
+color: #2f2f2f;
 }
 .heading{
-    font-family: 'OpenSans-Regular', sans-serif;
-  font-size: 30px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: justify;
-  color: #2f2f2f;
-  margin-bottom: 25px;
-  
+font-family: 'OpenSans-Regular', sans-serif;
+font-size: 30px;
+font-weight: 300;
+font-style: normal;
+font-stretch: normal;
+line-height: normal;
+letter-spacing: normal;
+text-align: justify;
+color: #2f2f2f;
+margin-bottom: 25px;
+
 }
 .casename{
-  font-family: 'OpenSans-Regular', sans-serif;
-  font-size: 30px;
-  font-weight: 200;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: justify;
-  color: #2f2f2f;
-  margin-bottom: 25px;
- 
+font-family: 'OpenSans-Regular', sans-serif;
+font-size: 30px;
+font-weight: 200;
+font-style: normal;
+font-stretch: normal;
+line-height: normal;
+letter-spacing: normal;
+text-align: justify;
+color: #2f2f2f;
+margin-bottom: 25px;
+
 }
 .heading-grp{
-  display: flex;
-  justify-content: flex-start;
-  width:100%;
+display: flex;
+justify-content: flex-start;
+width:100%;
 }
 .case-item{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
 }
 
 .bold-text{
-    font-weight: bold;
+font-weight: bold;
 }
 input{
-  min-width:10ch;
-  width: calc(var(--size) * 1ch);
+min-width:10ch;
+width: calc(var(--size) * 1ch);
 }
 .td1{
-  width:40%;
+width:40%;
 
 }
 .form-edit{
-  min-width:400px;
-  
-  display:flex;
-  flex-direction:column;
-  flex-wrap:wrap;
-  justify-content:center;
+min-width:400px;
+
+display:flex;
+flex-direction:column;
+flex-wrap:wrap;
+justify-content:center;
 }
-/* .td2{
-  width:15%;
-} */
+
 .td3{
-  width:60%;
+width:60%;
 }
 .edit-btn{
 justify-self: flex-end;
@@ -81,94 +79,114 @@ color:red;
 font-size: 22px;
 }
 
-        </style>
+  </style>
 </head>
-<div mat-dialog-content align="end" >
-  <button mat-button class="close-btn" (click)="onNoClick()"> <i class="material-icons">close</i></button>
-  </div>
-<mat-card *ngIf="card">
-  <div class="heading-grp">
-    <div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
-    <div class="edit-btn"> <button class="edit-btn" mat-button (click)="showform()"> Edit<i class="material-icons">
-      edit
-      </i></button></div>
-  </div>
-    <div mat-dialog-content class="display-detail">
-  <table style="width:100%">
-    <tr>  <div> <td class="td1"><span class="bold-text">Source DB Name:</span></td>
-      <td class="td2"></td>
-      <td class="td3">{{data.src_db_name}}</td></div>
-    </tr>
-      <tr>  <div> <td  class="td1"><span class="bold-text">Target DB Name:</span></td>
-        <td></td>
-        <td class="td3">{{data.des_db_name}}</td></div>
-      </tr>
-      <tr>  <div> <td class="td1"><span class="bold-text">Source Table:</span></td>
-        <td></td>
-        <td class="td3">{{data.src_table_name}}</td></div>
-      </tr>
-        <tr>  <div> <td class="td1"><span class="bold-text">Target Table:</span></td>
-          <td></td>
-          <td class="td3">{{data.des_table_name}}</td></div>
-        </tr>
-          <tr>  <div> <td class="td1"><span class="bold-text">Source DB:</span></td>
-            <td></td>
-            <td class="td3">{{data.src_db_type}}</td></div></tr>
-            <tr>  <div> <td class="td1"><span class="bold-text">Target DB:</span></td>
-              <td></td>
-              <td class="td3">{{data.des_db_type}}</td></div></tr>
-              <tr>  <div> <td class="td1"><span class="bold-text">Source Column:</span></td>
-                <td></td>
-                <td class="td3">{{data.src_column}}</td></div></tr>
-                <tr>  <div> <td class="td1"><span class="bold-text">Target Column:</span></td>
-                  <td></td>
-                  <td class="td3">{{data.des_column}}</td></div></tr>
-                  <tr>  <div> <td class="td1"><span class="bold-text">Source Query:</span></td>
-                    <td></td>
-                    <td class="td3">{{data.src_qry}}</td></div></tr>
-                    <tr>  <div> <td class="td1"><span class="bold-text">Target Query:</span></td>
-                      <td></td>
-                      <td class="td3">{{data.des_qry}}</td></div></tr>
-   
-  
-  </table>
 
-  </div>
+<div mat-dialog-content align="end" >
+<button mat-button class="close-btn" (click)="onNoClick()"> <i class="material-icons">close</i></button>
+</div>
+<mat-dialog-content class="mat-typography">
+
+<mat-card *ngIf="card">
+<div class="heading-grp">
+<div class="heading">Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+<div class="edit-btn"> <button class="edit-btn" mat-button (click)="showform()"> Edit<i class="material-icons">
+edit
+</i></button></div>
+</div>
+<div mat-dialog-content class="display-detail">
+<table style="width:100%">
+<tr>  <div> <td class="td1"><span class="bold-text">Source Connection:</span></td>
+  <td></td>
+  <td class="td3">{{data.src_db_id}}</td></div>
+</tr>
+<tr>  <div> <td class="td1"><span class="bold-text">Target Connection:</span></td>
+  <td></td>
+  <td class="td3">{{data.target_db_id}}</td></div>
+</tr>
+<tr>  <div> <td class="td1"><span class="bold-text">Source Table:</span></td>
+  <td></td>
+  <td class="td3">{{data.src_table_name}}</td></div>
+</tr>
+  <tr>  <div> <td class="td1"><span class="bold-text">Target Table:</span></td>
+    <td></td>
+    <td class="td3">{{data.des_table_name}}</td></div>
+  </tr>
+          <tr>  <div> <td class="td1"><span class="bold-text">Column:</span></td>
+            <td></td>
+            <td class="td3">{{data.column}}</td></div></tr>
+            <tr>  <div> <td class="td1"><span class="bold-text">Source Query:</span></td>
+              <td></td>
+              <td class="td3">{{data.src_qry}}</td></div></tr>
+              <tr>  <div> <td class="td1"><span class="bold-text">Target Query:</span></td>
+                <td></td>
+                <td class="td3">{{data.des_qry}}</td></div></tr>
+                
+
+
+</table>
+
+</div>
 </mat-card>
 <mat-card *ngIf="form">
-  <div class="heading-grp">
-    <div class="heading"> Edit Case-Detail: </div> <div class="casename">{{data.casename}}</div>
-    <div class="edit-btn"> <button class="edit-btn" mat-button (click)="showhome()">  <i class="material-icons">
-      keyboard_backspace
-      </i>View Details</button></div>
-  </div>
-  <form class="form-edit" [formGroup]="createForm">
-    <mat-form-field class="example-full-width">
-            <input type="text" autocomplete="off" matInput
-            value="{{data.src_table_name}}"
-            placeholder="Source Table" formControlName="src_name" #src_table>
-            <mat-error>Enter Correct Table Name</mat-error>
-        </mat-form-field>
+<div class="heading-grp">
+<div class="heading"> Edit Case-Detail: </div> <div class="casename">{{data.casename}}</div>
+<div class="edit-btn"> <button class="edit-btn" mat-button (click)="showhome()">  <i class="material-icons">
+keyboard_backspace
+</i>View Details</button></div>
+</div>
+
+<form class="form-edit" [formGroup]="createForm">
+Source Connection:<mat-form-field>
+    <mat-label>{{data.src_db_id}}</mat-label>
+    <mat-select>
+      <mat-option  *ngFor="let i of data.all_connections; let x=index" [(value)]="data.all_connections[x]" (click)="selectsrcdb(i[0])">
+        {{i[1]}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+Target Connection:<mat-form-field>
+      <mat-label>{{data.target_db_id}}</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let i of data.all_connections; let x=index" [(value)]="data.all_connections[x]" (click)="selecttargetdb(i[0])">
+          {{i[1]}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 <mat-form-field class="example-full-width">
-    <input type="text" 
-    value="{{data.des_table_name}}"
-    autocomplete="off" matInput placeholder="Target Table" formControlName="target_table" #target_table>
-    <mat-error>Enter Correct Table Name</mat-error>
+      <input type="text" autocomplete="off" matInput
+      value="{{data.src_table_name}}"
+      placeholder="Source Table" formControlName="src_name" #src_table>
+      <mat-error>Enter Correct Table Name</mat-error>
+  </mat-form-field>
+<mat-form-field class="example-full-width">
+<input type="text" 
+value="{{data.des_table_name}}"
+autocomplete="off" matInput placeholder="Target Table" formControlName="target_table" #target_table>
+<mat-error>Enter Correct Table Name</mat-error>
 </mat-form-field>
 <mat-form-field class="example-full-width">
-    <textarea rows=4 type="text" autocomplete="off"
-    value="{{data.src_qry}}"
-    matInput placeholder=" Source  Query" formControlName="src_query" #src_qry> </textarea>
-    <mat-error>Enter Correct Query</mat-error>
+<textarea rows=1 type="text" 
+value="{{data.column}}"
+autocomplete="off" matInput placeholder="Column" formControlName="column" #column></textarea>
+<mat-error>Enter Correct Column</mat-error>
+</mat-form-field>
+<mat-form-field class="example-full-width">
+<textarea rows=4 type="text" autocomplete="off"
+value="{{data.src_qry}}"
+matInput placeholder=" Source  Query" formControlName="src_query" #src_qry></textarea>
+<mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
 
 <mat-form-field class="example-full-width">
-    <textarea rows=4 type="text" autocomplete="off"
-    value="{{data.des_qry}}"
-    matInput placeholder=" Target Query" formControlName="target_query" #target_qry> </textarea>
-    <mat-error>Enter Correct Query</mat-error>
+<textarea rows=4 type="text" autocomplete="off"
+value="{{data.des_qry}}"
+matInput placeholder=" Target Query" formControlName="target_query" #target_qry> </textarea>
+<mat-error>Enter Correct Query</mat-error>
 </mat-form-field>
-<button mat-raised-button [disabled]="createForm.invalid" (click)="Update(src_table, target_table, src_qry, target_qry,data.case_id)" color="primary" >Update</button>
+{{all_connection}}
+<button mat-raised-button  [disabled]="createForm.invalid"  (click)="Update(src_table, target_table, src_qry, target_qry,column,data.case_id)" color="primary" >Update</button>
 
 </form>
 </mat-card>
+</mat-dialog-content>
