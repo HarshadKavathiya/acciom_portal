@@ -35,7 +35,9 @@ export interface DialogData {
  show_src_table:boolean;
  show_dest_table:boolean;
  len_null:number;
+ len_duplicate:number;
  src_db_id:number;
+ duplicate_Records:number;
  
 }
 export interface DialogDataCaseDetail {
@@ -127,6 +129,8 @@ export class StartupComponent implements OnInit {
  all_connections=[];
  all_cases=[];
  len_null:number;
+ len_duplicate:number;
+ duplicate_Records:number;
  
  constructor( private router:Router,
  private fileUploadService:UploadserviceService,
@@ -204,18 +208,7 @@ export class StartupComponent implements OnInit {
         matExpansionPanel.toggle();
 
     }
- }
-//     expandPanel1(matExpansionPanel,case_id, event){
-//   console.log(case_id)
-//     if(case_id == 0){
-
-//         matExpansionPanel.toggle();
-
-//     }
-//     }
-
-    
- 
+ } 
  manage_connection(suite_id){
  this.all_cases=[]
  this.all_connection=[]
@@ -428,12 +421,12 @@ getlog(test_name,src_table,target_table,case_log_id){
  //calls rest api with case_log_id and fetch the
  // case_name , case_src_log and case_des_log.
  this.fileUploadService.testcase_log_byid(case_log_id.test_case_log_id).subscribe(data=>{
-console.log(data)
- this.showlog(test_name, src_table, target_table, data.test_case_log.data)
+
+ this.showlog(test_name, src_table, target_table, data.test_case_log.data,data.test_case_log.data.destination_count, data.test_case_log.data.Duplicate_counts)
  });
 }
 
-showlog(test_name,src_table,target_table,case_log){
+showlog(test_name,src_table,target_table,case_log, destination_count, Duplicate_counts){
  if (test_name =='CountCheck'){
  this.show_logdialog(test_name)
  }
@@ -443,8 +436,9 @@ showlog(test_name,src_table,target_table,case_log){
  this.show_logdialog(test_name)
  if(case_log.destination_log==null){
  }else{
+     console.log(destination_count)
  this.len=eval(case_log.destination_log).length
- this.len_null=this.len - 1
+ this.len_null=destination_count
  console.log(case_log.destination_log)
  for(var i=0;i<this.len;i++){
  var temp=[]
@@ -468,6 +462,9 @@ showlog(test_name,src_table,target_table,case_log){
  || case_log.destination_log == "No Duplicate Records Available"
  ){
  }else{
+     this.duplicate_Records = Duplicate_counts
+     this.len_duplicate = destination_count
+
  this.len=eval(case_log.destination_log).length
  for(var i=0;i<this.len;i++){
  var temp=[]
@@ -587,7 +584,7 @@ showlog(test_name,src_table,target_table,case_log){
  src_to_dest_count:this.src_to_dest_count,dest_to_src_count:this.dest_to_src_count,datavalidation_pass:this.datavalidation_pass,ddlcheck_pass:this.ddlcheck_pass,ddlcheck:this.ddlcheck,
  case_log_id:case_log.test_case_log_id, execution_status:case_log.test_execution_status,
  src_table:src_table,target_table:target_table,value_src_nullcheck:this.value_src_nullcheck,src_value_dataduplication:this.src_value_dataduplication
- ,show_src_table:this.show_src_table, show_dest_table:this.show_dest_table, len_null:this.len_null}
+ ,show_src_table:this.show_src_table, show_dest_table:this.show_dest_table, len_null:this.len_null, duplicate_Records:this.duplicate_Records, len_duplicate:this.len_duplicate}
  });
  dialogRef.afterClosed().subscribe(result => {
  });}}

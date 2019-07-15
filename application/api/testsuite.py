@@ -1,6 +1,7 @@
 import ast
 import json
 from io import BytesIO
+from flask import current_app
 
 from flasgger import swag_from
 from flask import current_app as app
