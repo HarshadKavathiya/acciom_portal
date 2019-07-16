@@ -91,9 +91,25 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
 
         if all_results:
             if flag == True:
+                print("all_results",all_results)
+                for i in all_results:
+                    for x in range(0, len(i)):
+                        if i[x] == "None":
+                            i[x] = "Null"
+                        else:
+                            i[x] == i[x]
+                print("all_results", all_results)
                 all_results.insert(0, col_list)
                 a = json.dumps(all_results)
             elif flag == False:
+                print("all_results", all_results)
+                for i in all_results:
+                    for x in range(0, len(i)):
+                        if i[x] == "None":
+                            i[x] = "Null"
+                        else:
+                            i[x] == i[x]
+                print("all_results", all_results)
                 all_results.insert(0, col_list_custom)
                 a = json.dumps(all_results)
 
