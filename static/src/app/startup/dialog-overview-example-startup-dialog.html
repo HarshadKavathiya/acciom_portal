@@ -207,10 +207,10 @@ opacity: 0.9;
             <table border=1 style="border-collapse: collapse">
                     <tr  *ngFor="let each_row of data.value_src_nullcheck">
                             <td  *ngFor= "let z of each_row" >
-                                    <div *ngIf="z=='None'">
-                                        <div style=background-color:yellow;>Null</div>
+                                    <div *ngIf="z=='Null'">
+                                        <div style=background-color:yellow;>{{z}}</div>
                                     </div>
-                                    <div *ngIf="z!='None'">{{z}}</div>
+                                    <div *ngIf="z!='Null'">{{z}}</div>
         
                                     </td>
                             </tr>
