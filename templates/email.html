@@ -143,9 +143,135 @@
 
         </tbody>
     </table>
-<!--    <div>{% block content %}-->
+    <div>
+        Log Details
+    </div>
 
-<!--        {% endblock %}</div>-->
+    {% if  Null_display  %}
+        {% if Null_display |length == 1 %}
+            <div style="color:black">Null Check<div>
+                <br>
+            <b>Result:</b> Total {{ Null_display[0]['records'] }} Records found with Null Value(s)
+                <br>
+            Table <b> {{ Null_display[0]['table'] }}</b>
+             <br>
+            Top 10 Null
+            <table style="margin: 1em 0;
+            width: 50%;
+            overflow: hidden;
+            background: #FFFFFF;
+              border-collapse: collapse;
+            border: 1px solid black;
+            display: table;
+            border-spacing: 2px;
+            border-color: grey;color:black;" >
+
+            {% for row in Null_display[0]['data'] %}
+                <tr style="border:1px solid black">
+                    {% for each_val in row %}
+                    <td align="center" style="border:1px solid black;text-align:left">
+                        {{each_val}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+
+                {% for each_tables in Null_display %}
+                       <div style="color:black">Null Check<div>
+                    <br>
+                    <b>Result:</b> Total {{ each_tables['records'] }} Records found with Null Value(s)
+                    <br>
+                    Table <b>{{ each_tables['table'] }}</b>
+                     <br>
+                           Top 10 Null
+                    <table style="margin: 1em 0;
+            width: 50%;
+            overflow: hidden;
+            background: #FFFFFF;
+              border-collapse: collapse;
+            border: 1px solid black;
+            display: table;
+            border-spacing: 2px;
+            border-color: grey;color:black;">
+                        {% for each_row in each_tables['data'] %}
+                            <tr tyle="border:1px solid black">
+                                {% for each_val in each_row %}
+                                    <td align="center" style="border:1px solid black;text-align:left">{{ each_val }}</td>
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </table>
+                    <br/><br/>
+                {% endfor %}
+
+        {% endif %}
+    {% endif %}
+    {% if Dup_display %}
+        {% if Null_display |length == 1 %}
+                           <div>One Defected Columns</div>
+                           <div style="color:black">Duplicate Check<div>
+                <br>
+             <b>Result:</b>{{ Null_display[0]['records'] }}Duplicate Records
+                <br>
+            Table <b> {{ Null_display[0]['table'] }}</b>
+             <br>
+            Top 10 Duplicates
+            <table style="margin: 1em 0;
+            width: 50%;
+            overflow: hidden;
+            background: #FFFFFF;
+              border-collapse: collapse;
+            border: 1px solid black;
+            display: table;
+            border-spacing: 2px;
+            border-color: grey;color:black;" >
+
+            {% for row in Dup_display[0]['data'] %}
+                <tr style="border:1px solid black">
+                    {% for each_val in row %}
+                    <td align="center" style="border:1px solid black;text-align:left">
+                        {{each_val}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+                   {% for each_tables in Dup_display %}
+                       <div style="color:black">Null Check<div>
+                    <br>
+                    <b>Result:</b> Total {{ each_tables['records'] }} Records found with Null Value(s)
+                    <br>
+                    Table <b>{{ each_tables['table'] }}</b>
+                     <br>
+                           Top 10 Null
+                    <table style="margin: 1em 0;
+            width: 50%;
+            overflow: hidden;
+            background: #FFFFFF;
+              border-collapse: collapse;
+            border: 1px solid black;
+            display: table;
+            border-spacing: 2px;
+            border-color: grey;color:black;">
+                        {% for each_row in each_tables['data'] %}
+                            <tr tyle="border:1px solid black">
+                                {% for each_val in each_row %}
+                                    <td align="center" style="border:1px solid black;text-align:left">{{ each_val }}</td>
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </table>
+                    <br/><br/>
+                {% endfor %}
+        {% endif %}
+    {% endif %}
+
+
 
 </div>
 </body>

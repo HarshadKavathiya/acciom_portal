@@ -4,9 +4,10 @@ import time
 from flask import render_template
 from flask_mail import Message, Mail
 
-from application.models.user import TestSuite, TestCaseLog
+from application.models.user import (TestSuite, TestCaseLog,TestCase)
 from index import app
 from index import db
+import functools
 
 mail = Mail(app)
 
@@ -42,6 +43,7 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
     Test_target_table = []
     Test_status = []
 
+
     print(case_log_id_list, email)
     while not check_status(case_log_id_list):
         db.session.commit()
@@ -49,7 +51,6 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
     suite = TestSuite.query.filter_by(test_suite_id=suite_id).first()
     print(suite)
     for each_test in suite.test_case:
-        print(each_test)
         Test_Name.append(each_test.test_name)
         Test_Description.append(each_test.test_id)
         Test_status.append(each_test.test_status)
@@ -66,7 +67,20 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
     render_list['Test_Description'] = Test_Description
     render_list['src_tables'] = Test_src_table
     render_list['dest_tables'] = Test_target_table
-    # print(render_list)
+    Null_display = []
+    Dup_display = []
+    for i in case_log_id_list:
+        case_log_id = TestCaseLog.query.filter_by(test_case_log_id=i).first()
+        case = TestCase.query.filter_by(test_case_id=case_log_id.test_case_id).first()
+        if case.test_name == 'NullCheck' and case_log_id.des_execution_log is not None:
+            Table = (list(json.loads(case.test_case_detail)['table'].values())[0])
+            length = len(json.loads(case_log_id.des_execution_log))
+            Null_display.append({"data":json.loads(case_log_id.des_execution_log)[:11],"records":length-1,"table":Table})
+        elif case.test_name == 'DuplicateCheck' and case_log_id.des_execution_log is not None:
+            print("do some logic")
+            Table = (list(json.loads(case.test_case_detail)['table'].values())[0])
+            Dup_display.append({"data":json.loads(case_log_id.des_execution_log)[:11], "table":Table})
+    print(Dup_display)
     payload = {}
     payload = {"status": True, "message": "send Mail"}
     print(payload)
@@ -81,16 +95,5 @@ def suite_level_send_mail(case_log_id_list, email, suite_id):
         zip_content=zip(Test_Name, Test_Description, Test_src_table,
                         Test_target_table, Test_status),
         suite_name=suite.test_suite_name, suite_id=suite.test_suite_id,
-        executed_at=str(current_time.strftime("%c")))
+        executed_at=str(current_time.strftime("%c")), Null_display = Null_display, Dup_display=Dup_display)
         mail.send(msg)
-
-# def execute_suite_by_id(suite_id, email):
-#     case_log_id_list = []
-#     test_suite = TestSuite.query.filter_by(
-#         test_suite_id=suite_id).first()
-#     for each_test in test_suite.test_case:
-#         res = run_by_case_id(each_test.test_case_id)
-#         case_log_id_list.append(res['result']['test_case_log_id'])
-#
-#     print("After Executing Test all logs:", case_log_id_list)
-#     return_result(case_log_id_list, email, suite_id)
