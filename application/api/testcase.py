@@ -169,10 +169,8 @@ class EditTestCase(Resource):
         Target_Detail = db_details_without_password(des_db_id.db_id)
         src_db_id = obj.src_db_id
         obj1 = DbDetail.query.filter_by(db_id=src_db_id).one()
-        print(obj1.connection_name)
         target_db_id = obj.target_db_id
         obj2 = DbDetail.query.filter_by(db_id=target_db_id).one()
-        print(obj2.connection_name)
         if tabledetails['column'] is not {}:
             column = tabledetails['column']
             print(column)

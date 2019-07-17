@@ -167,7 +167,13 @@
             border-color: grey;color:black;" >
 
             {% for row in Null_display[0]['data'] %}
-                <tr style="border:1px solid black">
+                {% if loop.index == 1 %}
+
+                    <tr style="border:1px solid black; font-weight:bold">
+                {% else %}
+                    <tr style="border:1px solid black">
+                {% endif %}
+
                     {% for each_val in row %}
                     <td align="center" style="border:1px solid black;text-align:left">
                         {{each_val}}</td>
@@ -195,7 +201,14 @@
             border-spacing: 2px;
             border-color: grey;color:black;">
                         {% for each_row in each_tables['data'] %}
-                            <tr tyle="border:1px solid black">
+                        {% if loop.index == 1 %}
+
+                            <tr style="border:1px solid black; font-weight:bold">
+                        {% else %}
+                            <tr style="border:1px solid black">
+                        {% endif %}
+
+
                                 {% for each_val in each_row %}
                                     <td align="center" style="border:1px solid black;text-align:left">{{ each_val }}</td>
                                 {% endfor %}
@@ -230,7 +243,11 @@
             border-color: grey;color:black;" >
 
             {% for row in Dup_display[0]['data'] %}
-                <tr style="border:1px solid black">
+                {% if loop.index == 1 %}
+                    <tr style="border:1px solid black;font-weight:bold">
+                 {% else %}
+                     <tr style="border:1px solid black">
+                {% endif %}
                     {% for each_val in row %}
                     <td align="center" style="border:1px solid black;text-align:left">
                         {{each_val}}</td>
@@ -257,7 +274,14 @@
             border-spacing: 2px;
             border-color: grey;color:black;">
                         {% for each_row in each_tables['data'] %}
-                            <tr tyle="border:1px solid black">
+                        {% if loop.index == 1 %}
+
+                            <tr style="border:1px solid black; font-weight:bold">
+                        {% else %}
+                        <tr style="border:1px solid black">
+                        {% endif %}
+
+
                                 {% for each_val in each_row %}
                                     <td align="center" style="border:1px solid black;text-align:left">{{ each_val }}</td>
                                 {% endfor %}
