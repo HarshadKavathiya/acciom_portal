@@ -2,6 +2,7 @@ import ast
 import base64
 import datetime
 import json
+import functools
 
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -13,10 +14,10 @@ from sqlalchemy.dialects.mysql import LONGTEXT, INTEGER
 
 from index import db, app
 
-BLOCK_SIZE = 16
-pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(
-    BLOCK_SIZE - len(s) % BLOCK_SIZE)
-unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+
+BS = 16
+pad = lambda s: bytes(s + (BS - len(s) % BS) * chr(BS - len(s) % BS), 'utf-8')
+unpad = lambda s: s[0:-ord(s[-1:])]
 password1 = 'mypassword'
 
 
@@ -310,13 +311,13 @@ class TestCaseLog(db.Model):
 
     @classmethod
     def return_all_log(cls, test_case_log_id):
+        dest_count = 0
         def test_case_log_json(x):
             if (x.execution_status == 1):
 
                 if x.test_cases.test_name == 'Datavalidation':
                     src = ast.literal_eval(x.src_execution_log)
                     if src['result'] == 'none':
-                        print("in if 333")
                         src_pass = {'res': src['result'],
                                     'src_count': src['src_count'],
                                     'src_to_dest_count': src[
@@ -346,27 +347,28 @@ class TestCaseLog(db.Model):
                     dest = x.des_execution_log
                     src = x.src_execution_log
             else:
+                dest_count = 0
+                sum_of_duplicate_records = 0
                 if x.test_cases.test_name == 'NullCheck' or \
                         x.test_cases.test_name == 'DuplicateCheck':
-                    dest = json.loads(x.des_execution_log)
-                    dest = dest[:10]
+                    sum_of_duplicate_records = 0
+                    dest1 = json.loads(x.des_execution_log)
+                    dest_count = int(len(dest1) -1)
+                    dest = dest1[:current_app.config.get('TARGET_RECORD_COUNT_NULL_DUPLICATE')]
                     src = x.src_execution_log
+                    if x.test_cases.test_name =='DuplicateCheck':
+                        sum_of_duplicate_records = functools.reduce(lambda  x,y : x+y ,[int(i[-1]) for i in dest1[1:]])
                 elif x.test_cases.test_name == 'Datavalidation':
-                    print("324", x.src_execution_log)
                     if x.src_execution_log == 'none':
                         src = 'none'
                     else:
                         src = ast.literal_eval(x.src_execution_log)
-                        print(src)
                         if src['result'] == 'none':
-                            print("in if 333")
                             src = {'res': src['result'],
                                    'src_count': src['src_count'],
                                    'src_to_dest_count': src[
                                        'src_to_dest_count']}
                         else:
-                            print('came here 339')
-
                             src_dict = json.loads(src['result'])
                             src = {'res': src_dict[:10],
                                    'src_count': src['src_count'],
@@ -388,16 +390,17 @@ class TestCaseLog(db.Model):
                                     'dest_to_src_count': dest[
                                         'dest_to_src_count']}
                 else:
-                    print("came h")
+
                     dest = x.des_execution_log
                     src = x.src_execution_log
-
             return {
                 'test_case_log_id': x.test_case_log_id,
                 'test_case_id': x.test_case_id,
                 'test_execution_status': x.execution_status,
                 'source_log': src,
                 'destination_log': dest,
+                'destination_count':dest_count,
+                'Duplicate_counts': sum_of_duplicate_records,
             }
 
         return {"data": test_case_log_json(TestCaseLog.query.filter_by(
