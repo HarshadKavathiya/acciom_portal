@@ -352,12 +352,12 @@ class TestCaseLog(db.Model):
                 if x.test_cases.test_name == 'NullCheck' or \
                         x.test_cases.test_name == 'DuplicateCheck':
                     sum_of_duplicate_records = 0
-                    dest = json.loads(x.des_execution_log)
-                    dest_count = int(len(dest) -1)
-                    dest = dest[:current_app.config.get('TARGET_RECORD_COUNT_NULL_DUPLICATE')]
+                    dest1 = json.loads(x.des_execution_log)
+                    dest_count = int(len(dest1) -1)
+                    dest = dest1[:current_app.config.get('TARGET_RECORD_COUNT_NULL_DUPLICATE')]
                     src = x.src_execution_log
                     if x.test_cases.test_name =='DuplicateCheck':
-                        sum_of_duplicate_records = functools.reduce(lambda  x,y : x+y ,[int(i[-1]) for i in dest[1:]])
+                        sum_of_duplicate_records = functools.reduce(lambda  x,y : x+y ,[int(i[-1]) for i in dest1[1:]])
                 elif x.test_cases.test_name == 'Datavalidation':
                     if x.src_execution_log == 'none':
                         src = 'none'

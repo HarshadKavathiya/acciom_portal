@@ -183,13 +183,10 @@ class ExportTestLog(Resource):
         response = []
         if test_case.test_name == 'Datavalidation':
             data = ast.literal_eval(case_log.src_execution_log)
-            print("data", data)
             data1 = ast.literal_eval(case_log.des_execution_log)
-            print("data1", data1)
 
             if data["result"] != 'none':
                 dict_key1 = ast.literal_eval(data["result"])
-                print("dict_key", dict_key1)
                 response.append(['Source Table'])
                 for i in dict_key1:
                     dict_key2 = ast.literal_eval(i)
@@ -203,7 +200,6 @@ class ExportTestLog(Resource):
 
             if data1["result"] != 'none':
                 dict_key3 = ast.literal_eval(data1["result"])
-                print("dict_key3", dict_key3)
                 response.append(['Target Table'])
                 for i in dict_key3:
                     dict_key4 = ast.literal_eval(i)
