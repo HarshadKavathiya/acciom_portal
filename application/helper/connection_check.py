@@ -3,7 +3,7 @@ import pymysql
 import pyodbc
 from sqlalchemy import exc
 
-from application.common.Response import success
+from application.common.response import success
 
 
 def connection_check(db_type, db_hostname, db_username, db_password, db_name):

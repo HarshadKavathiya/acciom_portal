@@ -11,7 +11,7 @@ from flask_restful import Resource, reqparse
 from openpyxl import load_workbook
 
 from application.api.dbdetails import create_dbconnection
-from application.common.Response import success, error
+from application.common.response import success, error
 # from celery_task import my_background_task
 from application.helper.runner_class import run_by_case_id
 from application.helper.runner_class import split_db

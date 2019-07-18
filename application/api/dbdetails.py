@@ -2,7 +2,7 @@ from flasgger import swag_from
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource, reqparse
 
-from application.common.Response import error, success
+from application.common.response import error, success
 from application.models.user import DbDetail
 
 parser = reqparse.RequestParser()
