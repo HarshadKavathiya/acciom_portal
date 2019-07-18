@@ -267,7 +267,6 @@ if __name__ == '__main__':
             if testcase == "datavalidation":
                 src_to_dest = data_validation(df_src_master, df_dest_master)
                 dest_to_src = data_validation(df_dest_master, df_src_master)
-                print("line 270", len(src_to_dest), type(src_to_dest))
                 # Filtering the number of rows to be passed to DB based on value mentioned in config file
                 result["src_to_dest"] = src_to_dest[:source_record_count] if isinstance(src_to_dest, list) else []
                 result["dest_to_src"] = dest_to_src[:target_record_count] if isinstance(dest_to_src, list) else []
