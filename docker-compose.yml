@@ -29,11 +29,11 @@ services:
       export LANG=C.UTF-8 &&
       export FLASK_APP=manage.py &&
       flask db upgrade &&
-      gunicorn --bind 0.0.0.0:7000 --workers 3 --reload app:app"
+      gunicorn --bind 0.0.0.0:5000 --workers 3 --reload app:app"
     volumes:
       - .:/acciom
     ports:
-      - "7000:7000"
+      - "5000:5000"
 
 volumes:
   my-datavolume:

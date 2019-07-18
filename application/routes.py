@@ -8,8 +8,8 @@ from application.api.login import (Register,
                                    Login, Logout, ResetPasswordEmail,
                                    ResetPassword, ResetPasswordInput,
                                    SettingNewPaswword, VerifyAccount, GetToken)
-from application.api.testcase import TestCaseJob, TestCaseSparkJob, \
-    EditTestCase
+from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
+    EditTestCase)
 from application.api.testsuite import TestSuites, ExportTestLog, \
     TestCaseLogDetail, ConnectionDetails, SelectConnection
 from application.models.user import RevokedTokenModel
@@ -25,10 +25,10 @@ def check_if_token_in_blacklist(decrypted_token):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists(static_folder + path):
+    if path != "" and os.path.exists(static_folder + path):  # for UI path ex: /login, /register
         return send_from_directory(static_folder, path)
     elif not (os.path.exists(static_folder + path) or (
-            str(path).startswith("api/"))):
+            str(path).startswith("api/"))):  # for Backend Path ex: /api/register
         return send_from_directory(static_folder, 'index.html')
     elif path == "":
         return send_from_directory(static_folder, 'index.html')
