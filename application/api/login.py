@@ -266,6 +266,8 @@ class GetToken(Resource):
             access_token = create_access_token(
                 identity=current_user.user_id,
                 expires_delta=expires)
+            # else:
+            #     raise InvalidInput("Password Not Correct")
 
             payload = {'access_token': access_token,
                        'success': True}

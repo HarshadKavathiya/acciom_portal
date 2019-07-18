@@ -26,6 +26,7 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
                 else:
                     i = (i[0], i[1], "NO")
                 data1.append(i)
+                print(data1)
         else:
             cursor = source_cursor
             cursor.execute(
@@ -62,6 +63,8 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
 
             for row in cursor1:
                 data2.append(tuple(row))
+
+
         set_1, set_2 = set(data1), set(data2)
         a = list(set_1 & set_2)
         for item in a:

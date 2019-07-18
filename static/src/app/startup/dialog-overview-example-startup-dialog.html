@@ -199,18 +199,19 @@ opacity: 0.9;
                                 <td class="test-result1">Result: Fail</td>
                                 <td><img src="assets/images/001-cross-delete-black-circular-button.png"/>
                                 </tr>
-                        </table>  
+                        </table>
+
+               
             </div>
-            <div class="test-result">Total <b>{{data.len_null}}</b> Records found with Null value(s) </div>
-            <div class="test-result">Table <span class="bold-text">{{data.target_table}}</span> </div>
-            <div>Top <b>10</b> Null Records</div>
+            <div class="test-result1">Total Null Records {{data.len_null}}</div>
+            <div class="test-result">Null Values found in Target Table <span class="bold-text">{{data.target_table}}</span> </div>
             <table border=1 style="border-collapse: collapse">
                     <tr  *ngFor="let each_row of data.value_src_nullcheck">
                             <td  *ngFor= "let z of each_row" >
-                                    <div *ngIf="z=='Null'">
-                                        <div style=background-color:yellow;>{{z}}</div>
+                                    <div *ngIf="z=='None'">
+                                        <div style=background-color:yellow;>Null</div>
                                     </div>
-                                    <div *ngIf="z!='Null'">{{z}}</div>
+                                    <div *ngIf="z!='None'">{{z}}</div>
         
                                     </td>
                             </tr>
@@ -242,8 +243,7 @@ opacity: 0.9;
                                 </tr>
                         </table>
             </div>
-            <div class="test-result"> <b>{{data.duplicate_Records}}</b> Duplicate Rows Found </div>
-            <div class="test-result">Table <span class="bold-text">{{data.target_table }}</span></div>
+            <div class="test-result">Duplicate Records found in Target Table <span class="bold-text">{{data.target_table }}</span></div>
             <table border=1 style="border-collapse: collapse">
                    
                     <tr *ngFor="let y of data.src_value_dataduplication" cellspacing=2>
@@ -254,6 +254,7 @@ opacity: 0.9;
                 </table>
         </div>      
     </div>
+
     <div mat-dialog-content class="panel-body1"  *ngIf="!data.datavalidation">
             <div class="test-heading">Data Validation</div>
         <div *ngIf="data.execution_status === 2">
