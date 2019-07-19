@@ -68,7 +68,7 @@ class Login(Resource):
             if isinstance(request_data_validation, dict):
                 return api_response(request_data_validation, STATUS_BAD_REQUEST)
             current_user = User.query.filter_by(email=data['email']).first()
-            expires = datetime.timedelta(hours=TimeOuts.TWO_FORTY)
+            expires = datetime.timedelta(hours=TimeOuts.TWO_FORTY_IN_HOURS)
             # TODO: MORE COMPLEX USER OBJECT  TOKEN CREATION.
             # TODO: , expires_delta=expires
             if not current_user:
@@ -241,7 +241,7 @@ class GetToken(Resource):
     def get(self):
         """Get call."""
         try:
-            expires = datetime.timedelta(days=TimeOuts.HUNDRED)
+            expires = datetime.timedelta(days=TimeOuts.HUNDRED_IN_DAYS)
             current_user_id = get_jwt_identity()
             current_user = db.session.query(User).get(current_user_id)
             # TODO: Security for the token.

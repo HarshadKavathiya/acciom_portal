@@ -26,5 +26,5 @@ class APIMessages:
 class TimeOuts:
     """Timeouts to be referenced in the code."""
 
-    TWO_FORTY = 240
-    HUNDRED = 100
+    TWO_FORTY_IN_HOURS = 240
+    HUNDRED_IN_DAYS = 100
