@@ -10,7 +10,7 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restful import Resource
 from flask_restful import reqparse
 
-from application.common.Response import (error, success)
+from application.common.response import (error, success)
 from application.helper.runner_class import (run_by_case_id, split_table)
 from application.helper.suite_runner import suite_level_send_mail
 from application.models.user import (TestSuite, SparkJob, TestCaseLog,

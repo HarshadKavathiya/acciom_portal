@@ -7,7 +7,7 @@ from application.api.dbdetails import DbDetails
 from application.api.login import (Register,
                                    Login, Logout, ResetPasswordEmail,
                                    ResetPassword, ResetPasswordInput,
-                                   SettingNewPaswword, VerifyAccount, GetToken)
+                                   SettingNewPassword, VerifyAccount, GetToken)
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
     EditTestCase)
 from application.api.testsuite import TestSuites, ExportTestLog, \
@@ -51,7 +51,7 @@ api.add_resource(TestCaseLogDetail,
 api.add_resource(ResetPasswordEmail, '/api/reset-password-email')
 api.add_resource(ResetPassword, '/api/reset-password-link/<string:token>')
 api.add_resource(ResetPasswordInput, '/api/reset-password')
-api.add_resource(SettingNewPaswword, '/api/change-password')
+api.add_resource(SettingNewPassword, '/api/change-password')
 api.add_resource(VerifyAccount, '/api/verify-account/<string:token>')
 api.add_resource(CheckConnection, '/api/check-connection')
 api.add_resource(ConnectionDetails, '/api/connection-detail/<int:suite_id>')

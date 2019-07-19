@@ -1,7 +1,7 @@
 from flasgger import swag_from
 from flask_restful import Resource, reqparse
 
-from application.common.Response import success
+from application.common.response import success
 from application.helper.connection_check import connection_check
 
 
