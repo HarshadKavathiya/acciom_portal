@@ -33,7 +33,6 @@ class Register(Resource):
             # Checking if fields are empty
             request_data_validation = validate_empty_fields(data, list_of_args)
             if request_data_validation:
-                print(request_data_validation)
                 return api_response(success=False, message=request_data_validation,
                                     http_status_code=STATUS_BAD_REQUEST, data={})
             if User.find_by_username(data['email']):
