@@ -31,6 +31,7 @@ def input_error(error):  # Deprecate
     return error, STATUS_BAD_REQUEST
 
 
-def api_response(payload, http_status_code):
+def api_response(success, message, http_status_code, data=None):
     """API Response common method."""
+    payload = {"success": success, "message": message, "data": data if data else {}}
     return payload, http_status_code

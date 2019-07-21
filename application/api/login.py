@@ -21,35 +21,35 @@ class Register(Resource):
     @swag_from('/application/apidocs/register.yml')
     def post(self):
         """Post method."""
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('email', help='This field cannot be blank and ', required=True, type=str)
+        parser.add_argument('first_name', help='This field cannot be blank', required=True, type=str)
+        parser.add_argument('last_name', help='This field cannot be blank', required=True, type=str)
+        parser.add_argument('password', help='This field cannot be blank', required=True, type=str)
+        data = parser.parse_args(strict=True)
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('email', help='This field cannot be blank', required=True)
-            parser.add_argument('first_name', help='This field cannot be blank', required=True)
-            parser.add_argument('last_name', help='This field cannot be blank', required=True)
-            parser.add_argument('password', help='This field cannot be blank', required=True)
-            data = parser.parse_args()
+
             list_of_args = [arg.name for arg in parser.args]
             # Checking if fields are empty
             request_data_validation = validate_empty_fields(data, list_of_args)
-            if isinstance(request_data_validation, dict):
-                return api_response(request_data_validation, STATUS_BAD_REQUEST)
+            if request_data_validation:
+                print(request_data_validation)
+                return api_response(success=False, message=request_data_validation,
+                                    http_status_code=STATUS_BAD_REQUEST, data={})
             if User.find_by_username(data['email']):
                 raise InvalidInput(APIMessages.USER_EXISTS.format(data['email']))
             new_user = User(email=data['email'], first_name=data['first_name'], last_name=data['last_name'],
                             password=User.generate_hash(data['password']), verified=False)
             new_user.save_to_db()
             send_mail_to_verify(new_user)
-            return api_response({'message': APIMessages.USER_CREATED.format(new_user.email),
-                                 'success': True, 'data': {}}, STATUS_CREATED)
+            return api_response(True, APIMessages.USER_CREATED.format(new_user.email), STATUS_CREATED)
         except SQLAlchemyError as e:
             db.session.rollback()
-            return api_response({"success": False, 'message': APIMessages.INTERNAL_ERROR,
-                                 'data': {'error_log': str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {'error_log': str(e)})
         except InvalidInput as e:
-            return api_response({"success": False, "message": str(e), "data": {}}, STATUS_BAD_REQUEST)
+            return api_response(False, str(e), STATUS_BAD_REQUEST)
         except Exception as e:
-            return api_response({'success': False, 'message': APIMessages.INTERNAL_ERROR,
-                                 'data': {'error_log': str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {'error_log': str(e)})
 
 
 class Login(Resource):
@@ -58,15 +58,15 @@ class Login(Resource):
     @swag_from('/application/apidocs/login.yml')
     def post(self):
         """Post call."""
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', help='This field cannot be blank', required=True)
+        parser.add_argument('password', help='This field cannot be blank', required=True)
+        data = parser.parse_args()
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('email', help='This field cannot be blank', required=True)
-            parser.add_argument('password', help='This field cannot be blank', required=True)
-            data = parser.parse_args()
             list_of_args = [arg.name for arg in parser.args]
             request_data_validation = validate_empty_fields(data, list_of_args)
-            if isinstance(request_data_validation, dict):
-                return api_response(request_data_validation, STATUS_BAD_REQUEST)
+            if request_data_validation:
+                return api_response(False, request_data_validation, STATUS_BAD_REQUEST)
             current_user = User.query.filter_by(email=data['email']).first()
             expires = datetime.timedelta(hours=TimeOuts.TEN_DAYS_IN_HOURS)
             # TODO: MORE COMPLEX USER OBJECT  TOKEN CREATION.
@@ -79,19 +79,15 @@ class Login(Resource):
                     raise InvalidInput(APIMessages.VERIFY_USER)
                 else:
                     access_token = create_access_token(identity=current_user.user_id, expires_delta=expires)
-                    payload = {
-                        'message': APIMessages.USER_LOGIN.format(current_user.email),
-                        'success': True,
-                        'data': {'user_id': current_user.user_id, 'access_token': access_token,
-                                 'user_email': current_user.email, 'user_name': current_user.first_name}}
             else:
                 raise InvalidInput(APIMessages.INVALID_UID_PWD.format(data['email']))
         except InvalidInput as e:
-            return api_response({"success": False, "message": str(e), "data": {}}, STATUS_BAD_REQUEST)
+            return api_response(False, str(e), STATUS_BAD_REQUEST)
         except Exception as e:
-            return api_response({'message': APIMessages.INTERNAL_ERROR, 'success': False,
-                                 'data': {'error_log': str(e)}}, STATUS_SERVER_ERROR)
-        return api_response(payload, STATUS_OK)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {'error_log': str(e)})
+        return api_response(True, APIMessages.USER_LOGIN.format(current_user.email), STATUS_OK,
+                            {'user_id': current_user.user_id, 'access_token': access_token,
+                             'user_email': current_user.email, 'user_name': current_user.first_name})
 
 
 class Logout(Resource):  # Need to be revamped. Currently, not working
@@ -116,24 +112,22 @@ class ResetPasswordEmail(Resource):
     @swag_from('/application/apidocs/resetpasswordemail.yml')
     def post(self):  # api/reset-password-email
         """Post call."""
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', help='This field cannot be blank', required=True)
+        data = parser.parse_args()
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('email', help='This field cannot be blank', required=True)
-            data = parser.parse_args()
             list_of_args = [arg.name for arg in parser.args]
             request_data_validation = validate_empty_fields(data, list_of_args)
-            if isinstance(request_data_validation, dict):
-                return api_response(request_data_validation, STATUS_BAD_REQUEST)
+            if request_data_validation:
+                return api_response(False, request_data_validation, STATUS_BAD_REQUEST)
             user = User.query.filter_by(email=data['email']).first()
             if user is None:
-                return api_response({"success": False, "message": APIMessages.USER_NOT_EXIST.format(data['email']),
-                                     "data": {}}, STATUS_BAD_REQUEST)
+                return api_response(False, APIMessages.USER_NOT_EXIST.format(data['email']), STATUS_BAD_REQUEST)
             else:
                 send_reset_email(user)
-                return api_response({"success": True, "message": APIMessages.RESET_EMAIL, "data": {}}, STATUS_OK)
+                return api_response(True, APIMessages.RESET_EMAIL, STATUS_OK)
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 "data": {"error_log": str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {"error_log": str(e)})
 
 
 class ResetPassword(Resource):
@@ -144,14 +138,11 @@ class ResetPassword(Resource):
         try:
             user = User.verify_reset_token(token)
             if user is None:
-                return api_response({"success": False, "message": APIMessages.INVALID_TOKEN, "data": {}},
-                                    STATUS_BAD_REQUEST)
+                return api_response(False, APIMessages.INVALID_TOKEN, STATUS_BAD_REQUEST)
             else:
-                return api_response({"message": APIMessages.RESET_PAGE, "success": True, "data": {"token": token}},
-                                    STATUS_OK)
+                return api_response(True, APIMessages.RESET_PAGE, STATUS_OK, {"token": token})
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 "data": {"error_log": str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {"error_log": str(e)})
 
 
 class ResetPasswordInput(Resource):
@@ -159,29 +150,26 @@ class ResetPasswordInput(Resource):
 
     def post(self):
         """Post Call."""
+        parser = reqparse.RequestParser()
+        parser.add_argument('password', help='This field cannot be blank', required=True)
+        parser.add_argument('confirm_password', help='field is required', required=True)
+        parser.add_argument('token', help='filed is required', required=True)
+        data = parser.parse_args()
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('password', help='This field cannot be blank', required=True)
-            parser.add_argument('confirm_password', help='field is required', required=True)
-            parser.add_argument('token', help='filed is required', required=True)
-            data = parser.parse_args()
             list_of_args = [arg.name for arg in parser.args]
             request_data_validation = validate_empty_fields(data, list_of_args)
-            if isinstance(request_data_validation, dict):
-                return api_response(request_data_validation, STATUS_BAD_REQUEST)
+            if request_data_validation:
+                return api_response(False, request_data_validation, STATUS_BAD_REQUEST)
             user = User.verify_reset_token(data['token'])
             if user is None:
-                return api_response({"success": False, "message": APIMessages.INVALID_TOKEN,
-                                     "data": {}}, STATUS_BAD_REQUEST)
+                return api_response(False, APIMessages.INVALID_TOKEN, STATUS_BAD_REQUEST)
             else:
                 password = User.generate_hash(data['password'])
                 user.password = password
                 db.session.commit()
-                return api_response({"message": APIMessages.PASSWORD_CHANGE, "success": True,
-                                     "data": {}}, STATUS_CREATED)
+                return api_response(True, APIMessages.PASSWORD_CHANGE, STATUS_CREATED)
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 "data": {"error_log": str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {"error_log": str(e)})
 
 
 class SettingNewPassword(Resource):
@@ -191,26 +179,24 @@ class SettingNewPassword(Resource):
     @swag_from('/application/apidocs/settingnewpassword.yml')
     def post(self):
         """Post call."""
+        parser = reqparse.RequestParser()
+        parser.add_argument('old_password', help='This field cannot be blank', required=True)
+        parser.add_argument('new_password', help='This field cannot be blank', required=True)
+        data = parser.parse_args()
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('old_password', help='This field cannot be blank', required=True)
-            parser.add_argument('new_password', help='This field cannot be blank', required=True)
-            data = parser.parse_args()
             list_of_args = [arg.name for arg in parser.args]
             request_data_validation = validate_empty_fields(data, list_of_args)
-            if isinstance(request_data_validation, dict):
-                return api_response(request_data_validation, STATUS_BAD_REQUEST)
+            if request_data_validation:
+                return api_response(False, request_data_validation, STATUS_BAD_REQUEST)
             current_user_id = get_jwt_identity()
             current_user = db.session.query(User).get(current_user_id)
             if not User.verify_hash(data['old_password'], current_user.password):
-                return api_response({"success": False, "message": APIMessages.INVALID_PASSWORD,
-                                     "data": {}}, STATUS_BAD_REQUEST)
+                return api_response(False, APIMessages.INVALID_PASSWORD, STATUS_BAD_REQUEST)
             current_user.password = current_user.generate_hash(data['new_password'])
             current_user.save_to_db()
-            return api_response({'message': APIMessages.PASSWORD_CHANGE, 'success': True, 'data': {}}, STATUS_CREATED)
+            return api_response(True, APIMessages.PASSWORD_CHANGE, STATUS_CREATED)
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 "data": {"error_log": str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {"error_log": str(e)})
 
 
 class VerifyAccount(Resource):
@@ -222,16 +208,13 @@ class VerifyAccount(Resource):
         try:
             user = User.verify_reset_token(token)
             if user is None:
-                return api_response({"success": False, "message": APIMessages.INVALID_TOKEN, "data": {}},
-                                    STATUS_BAD_REQUEST)
+                return api_response(False, APIMessages.INVALID_TOKEN, STATUS_BAD_REQUEST)
             else:
                 user.verified = True
                 db.session.commit()
-                return api_response({"message": APIMessages.USER_VERIFIED, "success": True,
-                                     "data": {"token": token}}, STATUS_OK)
+                return api_response(True, APIMessages.USER_VERIFIED, STATUS_OK, {"token": token})
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 "data": {"error_log": str(e)}}, STATUS_SERVER_ERROR)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {"error_log": str(e)})
 
 
 class GetToken(Resource):
@@ -248,19 +231,17 @@ class GetToken(Resource):
             access_token = create_access_token(
                 identity=current_user.user_id,
                 expires_delta=expires)
-            payload = {'success': True, 'message': APIMessages.NEW_TOKEN, 'data': {'access_token': access_token}}
+            return api_response(True, APIMessages.NEW_TOKEN, STATUS_OK, {'access_token': access_token})
         except Exception as e:
-            return api_response({"success": False, "message": APIMessages.INTERNAL_ERROR,
-                                 'data': {'error_log': str(e)}}, STATUS_SERVER_ERROR)
-        return api_response(payload, STATUS_OK)
+            return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR, {'error_log': str(e)})
 
 
 def validate_empty_fields(data_json, list_of_args):
     """Validate empty fields on request payload."""
     for each_arg in list_of_args:
-        if not data_json[each_arg]:
+        if not (data_json[each_arg] and data_json[each_arg].strip()):
             # Checking if fields are empty
-            return {'message': APIMessages.EMPTY_FIELD.format(each_arg), 'success': False, 'data': {}}
+            return APIMessages.EMPTY_FIELD.format(each_arg)
 
 
 def send_reset_email(user):
