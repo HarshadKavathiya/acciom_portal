@@ -1,0 +1,47 @@
+{
+  "name": "acciom-ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.19.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
+    "redux-immutable-state-invariant": "^2.1.0",
+    "redux-thunk": "^2.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "stubbed": "./node_modules/.bin/gulp & react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "serve": "^11.0.2",
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-shell": "^0.6.5",
+    "gulp-yaml": "^2.0.2",
+    "stubby": "^4.0.0"
+  }
+}

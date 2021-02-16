@@ -1,0 +1,21 @@
+-   request:
+      url: ^/api/test$
+      method: GET
+    response:
+      status: 200
+
+-   request:
+      url: ^/api/login$
+      method: POST
+      post: '{"email":"success@gmail.com","password":"1234"}'
+    response:
+      status: 200
+      file: api-mocks/response/success-login.json
+
+-   request:
+      url: ^/api/login$
+      method: POST
+      post: '{"email":"failure@gmail.com","password":"1234"}'
+    response:
+      status: 200
+      file: api-mocks/response/failure-login.json
