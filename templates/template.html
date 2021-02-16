@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <style>
+            body {
+                background: #403d3d;
+                height: 100%;
+            }
+
+            .title {
+                text-align: center;
+                color: #8c8f92;
+            }
+
+            .responsive-table {
+                background: rgb(140, 143, 146);
+                color: #fff;
+                border-radius: .4em;
+                overflow: hidden;
+            }
+            .responsive-table tr {
+                border-color: #46637f;
+            }
+            .responsive-table th {
+                color: #2e6ca2;
+            }
+            .responsive-table-input-matrix {
+                margin: 1em 0;
+                width: 100%;
+            }
+            .responsive-table-input-matrix tr {
+                border-top: 1px solid #ddd;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .responsive-table th , .responsive-table td {
+                padding: 1em !important;
+            }
+            
+            .success {
+                color: green;
+            }
+            .fail {
+                color:#ca7f2d;
+            }
+            .error {
+                color:#821f1f;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <h3 class="title">
+                Acciom Tool Test Run Result
+            </h3>
+        </div>
+
+        <table class="responsive-table responsive-table-input-matrix">
+            <tbody>
+                <tr>
+                    <th>SR No</th>
+                    <th>Test Class</th>
+                    <th>Description</th>
+                    <th>Source Table</th>
+                    <th>Target Table</th>
+                    <th>Result Status</th>
+                    <th>Result Description</th>
+                </tr>
+
+                <tr>
+                    <td align="center">1</td>
+                    <td align="center">Count Check</td>
+                    <td align="center">Count Verification</td>
+                    <td align="center">src_inventory</td>
+                    <td align="center">dest_inventory</td>
+                    <td align="center" class="success">
+                        <strong>Success</strong>
+                    </td>
+                    <td align="center">Successfully Run</td>
+                </tr>
+
+                <tr>
+                    <td align="center">2</td>
+                    <td align="center">Count Check</td>
+                    <td align="center">Count Verification</td>
+                    <td align="center">src_inventory</td>
+                    <td align="center">dest_inventory</td>
+                    <td align="center" class="fail">
+                        <strong>Fail</strong>
+                    </td>
+                    <td align="center">Successfully Run</td>
+                </tr>
+
+                <tr>
+                    <td align="center">3</td>
+                    <td align="center">Count Check</td>
+                    <td align="center">Count Verification</td>
+                    <td align="center">src_inventory</td>
+                    <td align="center">dest_inventory</td>
+                    <td align="center" class="error">
+                        <strong> Error</strong> 
+                    </td>
+                    <td align="center">Successfully Rundsfadfsdfdsfsdffsdf</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+templates/node_modules
 # C extensions
 *.so
 
@@ -21,7 +22,7 @@ var/
 wheels/
 *.egg-info/
 .installed.cfg
-*.egg
+*.egg  
 MANIFEST
 
 # PyInstaller
